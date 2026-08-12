@@ -10,7 +10,6 @@ build
 *.db-shm
 public/uploads/*
 !public/uploads/.gitkeep
-public/demo-images/
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500" role="img" aria-label="3L Whistling Kettle placeholder illustration">
+  <rect width="500" height="500" fill="#f6f7f5"/>
+  <g fill="none" stroke="#1f6b52" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".85">
+    <rect x="150" y="160" width="200" height="140" rx="12"/><ellipse cx="250" cy="160" rx="100" ry="20"/><path d="M150 195 h-38 M350 195 h38"/><path d="M205 140 h90"/>
+  </g>
+  <text x="250" y="392" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="24" font-weight="600" fill="#243026">3L Whistling Kettle</text>
+  <text x="250" y="422" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="16" fill="#7c8a80">DK-KTL-003</text>
+  <text x="250" y="466" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" letter-spacing="1.5" fill="#a3ada6">PLACEHOLDER IMAGE</text>
+</svg>

@@ -132,7 +132,9 @@ async function main() {
     await db.insert(productImages).values({
       productId: product.id,
       url: `/demo-images/${fileName}`,
-      alt: `${item.name}, ${item.category} at Debby's Kitchenware`,
+      // Short and descriptive. A long alt string is worse for screen readers,
+      // and if the image ever fails it is what the browser paints on the page.
+      alt: item.name,
       sortOrder: 0,
     });
 

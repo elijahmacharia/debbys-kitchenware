@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500" role="img" aria-label="Lunch Box with Compartments placeholder illustration">
+  <rect width="500" height="500" fill="#f6f7f5"/>
+  <g fill="none" stroke="#1f6b52" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".85">
+    <rect x="160" y="150" width="180" height="160" rx="14"/><rect x="145" y="128" width="210" height="26" rx="10"/><path d="M195 190 v80 M250 190 v80 M305 190 v80" opacity=".35"/>
+  </g>
+  <text x="250" y="392" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="24" font-weight="600" fill="#243026">Lunch Box with Compartments</text>
+  <text x="250" y="422" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="16" fill="#7c8a80">DK-LNC-001</text>
+  <text x="250" y="466" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" letter-spacing="1.5" fill="#a3ada6">PLACEHOLDER IMAGE</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500" role="img" aria-label="Stainless Serving Spoon placeholder illustration">
+  <rect width="500" height="500" fill="#f6f7f5"/>
+  <g fill="none" stroke="#1f6b52" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".85">
+    <path d="M175 110 v210"/><path d="M175 110 q-26 34 0 70 q26 -36 0 -70"/><path d="M250 110 v210"/><path d="M232 110 v52 M250 110 v52 M268 110 v52"/><path d="M232 162 q18 16 36 0"/><path d="M325 320 v-120 q0 -90 30 -90 v210"/>
+  </g>
+  <text x="250" y="392" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="24" font-weight="600" fill="#243026">Stainless Serving Spoon</text>
+  <text x="250" y="422" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="16" fill="#7c8a80">DK-SSP-001</text>
+  <text x="250" y="466" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" letter-spacing="1.5" fill="#a3ada6">PLACEHOLDER IMAGE</text>
+</svg>

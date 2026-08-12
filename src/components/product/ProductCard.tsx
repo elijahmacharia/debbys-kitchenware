@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Badge, StockBadge } from '@/components/ui/Badge';
@@ -32,12 +33,19 @@ export function ProductCard({
 }) {
   const href = `/product/${product.slug}`;
   const soldOut = product.stock <= 0;
+  /*
+   * When an image 404s the browser paints its alt text in the box, which
+   * sprawls across the badges and the wishlist button. Tracking the failure
+   * lets us show the neutral placeholder icon instead, so a missing photo
+   * degrades quietly rather than wrecking the card.
+   */
+  const [imageFailed, setImageFailed] = useState(false);
 
   return (
     <article className="card group flex flex-col overflow-hidden transition hover:border-brand-200">
       <div className="relative aspect-square bg-canvas">
         <Link href={href} className="block h-full w-full" tabIndex={-1} aria-hidden="true">
-          {product.imageUrl ? (
+          {product.imageUrl && !imageFailed ? (
             <Image
               src={product.imageUrl}
               alt={product.imageAlt ?? product.name}
@@ -45,6 +53,7 @@ export function ProductCard({
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               priority={priority}
               loading={priority ? undefined : 'lazy'}
+              onError={() => setImageFailed(true)}
               className="object-contain p-2 transition-transform duration-200 group-hover:scale-[1.03]"
             />
           ) : (

@@ -17,6 +17,9 @@ export function ProductGallery({
   images, productName,
 }: { images: { id: string; url: string; alt: string }[]; productName: string }) {
   const [active, setActive] = useState(0);
+  // Same reasoning as the product card: a broken image should show the
+  // placeholder, not a paragraph of alt text stretched across the frame.
+  const [failed, setFailed] = useState<Set<string>>(new Set());
 
   if (images.length === 0) {
     return (
@@ -30,19 +33,25 @@ export function ProductGallery({
   }
 
   const current = images[Math.min(active, images.length - 1)];
+  const currentFailed = failed.has(current.id);
 
   return (
     <div>
       <div className="relative aspect-square overflow-hidden rounded-card border border-line bg-surface">
-        <Image
-          key={current.id}
-          src={current.url}
-          alt={current.alt || productName}
-          fill
-          sizes="(max-width: 1024px) 100vw, 45vw"
-          priority
-          className="object-contain p-4"
-        />
+        {currentFailed ? (
+          <div className="grid h-full place-items-center text-subtle"><ImageIcon className="h-12 w-12" /></div>
+        ) : (
+          <Image
+            key={current.id}
+            src={current.url}
+            alt={current.alt || productName}
+            fill
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            priority
+            onError={() => setFailed((prev) => new Set(prev).add(current.id))}
+            className="object-contain p-4"
+          />
+        )}
       </div>
 
       {images.length > 1 ? (
