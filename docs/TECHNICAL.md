@@ -290,6 +290,33 @@ checked against the deployed site.
 4. Run `npm run db:push` once against the production database.
 5. Back up the database on a schedule. It holds every order.
 
+### Deploying to Vercel with Turso
+
+Vercel's filesystem is read-only and ephemeral, so a local SQLite file cannot
+live there. Turso is hosted libSQL — the same engine — so this needs no code
+change, only configuration.
+
+1. Create a Turso database. It gives you a `libsql://...` URL and an auth token.
+2. Create the tables and load data **from your machine**, pointed at Turso:
+   ```bash
+   DATABASE_URL="libsql://your-db.turso.io" TURSO_AUTH_TOKEN="..." npm run db:push
+   DATABASE_URL="libsql://your-db.turso.io" TURSO_AUTH_TOKEN="..." npm run db:seed
+   ```
+3. In Vercel → Settings → Environment Variables, set at minimum:
+   `DATABASE_URL`, `TURSO_AUTH_TOKEN`, `AUTH_SECRET` (a **new** one, not your
+   local value), `NEXT_PUBLIC_SITE_URL` (your real deployment URL), and
+   `NEXT_PUBLIC_BUSINESS_WHATSAPP`.
+4. Redeploy.
+
+Note that `/sitemap.xml` is the only route rendered during `next build`. It is
+written to tolerate an unreachable database and fall back to the static pages,
+so a first deploy succeeds before the database exists — but check the build log
+for the warning, because it means product URLs are missing from the sitemap
+until the next hourly regeneration.
+
+Vercel's **Hobby plan forbids commercial use**. A shop taking real orders needs
+Pro, or one of the hosts below.
+
 ### A caveat about SQLite and serverless hosts
 
 Vercel and similar platforms have a read-only filesystem and ephemeral
