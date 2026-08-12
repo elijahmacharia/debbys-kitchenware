@@ -106,7 +106,7 @@ export function ProductCard({
 
           <div className="grid grid-cols-2 gap-2">
             <Link href={href} className="btn-secondary btn-sm">View</Link>
-            <WhatsAppOrderButton href={whatsappHref} label="WhatsApp" size="sm" source={`product-card:${product.sku}`} />
+            <WhatsAppOrderButton href={whatsappHref} label="Ask" size="sm" source={`product-card:${product.sku}`} />
           </div>
         </div>
       </div>

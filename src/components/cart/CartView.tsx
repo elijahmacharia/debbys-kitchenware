@@ -148,7 +148,7 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
 
           <div className="mt-4 space-y-2">
             <ButtonLink href="/checkout" fullWidth>Proceed to checkout</ButtonLink>
-            <WhatsAppOrderButton href={whatsappHref} label="Send this cart on WhatsApp" fullWidth source="cart" />
+            <WhatsAppOrderButton href={whatsappHref} label="Ask about these items" fullWidth source="cart" />
           </div>
 
           <p className="mt-3 text-center text-xs text-muted">No account needed.</p>

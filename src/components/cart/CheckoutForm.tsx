@@ -8,10 +8,8 @@ import { useCart, clearStoredCart } from './CartProvider';
 import { TextField, TextAreaField, SelectField, CheckboxField } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
-import { WhatsAppOrderButton } from '@/components/product/WhatsAppOrderButton';
 import { ImageIcon, StoreIcon, TruckIcon } from '@/components/icons';
 import { formatKsh } from '@/lib/money';
-import { orderMessage, waLink } from '@/lib/whatsapp';
 import { KENYAN_COUNTIES } from '@/lib/config';
 import { cn } from '@/lib/cn';
 
@@ -114,24 +112,6 @@ export function CheckoutForm({
   const deliveryFeeCents = fulfilment === 'DELIVERY' ? selectedZone?.feeCents ?? 0 : 0;
   const totalCents = subtotalCents + deliveryFeeCents;
 
-  const whatsappHref = waLink(
-    orderMessage({
-      lines: lines.map((l) => ({ name: l.name, quantity: l.quantity, unitPriceCents: l.unitPriceCents })),
-      subtotalCents,
-      deliveryFeeCents,
-      totalCents,
-      customerName: form.customerName || undefined,
-      customerPhone: form.customerPhone || undefined,
-      fulfilment,
-      county: form.county || undefined,
-      town: form.town || undefined,
-      area: form.area || undefined,
-      estate: form.estate || undefined,
-      landmark: form.landmark || undefined,
-      directions: form.directions || undefined,
-      note: form.customerNote || undefined,
-    }),
-  );
 
   /** Mirrors the server rules so obvious mistakes are caught before a request. */
   const validate = (): boolean => {
@@ -473,11 +453,10 @@ export function CheckoutForm({
           {submitting ? 'Placing your order…' : 'Place order'}
         </Button>
 
-        <p className="mt-2 text-center text-xs text-muted">You will get an order number next.</p>
+        <p className="mt-2 text-center text-xs text-muted">
+          You will get an order number next, and a WhatsApp button to reach us.
+        </p>
 
-        <div className="mt-3 border-t border-line pt-3">
-          <WhatsAppOrderButton href={whatsappHref} label="Send this order on WhatsApp instead" fullWidth size="sm" source="checkout" />
-        </div>
       </aside>
     </form>
   );

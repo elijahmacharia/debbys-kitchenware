@@ -8,6 +8,7 @@ import { getWishlistProductIds } from '@/lib/queries/wishlist';
 import { business } from '@/lib/config';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 import { ProductGrid } from '@/components/product/ProductGrid';
+import { ProductCard } from '@/components/product/ProductCard';
 import { Section, SectionHeader } from '@/components/ui/Section';
 import { ButtonLink } from '@/components/ui/Button';
 import { WebsiteSearchJsonLd } from '@/components/seo/JsonLd';
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const [featured, newArrivals, onSale, categories, session, zones, testimonials] = await Promise.all([
-    getFeaturedProducts(8),
+    getFeaturedProducts(4),
     getNewArrivals(4),
     getSaleProducts(4),
     getTopCategories(6),
@@ -62,7 +63,7 @@ export default async function HomePage() {
               {whatsappHref ? (
                 <ButtonLink href={whatsappHref} external variant="whatsapp" className="sm:px-7">
                   <WhatsAppIcon className="h-4 w-4" />
-                  Order on WhatsApp
+                  Ask on WhatsApp
                 </ButtonLink>
               ) : (
                 <ButtonLink href="/contact" variant="secondary">Contact us</ButtonLink>
@@ -73,23 +74,26 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Category shortcuts double as the hero image — more useful than a
-              decorative photograph, and there is no photography to use yet. */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
-            {categories.slice(0, 4).map((category) => (
-              <Link
-                key={category.slug}
-                href={`/category/${category.slug}`}
-                className="card flex flex-col justify-between gap-3 p-4 transition hover:border-brand-300 hover:shadow-pop"
-              >
-                <GridIcon className="h-6 w-6 text-brand-600" />
-                <div>
-                  <p className="text-sm font-semibold text-ink">{category.name}</p>
-                  <p className="text-xs text-muted">{category.productCount} products</p>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {/*
+            The hero used to repeat the category tiles that appear in full
+            directly below it. Showing a few real products instead gives the
+            customer something to actually click, and does not duplicate the
+            section underneath.
+          */}
+          {featured.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {featured.slice(0, 2).map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  whatsappHref={whatsappHref}
+                  isSignedIn={isSignedIn}
+                  isWishlisted={wishlisted.has(product.id)}
+                  priority
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -130,7 +134,7 @@ export default async function HomePage() {
       {featured.length > 0 ? (
         <Section labelledBy="home-featured" className="pt-0">
           <SectionHeader id="home-featured" title="Featured products" href="/shop" linkLabel="Shop all" />
-          <ProductGrid products={featured} whatsappHref={whatsappHref} isSignedIn={isSignedIn} wishlistedIds={wishlisted} priorityCount={4} />
+          <ProductGrid products={featured} whatsappHref={whatsappHref} isSignedIn={isSignedIn} wishlistedIds={wishlisted} priorityCount={0} />
         </Section>
       ) : null}
 

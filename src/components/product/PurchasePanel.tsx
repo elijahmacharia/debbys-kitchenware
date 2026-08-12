@@ -42,7 +42,7 @@ export function PurchasePanel({
 
       <div className="grid gap-2 sm:grid-cols-2">
         <AddToCartButton line={line} quantity={quantity} fullWidth />
-        <WhatsAppOrderButton href={whatsappHref} label="Order on WhatsApp" fullWidth source={`product-page:${line.sku}`} />
+        <WhatsAppOrderButton href={whatsappHref} label="Ask on WhatsApp" fullWidth source={`product-page:${line.sku}`} />
       </div>
 
       <div className="flex flex-wrap gap-2">

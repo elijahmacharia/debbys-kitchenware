@@ -39,7 +39,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title,
       description,
       url: `${siteUrl}/product/${product.slug}`,
-      images: product.images.slice(0, 1).map((image) => ({ url: image.url, alt: image.alt })),
+      // No `images` here on purpose: opengraph-image.tsx in this folder
+      // generates a PNG, and an explicit entry would override it with the
+      // product's SVG, which social platforms will not render.
     },
   };
 }

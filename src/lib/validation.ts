@@ -138,7 +138,7 @@ export const checkoutSchema = z
     customerPhone: phoneSchema,
     customerEmail: optionalEmailSchema,
     fulfilment: z.enum(['DELIVERY', 'PICKUP']),
-    paymentMethod: z.enum(['MPESA_TILL', 'MPESA_PAYBILL', 'MPESA_SEND_MONEY', 'CASH_ON_DELIVERY', 'PAY_ON_PICKUP']),
+    paymentMethod: z.enum(['WHATSAPP', 'MPESA_TILL', 'MPESA_PAYBILL', 'MPESA_SEND_MONEY', 'CASH_ON_DELIVERY', 'PAY_ON_PICKUP']),
     deliveryZoneId: z.string().optional(),
     county: shortText(60).optional(),
     town: shortText(60).optional(),

@@ -58,6 +58,7 @@ export const mailtoHref = (): string | null =>
   isPlaceholder(business.email) ? null : `mailto:${business.email}`;
 
 export type PaymentMethodKey =
+  | 'WHATSAPP'
   | 'MPESA_TILL'
   | 'MPESA_PAYBILL'
   | 'MPESA_SEND_MONEY'
@@ -80,6 +81,20 @@ const paybillAccount = env('NEXT_PUBLIC_MPESA_PAYBILL_ACCOUNT', 'Your phone numb
 const sendMoneyName = env('NEXT_PUBLIC_MPESA_SEND_MONEY_NAME');
 
 export const paymentMethods: PaymentMethodConfig[] = [
+  {
+    /*
+     * Ordering "on WhatsApp" still goes through checkout, so the order is
+     * recorded and stock is reserved. The customer is handed to WhatsApp
+     * afterwards with their order number, to settle payment there. Letting
+     * WhatsApp skip checkout meant no order record and no stock decrement.
+     */
+    key: 'WHATSAPP',
+    label: 'Arrange on WhatsApp',
+    instructions:
+      'Place the order, then we will confirm it and take payment with you on WhatsApp. You will get a WhatsApp button with your order number on the next screen.',
+    enabled: true,
+    appliesTo: 'both',
+  },
   {
     key: 'MPESA_TILL',
     label: 'M-Pesa (Buy Goods — Till)',

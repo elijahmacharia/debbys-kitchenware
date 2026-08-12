@@ -151,7 +151,7 @@ export function MobileMenu({
 
             {whatsappHref ? (
               <div className="border-t border-line p-3">
-                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-whatsapp w-full">Order on WhatsApp</a>
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-whatsapp w-full">Chat on WhatsApp</a>
               </div>
             ) : null}
           </div>

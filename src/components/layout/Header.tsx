@@ -93,7 +93,7 @@ export async function Header() {
           {whatsappHref ? (
             <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-whatsapp btn-sm my-1.5 ml-auto">
               <WhatsAppIcon className="h-4 w-4" />
-              Order on WhatsApp
+              Chat on WhatsApp
             </a>
           ) : null}
         </div>

@@ -82,7 +82,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
       ) : null}
 
       <div className="mt-6 flex flex-wrap gap-2">
-        <WhatsAppOrderButton href={whatsappHref} label="Send this order on WhatsApp" source="order-confirmation" />
+        <WhatsAppOrderButton href={whatsappHref} label="Continue on WhatsApp" source="order-confirmation" />
         <ButtonLink href="/contact" variant="secondary">Contact us</ButtonLink>
         <ButtonLink href="/shop" variant="ghost" className="border border-line">Continue shopping</ButtonLink>
       </div>
