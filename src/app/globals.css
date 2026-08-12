@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * DESIGN TOKENS
+ * -----------------------------------------------------------------------------
+ * Every colour in the application resolves back to one of these variables, so
+ * rebranding is a single edit here rather than a search across components.
+ * Values are space-separated RGB channels so Tailwind can apply opacity
+ * modifiers like `bg-brand-600/10`.
+ *
+ * The palette is a deep green (clean, fresh, trustworthy — reads well for
+ * household and food-adjacent retail) with a warm amber used sparingly for
+ * sale badges and secondary calls to action. Body text on the page background
+ * measures about 12:1 contrast and white on brand-600 about 5.4:1, both past
+ * the WCAG AA threshold of 4.5:1.
+ */
+:root {
+  --brand-50: 240 249 245;
+  --brand-100: 219 240 229;
+  --brand-200: 184 225 205;
+  --brand-300: 134 203 172;
+  --brand-400: 78 173 137;
+  --brand-500: 45 141 108;
+  --brand-600: 31 107 82;
+  --brand-700: 26 86 68;
+  --brand-800: 23 69 56;
+  --brand-900: 20 57 47;
+
+  --accent-50: 255 247 235;
+  --accent-100: 254 236 205;
+  --accent-500: 217 119 6;
+  --accent-600: 190 96 4;
+  --accent-700: 146 71 4;
+
+  --ink: 26 36 31;
+  --muted: 88 102 94;
+  --subtle: 124 138 128;
+  --surface: 255 255 255;
+  --canvas: 249 250 249;
+  --line: 224 229 226;
+
+  --success: 21 128 61;
+  --warning: 180 83 9;
+  --danger: 185 28 28;
+  --whatsapp: 37 176 90;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@layer base {
+  * { @apply border-line; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-canvas text-ink antialiased;
+    font-family: var(--font-sans);
+    /* Nothing may push the page sideways on a 320px phone. */
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { @apply font-semibold tracking-tight text-ink; }
+  h1 { @apply text-2xl sm:text-3xl lg:text-4xl; }
+  h2 { @apply text-xl sm:text-2xl; }
+  h3 { @apply text-base sm:text-lg; }
+
+  /* A single, consistent focus ring everywhere, including keyboard-only use. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-600 ring-offset-2 ring-offset-canvas rounded-sm;
+  }
+
+  /* Hide native number spinners; quantity uses explicit +/- buttons. */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type='number'] { -moz-appearance: textfield; }
+}
+
+@layer components {
+  .container-site { @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-8; }
+
+  /* 44px minimum height on interactive controls — the smallest comfortable
+     touch target on a phone. */
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-control
+           px-4 text-sm font-semibold transition-colors
+           disabled:cursor-not-allowed disabled:opacity-55;
+  }
+  .btn-primary   { @apply btn bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800; }
+  .btn-secondary { @apply btn border border-line bg-surface text-ink hover:border-brand-200 hover:bg-brand-50; }
+  .btn-accent    { @apply btn bg-accent-500 text-white hover:bg-accent-600; }
+  .btn-ghost     { @apply btn text-ink hover:bg-brand-50; }
+  .btn-danger    { @apply btn bg-danger text-white hover:opacity-90; }
+  .btn-whatsapp  { @apply btn bg-whatsapp text-white hover:brightness-95; }
+  .btn-sm        { @apply min-h-[36px] px-3 text-xs; }
+
+  .card { @apply rounded-card border border-line bg-surface shadow-card; }
+
+  .input {
+    @apply block min-h-[44px] w-full rounded-control border border-line bg-surface px-3 py-2
+           text-base text-ink placeholder:text-subtle
+           focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-600/25
+           disabled:bg-canvas disabled:text-muted;
+  }
+  .input-error { @apply border-danger focus:border-danger focus:ring-danger/25; }
+
+  .label { @apply mb-1.5 block text-sm font-medium text-ink; }
+  .hint  { @apply mt-1 text-xs text-muted; }
+  .error-text { @apply mt-1 flex items-start gap-1 text-xs font-medium text-danger; }
+
+  .badge { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold leading-5; }
+
+  .link { @apply text-brand-700 underline underline-offset-2 hover:text-brand-800; }
+
+  .skeleton { @apply animate-pulse rounded bg-line/70; }
+
+  /* Screen-reader-only text that becomes visible when focused (skip link). */
+  .sr-only-focusable {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50
+           focus:rounded-control focus:bg-brand-700 focus:px-4 focus:py-2 focus:text-white;
+  }
+
+  .prose-page { @apply max-w-3xl space-y-4 text-sm leading-relaxed text-muted; }
+  .prose-page h2 { @apply mt-8 text-lg font-bold text-ink; }
+  .prose-page h3 { @apply mt-6 text-base font-semibold text-ink; }
+  .prose-page ul { @apply list-disc space-y-1 pl-5; }
+  .prose-page a { @apply link; }
+}
+
+/* Standalone (installed PWA) tweak: keep content clear of the iOS home
+   indicator. The website in a normal browser tab is unaffected. */
+@media all and (display-mode: standalone) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}
