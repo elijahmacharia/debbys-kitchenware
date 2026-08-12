@@ -164,8 +164,18 @@ async function main() {
   // --- Settings --------------------------------------------------------------
   await db.insert(settings).values([
     {
+      /*
+       * Empty by default, which hides the announcement bar. The demo-data
+       * warning used to live here, but it reappeared every time the database
+       * was reseeded and had to be cleared again by hand. The catalogue being
+       * placeholder data is called out in the README and the admin dashboard
+       * instead, where the owner will actually see it.
+       *
+       * Set this from Admin > Settings for real announcements: opening hours
+       * over a holiday, a delivery delay, a sale.
+       */
       key: 'shop.announcement',
-      value: 'Demo catalogue, products, prices and delivery fees are placeholders and are not yet the real ones.',
+      value: '',
     },
     {
       key: 'delivery.notice',
