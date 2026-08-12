@@ -19,7 +19,7 @@ export default async function RegisterPage() {
   return (
     <AuthCard
       title="Create an account"
-      subtitle="Optional — it saves your orders, addresses and wishlist for next time."
+      subtitle="Optional. Saves your orders, addresses and wishlist."
       footer={<>Already have an account? <Link href="/login" className="link">Sign in</Link></>}
     >
       <Suspense fallback={<Skeleton className="h-96 w-full" />}>

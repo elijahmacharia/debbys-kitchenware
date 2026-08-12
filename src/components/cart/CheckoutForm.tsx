@@ -236,7 +236,7 @@ export function CheckoutForm({
 
         <section className={cardClass} aria-labelledby="step-contact">
           <h2 id="step-contact" className="text-base font-bold">1. Your details</h2>
-          <p className="mt-0.5 text-xs text-muted">We use these to confirm your order and reach you about delivery.</p>
+          
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div id="field-customerName">
               <TextField label="Full name" required autoComplete="name" value={form.customerName} onChange={(e) => set('customerName', e.target.value)} error={errors.customerName} />
@@ -245,23 +245,22 @@ export function CheckoutForm({
               <TextField
                 label="Phone number" required type="tel" inputMode="tel" autoComplete="tel" placeholder="0712345678"
                 value={form.customerPhone} onChange={(e) => set('customerPhone', e.target.value)} error={errors.customerPhone}
-                hint="We will call or WhatsApp this number about your order"
+                hint="We will WhatsApp you about your order"
               />
             </div>
             <div className="sm:col-span-2" id="field-customerEmail">
               <TextField
                 label="Email address" type="email" autoComplete="email"
                 value={form.customerEmail} onChange={(e) => set('customerEmail', e.target.value)} error={errors.customerEmail}
-                hint="Optional. Only if you would like a written copy of your order."
+                
               />
             </div>
           </div>
 
           {!isSignedIn ? (
             <p className="mt-3 rounded-control bg-canvas p-2.5 text-xs text-muted">
-              You are checking out as a guest — no account needed.{' '}
-              <Link href="/login?next=/checkout" className="link">Sign in</Link> if you would like your details
-              filled in and your order saved to your account.
+              Checking out as a guest.{' '}
+              <Link href="/login?next=/checkout" className="link">Sign in</Link> to save this order to your account.
             </p>
           ) : null}
         </section>
@@ -278,7 +277,7 @@ export function CheckoutForm({
               <StoreIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
               <span>
                 <span className="block text-sm font-semibold">Collect at the shop</span>
-                <span className="block text-xs text-muted">Free. {shopAddress ?? 'We will confirm the pickup point with you.'}</span>
+                <span className="block text-xs text-muted">Free. {shopAddress ?? 'We will confirm where.'}</span>
               </span>
             </button>
 
@@ -293,8 +292,8 @@ export function CheckoutForm({
                 <span className="block text-sm font-semibold">Deliver to me</span>
                 <span className="block text-xs text-muted">
                   {zones.length === 0
-                    ? 'No delivery areas set up yet — please choose pickup or ask us on WhatsApp.'
-                    : 'Fee depends on your area and is shown below.'}
+                    ? 'No delivery areas set up yet — choose pickup or ask us.'
+                    : 'Fee depends on your area.'}
                 </span>
               </span>
             </button>
@@ -336,8 +335,8 @@ export function CheckoutForm({
                 {selectedZone?.note ? <p className="hint">{selectedZone.note}</p> : null}
                 {selectedZone && selectedZone.feeCents === 0 ? (
                   <Alert tone="info" className="mt-2">
-                    No fixed fee is set for this area yet. We will confirm the delivery cost with you on
-                    WhatsApp before we dispatch — the total below does not include it.
+                    No fixed fee for this area yet. We will confirm the cost before dispatch — the total
+                    below does not include it.
                   </Alert>
                 ) : null}
               </div>
@@ -362,8 +361,8 @@ export function CheckoutForm({
               <TextAreaField
                 label="Directions for the rider" rows={3} value={form.directions}
                 onChange={(e) => set('directions', e.target.value)}
-                placeholder="e.g. Opposite the supermarket, take the murram road, blue gate on the right."
-                hint="Anything that helps us find you quickly. Most places here are easier to find by landmark than by street name."
+                placeholder="e.g. Opposite the supermarket, blue gate on the right."
+                hint="Landmarks help more than street names."
               />
 
               {isSignedIn ? (
@@ -386,15 +385,13 @@ export function CheckoutForm({
         <section className={cardClass} aria-labelledby="step-payment">
           <h2 id="step-payment" className="text-base font-bold">3. Payment</h2>
           <p className="mt-0.5 text-xs text-muted">
-            Nothing is charged on this website. You pay using the method you choose below, and we confirm
-            your order once payment or the arrangement is agreed.
+            Nothing is charged here. You pay by the method you choose below.
           </p>
 
           <div className="mt-3 space-y-2" id="field-paymentMethod" role="radiogroup" aria-label="Payment method">
             {availablePayments.length === 0 ? (
               <Alert tone="warning">
-                No payment methods are configured yet. Please place your order and we will contact you, or
-                message us on WhatsApp.
+                No payment methods configured yet. Place your order and we will contact you.
               </Alert>
             ) : null}
             {availablePayments.map((method) => (
@@ -420,12 +417,12 @@ export function CheckoutForm({
         </section>
 
         <section className={cardClass} aria-labelledby="step-notes">
-          <h2 id="step-notes" className="text-base font-bold">4. Anything else?</h2>
+          <h2 id="step-notes" className="text-base font-bold">4. Notes</h2>
           <div className="mt-3">
             <TextAreaField
-              label="Notes for your order" rows={3} value={form.customerNote}
+              label="Anything we should know?" rows={3} value={form.customerNote}
               onChange={(e) => set('customerNote', e.target.value)}
-              placeholder="e.g. Please call before delivery. I would prefer the blue one if available."
+              placeholder="e.g. Please call before delivery."
             />
           </div>
         </section>
@@ -476,7 +473,7 @@ export function CheckoutForm({
           {submitting ? 'Placing your order…' : 'Place order'}
         </Button>
 
-        <p className="mt-2 text-center text-xs text-muted">You will see a confirmation with your order number once we have it.</p>
+        <p className="mt-2 text-center text-xs text-muted">You will get an order number next.</p>
 
         <div className="mt-3 border-t border-line pt-3">
           <WhatsAppOrderButton href={whatsappHref} label="Send this order on WhatsApp instead" fullWidth size="sm" source="checkout" />

@@ -14,7 +14,7 @@ export default async function SettingsPage() {
     <div className="max-w-lg space-y-4">
       <div>
         <h1>Settings</h1>
-        <p className="mt-1 text-sm text-muted">Control what we send you and what we hold about you.</p>
+        <p className="mt-1 text-sm text-muted">What we send you, and what we hold.</p>
       </div>
 
       <MarketingToggle initial={customer.marketingOptIn} />
@@ -36,8 +36,8 @@ export default async function SettingsPage() {
       <section className="card p-4 sm:p-5">
         <h2 className="text-base font-bold">Notifications</h2>
         <p className="mt-1.5 text-sm leading-relaxed text-muted">
-          Order updates are sent by WhatsApp or phone call today. Push notifications and SMS are planned
-          but not switched on, so nothing will ask for permission to notify you.
+          Order updates come by WhatsApp or phone. Push and SMS are not switched on, so nothing will ask
+          for permission.
         </p>
       </section>
     </div>

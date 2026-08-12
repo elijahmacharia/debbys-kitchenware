@@ -91,7 +91,7 @@ export default async function CategoryPage({
             <EmptyState
               icon={<PackageIcon className="h-8 w-8" />}
               title={`Nothing in ${category.name} right now`}
-              description="This category is empty or everything here is filtered out. Try clearing the filters, or ask us on WhatsApp whether we have it in the shop."
+              description="Nothing here matches, or the category is empty. Try clearing the filters."
               action={
                 <>
                   <ButtonLink href={`/category/${slug}`} variant="secondary">Clear filters</ButtonLink>

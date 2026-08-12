@@ -20,8 +20,7 @@ export default async function PaymentPage() {
       <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'How to pay' }]} />
       <h1 className="mt-3">How to pay</h1>
       <p className="mt-1 max-w-2xl text-sm text-muted">
-        No card details are taken and nothing is charged on this website. You choose how to pay at
-        checkout, and we confirm your order once payment or the arrangement is agreed.
+        No card details, nothing charged here. You choose how to pay at checkout.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -51,22 +50,15 @@ export default async function PaymentPage() {
       <div className="prose-page mt-8">
         <h2>When do I pay?</h2>
         <p>
-          After you place an order we contact you to confirm that everything is in stock and, for
-          delivery, the fee for your area. You pay after that confirmation — or on delivery/collection if
-          you chose one of those options.
+          After we confirm your order is in stock and, for delivery, the fee for your area. Or on
+          delivery or collection if you chose that.
         </p>
 
         <h2>Will I get a receipt?</h2>
-        <p>
-          Your M-Pesa confirmation message is your proof of payment. Ask us and we will also confirm your
-          order and payment in writing on WhatsApp.
-        </p>
+        <p>Your M-Pesa message is your proof. Ask and we will confirm in writing on WhatsApp.</p>
 
-        <h2>Automatic M-Pesa payment</h2>
-        <p>
-          Automated M-Pesa (STK push, where a prompt appears on your phone) is not switched on. Payment
-          is arranged manually for now, which is why we always confirm with you first.
-        </p>
+        <h2>Automatic M-Pesa</h2>
+        <p>STK push is not switched on. Payment is arranged manually, so we always confirm first.</p>
       </div>
     </div>
   );

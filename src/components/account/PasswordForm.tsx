@@ -57,7 +57,7 @@ export function PasswordForm() {
       {error ? <Alert tone="error">{error}</Alert> : null}
 
       <TextField label="Current password" required type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} error={errors.currentPassword} />
-      <TextField label="New password" required type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} error={errors.newPassword} hint="At least 8 characters, including a letter and a number." />
+      <TextField label="New password" required type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} error={errors.newPassword} hint="8+ characters, with a letter and a number." />
       <TextField label="Confirm new password" required type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} error={errors.confirm} />
 
       <Button type="submit" loading={saving}>{saving ? 'Saving…' : 'Change password'}</Button>

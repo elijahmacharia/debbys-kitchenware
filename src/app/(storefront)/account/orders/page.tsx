@@ -22,14 +22,14 @@ export default async function OrdersPage() {
   return (
     <div>
       <h1>My orders</h1>
-      <p className="mt-1 text-sm text-muted">Every order you have placed with us, newest first.</p>
+      <p className="mt-1 text-sm text-muted">Newest first.</p>
 
       {orders.length === 0 ? (
         <div className="mt-6">
           <EmptyState
             icon={<PackageIcon className="h-8 w-8" />}
             title="You haven't placed any orders yet"
-            description="Once you place an order you will be able to follow its progress here, from the moment we receive it until it reaches you."
+            description="Your orders and their progress will show here."
             action={<ButtonLink href="/shop">Browse the shop</ButtonLink>}
           />
         </div>

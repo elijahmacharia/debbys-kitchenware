@@ -20,7 +20,7 @@ export default async function LoginPage() {
   return (
     <AuthCard
       title="Sign in"
-      subtitle="Access your orders, saved addresses and wishlist."
+      subtitle="Orders, addresses and wishlist."
       footer={<>New here? <Link href="/register" className="link">Create an account</Link></>}
     >
       <Suspense fallback={<Skeleton className="h-56 w-full" />}>

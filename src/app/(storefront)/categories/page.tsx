@@ -19,13 +19,13 @@ export default async function CategoriesPage() {
     <div className="container-site py-6">
       <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Categories' }]} />
       <h1 className="mt-3">All categories</h1>
-      <p className="mt-1 text-sm text-muted">Everything in the shop, grouped by department. Tap a category to see what is in stock.</p>
+      <p className="mt-1 text-sm text-muted">Everything in the shop, grouped by department.</p>
 
       {tree.length === 0 ? (
         <div className="mt-6">
           <EmptyState
             title="No categories yet"
-            description="Categories will appear here once they are added in the admin dashboard."
+            description="Categories will appear here once they are added."
             action={<ButtonLink href="/shop">Browse all products</ButtonLink>}
           />
         </div>

@@ -76,7 +76,7 @@ export function ContactForm() {
       </div>
 
       <Button type="submit" loading={sending}>{sending ? 'Sending…' : 'Send message'}</Button>
-      <p className="text-xs text-muted">We will reply to the phone number you give us, usually on WhatsApp.</p>
+      <p className="text-xs text-muted">We reply on WhatsApp, usually.</p>
     </form>
   );
 }

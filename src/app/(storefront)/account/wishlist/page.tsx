@@ -35,7 +35,7 @@ export default async function WishlistPage() {
           <EmptyState
             icon={<HeartIcon className="h-8 w-8" />}
             title="Your wishlist is empty"
-            description="Tap the heart on any product to save it here for later. Your wishlist stays with your account."
+            description="Tap the heart on any product to save it here."
             action={<ButtonLink href="/shop">Find something you like</ButtonLink>}
           />
         </div>
@@ -62,10 +62,7 @@ export default async function WishlistPage() {
               <ul className="mt-1 list-disc pl-4">
                 {withdrawn.map((item) => <li key={item.id}>{item.name}</li>)}
               </ul>
-              <p className="mt-1.5 text-xs">
-                These have been withdrawn from sale. Ask us on WhatsApp if you would like us to source
-                something similar.
-              </p>
+              <p className="mt-1.5 text-xs">Withdrawn from sale. Ask us about something similar.</p>
             </Alert>
           ) : null}
         </div>

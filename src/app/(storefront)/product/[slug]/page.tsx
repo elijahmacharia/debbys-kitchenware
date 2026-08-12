@@ -97,9 +97,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </p>
 
           {product.stock <= 0 ? (
-            <Alert tone="warning" className="mt-4" title="Currently out of stock">
-              We cannot take an online order for this item right now.{' '}
-              {genericWhatsapp ? 'Message us on WhatsApp and we will tell you when it is back.' : 'Please contact us to check when it is back.'}
+            <Alert tone="warning" className="mt-4" title="Out of stock">
+              {genericWhatsapp ? 'Message us and we will tell you when it is back.' : 'Contact us to check when it is back.'}
             </Alert>
           ) : null}
 
@@ -133,7 +132,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <StoreIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
               <div>
                 <p className="text-sm font-semibold">Collect at the shop</p>
-                <p className="text-xs leading-snug text-muted">Free. We will tell you when your order is ready.</p>
+                <p className="text-xs leading-snug text-muted">Free. We will tell you when it is ready.</p>
               </div>
             </div>
             <div className="card flex gap-2.5 p-3">
@@ -142,8 +141,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <p className="text-sm font-semibold">Delivery</p>
                 <p className="text-xs leading-snug text-muted">
                   {zones.length > 0
-                    ? `Available in ${zones.length} area${zones.length === 1 ? '' : 's'}. Fee shown at checkout.`
-                    : 'Ask us about delivery to your area.'}
+                    ? `${zones.length} area${zones.length === 1 ? '' : 's'}. Fee shown at checkout.`
+                    : 'Ask us about your area.'}
                 </p>
               </div>
             </div>
@@ -154,7 +153,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       {related.length > 0 ? (
         <section className="mt-12" aria-labelledby="related">
-          <SectionHeader id="related" title="You might also like" description={`More from ${product.categoryName}`} href={`/category/${product.categorySlug}`} linkLabel="See category" />
+          <SectionHeader id="related" title="You might also like" href={`/category/${product.categorySlug}`} linkLabel="See category" />
           <ProductGrid products={related} whatsappHref={genericWhatsapp} isSignedIn={Boolean(session)} wishlistedIds={wishlisted} priorityCount={0} />
         </section>
       ) : null}

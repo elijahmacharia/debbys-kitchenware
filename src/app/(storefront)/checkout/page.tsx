@@ -30,7 +30,7 @@ export default async function CheckoutPage() {
     <div className="container-site py-6">
       <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Cart', href: '/cart' }, { name: 'Checkout' }]} />
       <h1 className="mt-3">Checkout</h1>
-      <p className="mt-1 text-sm text-muted">No account required. Fill in your details and we will confirm your order.</p>
+      <p className="mt-1 text-sm text-muted">No account required.</p>
 
       <div className="mt-5">
         <CheckoutForm

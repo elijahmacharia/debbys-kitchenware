@@ -51,8 +51,8 @@ export default async function HomePage() {
               Everything you need for your kitchen and home
             </h1>
             <p className="mt-3 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-              Quality kitchenware, household essentials and everyday products at affordable prices.
-              Order online or send us your list on WhatsApp — we will do the rest.
+              Quality kitchenware and household essentials at affordable prices. Order online, or
+              send us your list on WhatsApp.
             </p>
             <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
               <ButtonLink href="/shop" className="sm:px-7">
@@ -97,10 +97,10 @@ export default async function HomePage() {
       <div className="border-b border-line bg-surface">
         <div className="container-site grid grid-cols-2 gap-4 py-5 sm:grid-cols-4">
           {[
-            { Icon: PackageIcon, title: 'Wide range', text: 'Kitchen, household, storage and cleaning' },
-            { Icon: TagIcon, title: 'Affordable prices', text: 'Everyday value on everyday items' },
-            { Icon: TruckIcon, title: 'Pickup or delivery', text: zones.length > 0 ? `Delivery to ${zones.length} areas` : 'Collect at the shop or ask about delivery' },
-            { Icon: WhatsAppIcon, title: 'WhatsApp ordering', text: 'Send your list, we reply' },
+            { Icon: PackageIcon, title: 'Wide range', text: 'Kitchen, home, storage, cleaning' },
+            { Icon: TagIcon, title: 'Affordable', text: 'Everyday value' },
+            { Icon: TruckIcon, title: 'Pickup or delivery', text: zones.length > 0 ? `${zones.length} delivery areas` : 'Ask about delivery' },
+            { Icon: WhatsAppIcon, title: 'WhatsApp ordering', text: 'Send your list' },
           ].map(({ Icon, title, text }) => (
             <div key={title} className="flex gap-2.5">
               <Icon className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
@@ -115,7 +115,7 @@ export default async function HomePage() {
 
       {/* ---------------------------------------------------------- Categories */}
       <Section labelledBy="home-categories">
-        <SectionHeader id="home-categories" title="Shop by category" description="Browse the departments in the shop" href="/categories" linkLabel="All categories" />
+        <SectionHeader id="home-categories" title="Shop by category" href="/categories" linkLabel="All categories" />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {categories.map((category) => (
             <Link key={category.slug} href={`/category/${category.slug}`} className="card flex flex-col items-center gap-2 p-4 text-center transition hover:border-brand-300">
@@ -129,7 +129,7 @@ export default async function HomePage() {
 
       {featured.length > 0 ? (
         <Section labelledBy="home-featured" className="pt-0">
-          <SectionHeader id="home-featured" title="Featured products" description="Picked out by us this week" href="/shop" linkLabel="Shop all" />
+          <SectionHeader id="home-featured" title="Featured products" href="/shop" linkLabel="Shop all" />
           <ProductGrid products={featured} whatsappHref={whatsappHref} isSignedIn={isSignedIn} wishlistedIds={wishlisted} priorityCount={4} />
         </Section>
       ) : null}
@@ -140,7 +140,7 @@ export default async function HomePage() {
             <SectionHeader
               id="home-offers"
               title="Special offers"
-              description="Items currently reduced. The price shown is the discounted price."
+              description="Prices shown are the reduced prices."
               href="/shop?sale=1"
               linkLabel="All offers"
             />
@@ -151,7 +151,7 @@ export default async function HomePage() {
 
       {newArrivals.length > 0 ? (
         <Section labelledBy="home-new">
-          <SectionHeader id="home-new" title="New arrivals" description="Just added to the shop" href="/shop?new=1" linkLabel="See all new" />
+          <SectionHeader id="home-new" title="New arrivals" href="/shop?new=1" linkLabel="See all new" />
           <ProductGrid products={newArrivals} whatsappHref={whatsappHref} isSignedIn={isSignedIn} wishlistedIds={wishlisted} priorityCount={0} />
         </Section>
       ) : null}
@@ -160,12 +160,12 @@ export default async function HomePage() {
         <SectionHeader id="home-why" title="Why shop with us" />
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { title: 'One stop for the whole house', text: 'Kitchenware, utensils, buckets and basins, storage, cleaning and general household items in one place, so you are not walking between shops.' },
-            { title: 'Prices that make sense', text: 'We stock practical, hard-wearing everyday items and keep prices affordable. What you see on the product page is what you pay, plus delivery if you choose it.' },
-            { title: 'Order the way that suits you', text: 'Add to cart and check out online, or simply send your list on WhatsApp and we will confirm availability and the total.' },
-            { title: 'Collect or have it delivered', text: 'Pick up at the shop at no extra cost, or choose delivery and we will confirm the fee for your area before dispatch.' },
-            { title: 'A real person on the other end', text: 'Questions about a size, a colour or whether something is in stock? Message us and we will check and reply.' },
-            { title: 'No account required', text: 'You can shop and check out as a guest. Create an account only if you want your orders, addresses and wishlist saved for next time.' },
+            { title: 'Everything in one place', text: 'Kitchen, household, storage and cleaning — no walking between shops.' },
+            { title: 'Honest prices', text: 'The price on the product page is what you pay, plus delivery if you choose it.' },
+            { title: 'Order your way', text: 'Check out online, or send your list on WhatsApp.' },
+            { title: 'Collect or delivered', text: 'Pickup is free. Delivery fees are shown before you confirm.' },
+            { title: 'A real person replies', text: 'Ask about a size, a colour or stock and we will check.' },
+            { title: 'No account needed', text: 'Check out as a guest. Sign up only if you want your details saved.' },
           ].map((item) => (
             <div key={item.title} className="card p-4">
               <p className="text-sm font-semibold text-ink">{item.title}</p>
@@ -198,10 +198,9 @@ export default async function HomePage() {
       <Section className="pt-0">
         <div className="card flex flex-col items-start gap-4 bg-brand-700 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
-            <h2 className="text-xl font-bold">Cannot find what you are looking for?</h2>
+            <h2 className="text-xl font-bold">Cannot find what you need?</h2>
             <p className="mt-1 text-sm text-brand-50/90">
-              Send us your list on WhatsApp or call the shop. If we do not have it, we will tell you
-              honestly and try to source it.
+              Message us. If we do not have it, we will try to source it.
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-2">

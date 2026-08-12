@@ -20,7 +20,7 @@ export default async function AddressesPage() {
   return (
     <div className="max-w-2xl">
       <h1>Saved addresses</h1>
-      <p className="mt-1 text-sm text-muted">Save the places we deliver to so repeat orders take seconds.</p>
+      <p className="mt-1 text-sm text-muted">Save places you order to, so repeat orders take seconds.</p>
       <div className="mt-5">
         <AddressManager
           addresses={rows.map((a) => ({

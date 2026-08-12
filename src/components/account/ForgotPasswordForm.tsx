@@ -40,8 +40,7 @@ export function ForgotPasswordForm() {
       <TextField label="Phone number or email" required autoFocus value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="0712345678" />
       <Button type="submit" fullWidth loading={submitting}>{submitting ? 'Sending…' : 'Send reset link'}</Button>
       <p className="text-xs leading-relaxed text-muted">
-        For your security we give the same answer whether or not an account exists. If you do not
-        receive anything, please contact us and we will help you directly.
+        We give the same answer either way, for your security. Nothing arrived? Contact us.
       </p>
     </form>
   );

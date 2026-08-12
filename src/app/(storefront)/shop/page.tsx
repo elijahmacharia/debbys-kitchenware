@@ -70,7 +70,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
               title={filters.q ? `No products match “${filters.q}”` : 'No products match these filters'}
               description={
                 filters.q
-                  ? 'Try a shorter word, check the spelling, or browse the categories. You can also ask us on WhatsApp — we may have it in the shop.'
+                  ? 'Try a shorter word or check the spelling. We may still have it in the shop — ask us.'
                   : 'Try widening the price range or clearing a filter.'
               }
               action={
@@ -89,7 +89,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
           {result.items.length > 0 && result.totalPages <= 1 ? (
             <p className="mt-8 text-center text-sm text-muted">
-              Looking for something specific? <Link href="/contact" className="link">Ask us</Link> — we may have it in the shop.
+              Looking for something else? <Link href="/contact" className="link">Ask us</Link>.
             </p>
           ) : null}
         </div>

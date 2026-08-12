@@ -41,7 +41,7 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
         <EmptyState
           icon={<CartIcon className="h-8 w-8" />}
           title="Your cart is empty"
-          description="Browse the shop and add the things you need. Your cart is saved on this device, so you can come back to it."
+          description="Your cart is saved on this device, so you can come back to it."
           action={
             <>
               <ButtonLink href="/shop">Start shopping</ButtonLink>
@@ -143,8 +143,7 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
           </dl>
 
           <p className="mt-1.5 text-xs text-muted">
-            Pickup at the shop is free. If you choose delivery, the fee for your area is added at
-            checkout before you confirm.
+            Pickup is free. Delivery is added at checkout before you confirm.
           </p>
 
           <div className="mt-4 space-y-2">
@@ -152,7 +151,7 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
             <WhatsAppOrderButton href={whatsappHref} label="Send this cart on WhatsApp" fullWidth source="cart" />
           </div>
 
-          <p className="mt-3 text-center text-xs text-muted">No account needed — you can check out as a guest.</p>
+          <p className="mt-3 text-center text-xs text-muted">No account needed.</p>
         </aside>
       </div>
     </>

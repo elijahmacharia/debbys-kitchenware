@@ -57,7 +57,7 @@ export function ProfileForm({ customer }: { customer: { name: string; phone: str
       <TextField
         label="Phone number" required type="tel" autoComplete="tel"
         value={form.phone} onChange={(e) => set('phone', e.target.value)} error={errors.phone}
-        hint="This is also your sign-in name. Changing it changes how you sign in."
+        hint="Also your sign-in name."
       />
       <TextField label="Email address" type="email" autoComplete="email" value={form.email} onChange={(e) => set('email', e.target.value)} error={errors.email} />
 

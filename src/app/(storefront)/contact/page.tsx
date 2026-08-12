@@ -24,8 +24,7 @@ export default function ContactPage() {
       <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Contact' }]} />
       <h1 className="mt-3">Contact us</h1>
       <p className="mt-1 max-w-2xl text-sm text-muted">
-        Questions about a product, an order, or delivery to your area? Send us a message and we will get
-        back to you.
+        Questions about a product, an order or delivery? Send us a message.
       </p>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_20rem] lg:items-start">
@@ -40,8 +39,7 @@ export default function ContactPage() {
 
             {!hasAnyContact ? (
               <Alert tone="warning" className="mt-3">
-                Contact details have not been added to the site yet. Use the form and we will still
-                receive your message.
+                Contact details are not set up yet. Use the form and we will still get your message.
               </Alert>
             ) : null}
 

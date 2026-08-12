@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Browser tab icon. Matches the wordmark in the header: a white "D" on the
+    brand green. SVG so it stays sharp on any display, and it is under 400
+    bytes so it costs nothing to load.
+    Replace this file with the real logo when artwork exists — no code change
+    is needed, Next.js picks up whatever is here.
+  -->
+  <rect width="64" height="64" rx="14" fill="#1f6b52"/>
+  <path d="M20 15h13.5c10.2 0 17 6.6 17 17s-6.8 17-17 17H20V15Zm10 8.6v16.8h3.2c5.6 0 9.2-3.3 9.2-8.4s-3.6-8.4-9.2-8.4H30Z" fill="#ffffff"/>
+</svg>

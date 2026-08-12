@@ -33,7 +33,7 @@ export default async function AccountPage() {
     <div className="space-y-6">
       <div>
         <h1>Hello, {customer.name.split(' ')[0]} 👋</h1>
-        <p className="mt-1 text-sm text-muted">Here is what is happening with your orders.</p>
+        
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -74,7 +74,7 @@ export default async function AccountPage() {
           <EmptyState
             icon={<PackageIcon className="h-8 w-8" />}
             title="You have not placed any orders yet"
-            description="When you place an order it will show here, with its status and full details."
+            description="Your orders will show here."
             action={<ButtonLink href="/shop">Start shopping</ButtonLink>}
           />
         ) : (

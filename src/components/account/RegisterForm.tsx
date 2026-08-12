@@ -78,17 +78,17 @@ export function RegisterForm() {
       <TextField
         label="Phone number" required type="tel" inputMode="tel" autoComplete="tel" placeholder="0712345678"
         value={form.phone} onChange={(e) => set('phone', e.target.value)} error={errors.phone}
-        hint="This is how you will sign in, and how we reach you about orders."
+        hint="How you sign in, and how we reach you."
       />
       <TextField
         label="Email address" type="email" autoComplete="email"
         value={form.email} onChange={(e) => set('email', e.target.value)} error={errors.email}
-        hint="Optional. Useful for password resets once email is set up."
+        hint="Optional."
       />
       <TextField
         label="Password" required type="password" autoComplete="new-password"
         value={form.password} onChange={(e) => set('password', e.target.value)} error={errors.password}
-        hint="At least 8 characters, including a letter and a number."
+        hint="8+ characters, with a letter and a number."
       />
 
       <CheckboxField

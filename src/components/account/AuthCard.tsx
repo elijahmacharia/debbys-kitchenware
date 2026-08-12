@@ -16,8 +16,7 @@ export function AuthCard({
         </div>
         {footer ? <div className="mt-4 text-center text-sm text-muted">{footer}</div> : null}
         <p className="mt-6 text-center text-xs text-muted">
-          You never need an account to shop at {business.name}.{' '}
-          <Link href="/shop" className="link">Continue as a guest</Link>
+          No account needed to shop. <Link href="/shop" className="link">Continue as a guest</Link>
         </p>
       </div>
     </div>

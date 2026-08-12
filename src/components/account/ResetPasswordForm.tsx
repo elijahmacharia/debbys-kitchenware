@@ -72,7 +72,7 @@ export function ResetPasswordForm() {
       <TextField
         label="New password" required type="password" autoComplete="new-password" autoFocus
         value={password} onChange={(e) => setPassword(e.target.value)} error={errors.password}
-        hint="At least 8 characters, including a letter and a number."
+        hint="8+ characters, with a letter and a number."
       />
       <TextField
         label="Confirm new password" required type="password" autoComplete="new-password"

@@ -26,25 +26,18 @@ export default async function DeliveryPage() {
 
       <div className="prose-page mt-5">
         <h2>Collect at the shop</h2>
-        <p>
-          Pickup is free. Place your order, and we will let you know as soon as it is packed and ready.
-          Bring your order number.
-        </p>
+        <p>Free. We tell you when it is packed and ready — bring your order number.</p>
         {!isPlaceholder(business.address) ? <p><strong className="text-ink">Where:</strong> {business.address}</p> : null}
         {!isPlaceholder(business.hours) ? <p><strong className="text-ink">When:</strong> {business.hours}</p> : null}
 
         <h2>Delivery</h2>
         {settings.deliveryNotice ? <p>{settings.deliveryNotice}</p> : null}
-        <p>
-          Choose delivery at checkout and pick your area. The fee for that area is added to your total
-          before you confirm, so there are no surprises.
-        </p>
+        <p>Pick your area at checkout. The fee is added to your total before you confirm.</p>
       </div>
 
       {zones.length === 0 ? (
         <Alert tone="warning" className="mt-5" title="Delivery areas are not set up yet">
-          No delivery zones have been switched on. For now, please choose shop pickup at checkout, or ask
-          us about delivery to your area and we will arrange it directly.
+          No zones are switched on yet. Choose shop pickup at checkout, or ask us about your area.
         </Alert>
       ) : (
         <div className="mt-5 overflow-hidden rounded-card border border-line">
@@ -79,22 +72,18 @@ export default async function DeliveryPage() {
       <div className="prose-page mt-8">
         <h2>What we need from you</h2>
         <p>
-          Most homes here are found by landmark rather than street number, so at checkout we ask for your
-          county, town and area, then the estate, building and nearest landmark. Anything else that helps
-          the rider find you quickly — a shop opposite, the colour of a gate — goes in the directions box.
+          County, town and area, then estate, building and nearest landmark. Landmarks find you faster
+          than street names — a shop opposite, the colour of a gate.
         </p>
 
         <h2>Not in a listed area?</h2>
         <p>
-          Choose the closest option, or the &ldquo;other areas&rdquo; option if it is available, and we
-          will confirm whether we can reach you and what it will cost before dispatching. You can also
-          just ask us first.
+          Pick the closest option, or &ldquo;other areas&rdquo;, and we will confirm whether we can reach
+          you and what it costs before dispatch.
         </p>
 
         <h2>Questions</h2>
-        <p>
-          See the <Link href="/faq">FAQ</Link>, or <Link href="/contact">contact us</Link>.
-        </p>
+        <p>See the <Link href="/faq">FAQ</Link>, or <Link href="/contact">contact us</Link>.</p>
       </div>
 
       {whatsappHref ? (

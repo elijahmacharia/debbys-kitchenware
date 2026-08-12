@@ -60,7 +60,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
         </span>
         <h1 className="mt-4">Thank you, we have your order</h1>
         <p className="mt-1.5 text-sm text-muted">
-          Your order number is <strong className="font-mono text-base text-ink">{order.orderNumber}</strong>. Please keep it for reference.
+          Order <strong className="font-mono text-base text-ink">{order.orderNumber}</strong> — keep this number.
         </p>
       </div>
 
@@ -69,16 +69,15 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
         Payment status stays "awaiting payment" until a person confirms it.
       */}
       <Alert tone="info" className="mt-5" title="What happens next">
-        We have received your order but it is <strong>not paid or confirmed yet</strong>. We will contact
-        you on <strong>{order.customerPhone}</strong> to confirm availability and, if you chose delivery,
-        the delivery fee for your area.
+        Your order is <strong>not paid or confirmed yet</strong>. We will contact you on{' '}
+        <strong>{order.customerPhone}</strong> to confirm stock and, for delivery, the fee for your area.
       </Alert>
 
       {paymentMethod ? (
         <section className="card mt-4 p-4" aria-labelledby="how-to-pay">
           <h2 id="how-to-pay" className="text-sm font-bold">How to pay — {paymentMethod.label}</h2>
           <p className="mt-1 text-sm leading-relaxed text-muted">{paymentMethod.instructions}</p>
-          <p className="mt-2 text-xs text-muted">Please do not send money to any number we have not confirmed with you directly.</p>
+          <p className="mt-2 text-xs text-muted">Do not send money to any number we have not confirmed directly.</p>
         </section>
       ) : null}
 
@@ -99,8 +98,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
         <div className="card mt-6 bg-brand-50 p-4 text-center">
           <p className="text-sm font-semibold text-brand-900">Want to track future orders more easily?</p>
           <p className="mt-1 text-sm text-brand-800/80">
-            Create an account to keep your order history, saved addresses and wishlist in one place. It is
-            completely optional — you can keep checking out as a guest.
+            Keep your order history, addresses and wishlist in one place. Entirely optional.
           </p>
           <div className="mt-3 flex flex-wrap justify-center gap-2">
             <ButtonLink href="/register" size="sm">Create an account</ButtonLink>

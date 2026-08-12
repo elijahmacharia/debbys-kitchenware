@@ -122,7 +122,7 @@ export function AddressManager({ addresses }: { addresses: SavedAddress[] }) {
         <EmptyState
           icon={<MapPinIcon className="h-8 w-8" />}
           title="No saved addresses yet"
-          description="Save the places we deliver to and your next order will be a few taps instead of a full form."
+          description="Save a place and your next order is a few taps."
           action={<Button onClick={startCreate}><PlusIcon className="h-4 w-4" />Add an address</Button>}
         />
       ) : null}

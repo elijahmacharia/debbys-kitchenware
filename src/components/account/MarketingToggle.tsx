@@ -40,7 +40,7 @@ export function MarketingToggle({ initial }: { initial: boolean }) {
         label="Let me know about new products and special offers"
         checked={optIn}
         onChange={(e) => { setOptIn(e.target.checked); setMessage(null); }}
-        hint="We will only use this for occasional updates, never for anything else."
+        hint="Occasional updates only."
       />
       <Button size="sm" onClick={save} loading={saving} type="button">{saving ? 'Saving…' : 'Save preference'}</Button>
     </section>

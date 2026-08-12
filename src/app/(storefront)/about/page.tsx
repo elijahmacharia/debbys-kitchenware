@@ -27,10 +27,9 @@ export default async function AboutPage() {
       */}
       <div className="prose-page mt-5">
         <p>
-          {business.name} sells kitchenware, kitchen utensils, household goods, plastic products,
-          storage and cleaning items — the everyday things a home actually runs on. If you are setting
-          up a new place, replacing something that finally gave up, or just restocking, the aim is that
-          you can find it here in one go rather than walking between shops.
+          {business.name} sells kitchenware, utensils, household goods, plastic products, storage and
+          cleaning items — the everyday things a home runs on. Setting up a new place, replacing
+          something that gave up, or just restocking: the aim is you find it all here in one go.
         </p>
 
         <h2>What we stock</h2>
@@ -44,41 +43,32 @@ export default async function AboutPage() {
           ))}
         </ul>
         <p>
-          Stock changes, so what you see on the site is what we currently have. If something you need is
-          not listed, ask us — we may have it in the shop or be able to source it.
+          What you see is what we have. If something is not listed, ask — we may have it in the shop.
         </p>
 
         <h2>How to order</h2>
-        <p>There are two ways, and neither requires an account:</p>
+        <p>Two ways, neither needs an account:</p>
         <ul>
-          <li>
-            <strong>On the website.</strong> Add what you need to your cart and check out. You will get an
-            order number, and we will contact you to confirm.
-          </li>
-          <li>
-            <strong>On WhatsApp.</strong> Use any of the WhatsApp buttons and your cart is turned into a
-            message you can send us as it is. Good if you would rather just talk to a person.
-          </li>
+          <li><strong>On the website.</strong> Add to cart, check out, get an order number.</li>
+          <li><strong>On WhatsApp.</strong> Any WhatsApp button turns your cart into a message to send us.</li>
         </ul>
 
         <h2>Delivery and pickup</h2>
         <p>
-          You can collect your order at the shop at no extra cost, or choose delivery. Delivery fees
-          depend on your area and are shown at checkout before you confirm. See{' '}
-          <Link href="/delivery">delivery and pickup</Link> for the details.
+          Collect free at the shop, or choose delivery — fees depend on your area and are shown at
+          checkout. See <Link href="/delivery">delivery and pickup</Link>.
         </p>
 
         <h2>Paying</h2>
         <p>
-          Nothing is charged on this website. You pay by M-Pesa, or in cash on delivery or at pickup where
-          those options are available. <Link href="/payment">How to pay</Link> explains each method.
+          Nothing is charged on this website. M-Pesa, or cash on delivery or pickup where available.
+          See <Link href="/payment">how to pay</Link>.
         </p>
 
         <h2>Customer service</h2>
         <p>
-          If something is wrong with your order, tell us. We would much rather hear about it and put it
-          right than have you not come back. You can reach us on{' '}
-          <Link href="/contact">the contact page</Link>, by phone, or on WhatsApp.
+          If something is wrong, tell us. We would rather put it right than lose you.{' '}
+          <Link href="/contact">Contact us</Link>, by phone or WhatsApp.
         </p>
 
         {settings.aboutExtra ? (

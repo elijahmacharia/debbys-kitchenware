@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDownIcon, MenuIcon, XIcon } from '@/components/icons';
@@ -10,6 +11,14 @@ export interface MenuCategory { name: string; slug: string; children: { name: st
 
 /**
  * Slide-out navigation for phones.
+ *
+ * The drawer is rendered into document.body through a portal, NOT in place.
+ * That is not a stylistic choice — the header it lives in uses `backdrop-blur`,
+ * and any element with a backdrop-filter becomes the containing block for its
+ * `position: fixed` descendants. Rendered inline, the drawer's `fixed inset-0`
+ * would size itself to the header rather than the viewport, collapsing into a
+ * stub a couple of hundred pixels tall. The portal moves it out of that
+ * containing block so it covers the screen properly.
  *
  * Closes on route change and on Escape, returns focus to the trigger, and
  * locks body scroll while open so the page behind does not move under the
@@ -25,10 +34,14 @@ export function MobileMenu({
 }) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
+  // document does not exist during server rendering, so the portal can only
+  // be created once the component has mounted in the browser.
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => setMounted(true), []);
   useEffect(() => { setOpen(false); }, [pathname]);
 
   useEffect(() => {
@@ -61,7 +74,7 @@ export function MobileMenu({
         <MenuIcon className="h-6 w-6" />
       </button>
 
-      {open ? (
+      {open && mounted ? createPortal(
         <div className="fixed inset-0 z-[70] lg:hidden">
           <button type="button" className="absolute inset-0 animate-fade-in bg-ink/40" aria-label="Close menu" onClick={() => setOpen(false)} />
           <div
@@ -142,7 +155,8 @@ export function MobileMenu({
               </div>
             ) : null}
           </div>
-        </div>
+        </div>,
+        document.body,
       ) : null}
     </>
   );
