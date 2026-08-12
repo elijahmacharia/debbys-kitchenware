@@ -44,7 +44,7 @@ export function productEnquiryMessage(product: {
     `Hello ${business.name},`,
     '',
     'I am interested in this product:',
-    `${product.name} (${product.sku}) — ${formatKsh(product.priceCents)}`,
+    `${product.name} (${product.sku}), ${formatKsh(product.priceCents)}`,
   ];
   if (product.url) lines.push(product.url);
   lines.push('', 'Is it available?');
@@ -64,7 +64,7 @@ export function orderMessage(ctx: WhatsAppOrderContext): string {
   out.push('', 'Products:');
 
   ctx.lines.forEach((line, index) => {
-    out.push(`${index + 1}. ${line.name} x ${line.quantity} — ${formatKsh(line.unitPriceCents * line.quantity)}`);
+    out.push(`${index + 1}. ${line.name} x ${line.quantity}, ${formatKsh(line.unitPriceCents * line.quantity)}`);
   });
 
   out.push('', `Subtotal: ${formatKsh(ctx.subtotalCents)}`);

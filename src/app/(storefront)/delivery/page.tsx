@@ -26,7 +26,7 @@ export default async function DeliveryPage() {
 
       <div className="prose-page mt-5">
         <h2>Collect at the shop</h2>
-        <p>Free. We tell you when it is packed and ready — bring your order number.</p>
+        <p>Free. We tell you when it is packed and ready, bring your order number.</p>
         {!isPlaceholder(business.address) ? <p><strong className="text-ink">Where:</strong> {business.address}</p> : null}
         {!isPlaceholder(business.hours) ? <p><strong className="text-ink">When:</strong> {business.hours}</p> : null}
 
@@ -73,7 +73,7 @@ export default async function DeliveryPage() {
         <h2>What we need from you</h2>
         <p>
           County, town and area, then estate, building and nearest landmark. Landmarks find you faster
-          than street names — a shop opposite, the colour of a gate.
+          than street names, a shop opposite, the colour of a gate.
         </p>
 
         <h2>Not in a listed area?</h2>

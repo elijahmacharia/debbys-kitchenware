@@ -73,7 +73,7 @@ export default async function AdminSettingsPage() {
           ))}
         </ul>
         <p className="border-t border-line bg-canvas px-4 py-3 text-xs text-muted">
-          Turn a method on by setting its value in <code>.env</code> — for example{' '}
+          Turn a method on by setting its value in <code>.env</code>, for example{' '}
           <code>NEXT_PUBLIC_MPESA_TILL</code>. Automated M-Pesa (STK push) is not implemented.
         </p>
       </section>

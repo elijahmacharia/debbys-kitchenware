@@ -26,7 +26,7 @@ export function LegalPage({
         <div className="prose-page mt-6 whitespace-pre-line">{custom}</div>
       ) : (
         <>
-          <Alert tone="warning" className="mt-5" title="Draft — not yet approved by the business">
+          <Alert tone="warning" className="mt-5" title="Draft, not yet approved by the business">
             This is a starting point written from how the website actually works. {business.name} must
             review it, fill in the bracketed items and have it checked before relying on it. The owner can
             replace this entire page from Admin &gt; Settings.

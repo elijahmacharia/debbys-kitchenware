@@ -29,7 +29,7 @@ export default async function SettingsPage() {
         <Alert tone="info" className="mt-3">
           To request a copy of your data, or to have your account deleted, please{' '}
           <Link href="/contact" className="link">contact us</Link> and we will handle it. Self-service
-          deletion is not built yet — see the project documentation.
+          deletion is not built yet, see the project documentation.
         </Alert>
       </section>
 

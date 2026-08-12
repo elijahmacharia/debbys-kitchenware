@@ -132,7 +132,7 @@ async function main() {
     await db.insert(productImages).values({
       productId: product.id,
       url: `/demo-images/${fileName}`,
-      alt: `${item.name} — ${item.category} at Debby's Kitchenware`,
+      alt: `${item.name}, ${item.category} at Debby's Kitchenware`,
       sortOrder: 0,
     });
 
@@ -163,7 +163,7 @@ async function main() {
   await db.insert(settings).values([
     {
       key: 'shop.announcement',
-      value: 'Demo catalogue — products, prices and delivery fees are placeholders and are not yet the real ones.',
+      value: 'Demo catalogue, products, prices and delivery fees are placeholders and are not yet the real ones.',
     },
     {
       key: 'delivery.notice',

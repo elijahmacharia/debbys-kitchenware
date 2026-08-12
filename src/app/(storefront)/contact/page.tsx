@@ -8,7 +8,7 @@ import { ClockIcon, MailIcon, MapPinIcon, PhoneIcon, WhatsAppIcon } from '@/comp
 
 export const metadata: Metadata = {
   title: 'Contact us',
-  description: `Get in touch with ${business.name} — phone, WhatsApp, email, our location and opening hours.`,
+  description: `Get in touch with ${business.name}, phone, WhatsApp, email, our location and opening hours.`,
   alternates: { canonical: '/contact' },
 };
 

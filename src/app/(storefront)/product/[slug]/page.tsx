@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const title = product.metaTitle || product.name;
   const description =
     product.metaDescription ||
-    `${product.name} — ${product.description.slice(0, 140).trim()}${product.description.length > 140 ? '…' : ''}`;
+    `${product.name}, ${product.description.slice(0, 140).trim()}${product.description.length > 140 ? '…' : ''}`;
 
   return {
     title,

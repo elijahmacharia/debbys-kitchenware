@@ -9,7 +9,7 @@ import { ButtonLink } from '@/components/ui/Button';
 export const metadata: Metadata = {
   title: 'About us',
   description:
-    "About Debby's Kitchenware — what we sell, how to order, and what to expect from delivery, pickup and customer service.",
+    "About Debby's Kitchenware, what we sell, how to order, and what to expect from delivery, pickup and customer service.",
   alternates: { canonical: '/about' },
 };
 
@@ -23,12 +23,12 @@ export default async function AboutPage() {
 
       {/*
         Everything below describes how the shop works. No founding date, no
-        staff count, no awards — nothing the business has not told us.
+        staff count, no awards, nothing the business has not told us.
       */}
       <div className="prose-page mt-5">
         <p>
           {business.name} sells kitchenware, utensils, household goods, plastic products, storage and
-          cleaning items — the everyday things a home runs on. Setting up a new place, replacing
+          cleaning items, the everyday things a home runs on. Setting up a new place, replacing
           something that gave up, or just restocking: the aim is you find it all here in one go.
         </p>
 
@@ -38,12 +38,12 @@ export default async function AboutPage() {
           {tree.map((category) => (
             <li key={category.id}>
               <Link href={`/category/${category.slug}`}>{category.name}</Link>
-              {category.children.length > 0 ? ` — ${category.children.map((c) => c.name).join(', ')}` : null}
+              {category.children.length > 0 ? `, ${category.children.map((c) => c.name).join(', ')}` : null}
             </li>
           ))}
         </ul>
         <p>
-          What you see is what we have. If something is not listed, ask — we may have it in the shop.
+          What you see is what we have. If something is not listed, ask, we may have it in the shop.
         </p>
 
         <h2>How to order</h2>
@@ -55,7 +55,7 @@ export default async function AboutPage() {
 
         <h2>Delivery and pickup</h2>
         <p>
-          Collect free at the shop, or choose delivery — fees depend on your area and are shown at
+          Collect free at the shop, or choose delivery, fees depend on your area and are shown at
           checkout. See <Link href="/delivery">delivery and pickup</Link>.
         </p>
 

@@ -11,7 +11,7 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'Checkout',
-  description: 'Complete your order — pickup or delivery, with M-Pesa or cash payment options.',
+  description: 'Complete your order, pickup or delivery, with M-Pesa or cash payment options.',
   robots: { index: false, follow: false },
 };
 

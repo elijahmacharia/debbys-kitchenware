@@ -11,7 +11,7 @@ import { business } from '@/lib/config';
  *
  * 1200x630 is the size every platform crops from.
  */
-export const alt = `${business.name} — kitchenware and household essentials`;
+export const alt = `${business.name}, kitchenware and household essentials`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

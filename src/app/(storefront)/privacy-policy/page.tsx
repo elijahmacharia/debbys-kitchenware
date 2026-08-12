@@ -29,7 +29,7 @@ export default async function PrivacyPolicyPage() {
       <h2>Why we collect it</h2>
       <ul>
         <li>To take, pack and deliver your order.</li>
-        <li>To contact you about that order — by phone or WhatsApp.</li>
+        <li>To contact you about that order, by phone or WhatsApp.</li>
         <li>To keep a record of what we have sold, as any shop must.</li>
         <li>To send you offers, but only if you tick the box asking for them. You can turn that off at any time in your account settings.</li>
       </ul>
@@ -49,11 +49,11 @@ export default async function PrivacyPolicyPage() {
       <p>We use a small number of cookies that are necessary for the site to work: one to keep you signed
         in, and one that lets a guest reopen the order they just placed. Your shopping cart is stored in
         your own browser, not on our servers, unless you are signed in. We do not use advertising
-        cookies. [If Google Analytics is switched on, it will also set its own cookies — the business
+        cookies. [If Google Analytics is switched on, it will also set its own cookies, the business
         must confirm whether it is in use.]</p>
 
       <h2>How long we keep it</h2>
-      <p>[The business must decide and state a retention period — for example, order records kept for
+      <p>[The business must decide and state a retention period, for example, order records kept for
         [NUMBER] years for accounting purposes, and account data kept until you ask us to delete it.]</p>
 
       <h2>Your rights</h2>

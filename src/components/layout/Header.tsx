@@ -39,7 +39,7 @@ export async function Header() {
     <header className="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/85">
       <AnnouncementBar message={settings.announcement} />
 
-      {/* Utility strip — desktop only, nothing essential lives here. */}
+      {/* Utility strip, desktop only, nothing essential lives here. */}
       <div className="hidden border-b border-line bg-canvas lg:block">
         <div className="container-site flex h-9 items-center justify-between text-xs text-muted">
           <p>{business.tagline} · Pickup &amp; local delivery</p>

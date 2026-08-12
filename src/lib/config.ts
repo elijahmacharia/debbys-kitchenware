@@ -97,7 +97,7 @@ export const paymentMethods: PaymentMethodConfig[] = [
   },
   {
     key: 'MPESA_TILL',
-    label: 'M-Pesa (Buy Goods — Till)',
+    label: 'M-Pesa (Buy Goods, Till)',
     instructions: isPlaceholder(till)
       ? 'M-Pesa Till number has not been configured yet. We will send you payment details on WhatsApp after you place your order.'
       : `Go to M-Pesa > Lipa na M-Pesa > Buy Goods and Services. Enter Till Number ${till}, then the order total. Send us the M-Pesa confirmation message on WhatsApp so we can confirm your order.`,

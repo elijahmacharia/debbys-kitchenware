@@ -9,7 +9,6 @@ import { effectivePriceCents } from '@/lib/money';
 import type { ProductListItem } from '@/lib/queries/products';
 import { AddToCartButton } from './AddToCartButton';
 import { WishlistButton } from './WishlistButton';
-import { WhatsAppOrderButton } from './WhatsAppOrderButton';
 
 /**
  * The product card used in every grid on the site.
@@ -22,10 +21,11 @@ import { WhatsAppOrderButton } from './WhatsAppOrderButton';
  *  - Only the first row of cards loads eagerly; the rest are lazy.
  */
 export function ProductCard({
-  product, whatsappHref, isSignedIn, isWishlisted, priority,
+  product, isSignedIn, isWishlisted, priority,
 }: {
   product: ProductListItem;
-  whatsappHref: string | null;
+  /** Accepted but unused: enquiries go through the floating WhatsApp button. */
+  whatsappHref?: string | null;
   isSignedIn: boolean;
   isWishlisted?: boolean;
   priority?: boolean;
@@ -103,11 +103,6 @@ export function ProductCard({
               unit: product.unit,
             }}
           />
-
-          <div className="grid grid-cols-2 gap-2">
-            <Link href={href} className="btn-secondary btn-sm">View</Link>
-            <WhatsAppOrderButton href={whatsappHref} label="Ask" size="sm" source={`product-card:${product.sku}`} />
-          </div>
         </div>
       </div>
     </article>

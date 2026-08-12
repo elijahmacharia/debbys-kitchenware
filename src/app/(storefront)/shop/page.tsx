@@ -70,7 +70,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
               title={filters.q ? `No products match “${filters.q}”` : 'No products match these filters'}
               description={
                 filters.q
-                  ? 'Try a shorter word or check the spelling. We may still have it in the shop — ask us.'
+                  ? 'Try a shorter word or check the spelling. We may still have it in the shop, ask us.'
                   : 'Try widening the price range or clearing a filter.'
               }
               action={

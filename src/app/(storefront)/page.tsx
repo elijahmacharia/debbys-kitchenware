@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getFeaturedProducts, getNewArrivals, getSaleProducts } from '@/lib/queries/products';
@@ -15,7 +16,7 @@ import { WebsiteSearchJsonLd } from '@/components/seo/JsonLd';
 import { CartIcon, GridIcon, PackageIcon, StarIcon, StoreIcon, TagIcon, TruckIcon, WhatsAppIcon } from '@/components/icons';
 
 export const metadata: Metadata = {
-  title: `${business.name} — Kitchenware & Household Essentials in Kenya`,
+  title: `${business.name}, Kitchenware & Household Essentials in Kenya`,
   description:
     'Everything you need for your kitchen and home. Shop quality kitchenware, utensils, buckets, basins, storage and cleaning products at affordable prices. Pickup or delivery, and ordering on WhatsApp.',
   alternates: { canonical: '/' },
@@ -164,16 +165,32 @@ export default async function HomePage() {
         <SectionHeader id="home-why" title="Why shop with us" />
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { title: 'Everything in one place', text: 'Kitchen, household, storage and cleaning — no walking between shops.' },
-            { title: 'Honest prices', text: 'The price on the product page is what you pay, plus delivery if you choose it.' },
-            { title: 'Order your way', text: 'Check out online, or send your list on WhatsApp.' },
-            { title: 'Collect or delivered', text: 'Pickup is free. Delivery fees are shown before you confirm.' },
-            { title: 'A real person replies', text: 'Ask about a size, a colour or stock and we will check.' },
-            { title: 'No account needed', text: 'Check out as a guest. Sign up only if you want your details saved.' },
+            { image: 'one-place', title: 'Everything in one place', text: 'Kitchen, household, storage and cleaning, no walking between shops.' },
+            { image: 'honest-prices', title: 'Honest prices', text: 'The price on the product page is what you pay, plus delivery if you choose it.' },
+            { image: 'order-your-way', title: 'Order your way', text: 'Check out online, or send your list on WhatsApp.' },
+            { image: 'collect-or-delivered', title: 'Collect or delivered', text: 'Pickup is free. Delivery fees are shown before you confirm.' },
+            { image: 'real-person', title: 'A real person replies', text: 'Ask about a size, a colour or stock and we will check.' },
+            { image: 'no-account', title: 'No account needed', text: 'Check out as a guest. Sign up only if you want your details saved.' },
           ].map((item) => (
-            <div key={item.title} className="card p-4">
-              <p className="text-sm font-semibold text-ink">{item.title}</p>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted">{item.text}</p>
+            <div key={item.title} className="card overflow-hidden">
+              {/*
+                Fixed aspect ratio so the row of cards cannot jump around as
+                the images load. Lazy, because this section is below the fold.
+              */}
+              <div className="relative aspect-[800/380] bg-brand-50">
+                <Image
+                  src={`/banners/${item.image}.svg`}
+                  alt=""
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  loading="lazy"
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <p className="text-sm font-semibold text-ink">{item.title}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">{item.text}</p>
+              </div>
             </div>
           ))}
         </div>

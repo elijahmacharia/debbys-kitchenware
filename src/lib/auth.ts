@@ -21,7 +21,7 @@ export const ADMIN_COOKIE = 'dk_admin_session';
 export const GUEST_ORDERS_COOKIE = 'dk_guest_orders';
 
 const CUSTOMER_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
-const ADMIN_MAX_AGE = 60 * 60 * 8;          // 8 hours — staff sessions end same-day
+const ADMIN_MAX_AGE = 60 * 60 * 8;          // 8 hours, staff sessions end same-day
 const BCRYPT_ROUNDS = 12;
 
 export type Audience = 'customer' | 'admin';

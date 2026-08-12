@@ -20,7 +20,7 @@ export default async function AdminCustomersPage({
       </p>
 
       <Alert tone="info" className="mt-4">
-        This list shows only what is needed to serve an order — name, contact details and order totals.
+        This list shows only what is needed to serve an order, name, contact details and order totals.
         Passwords cannot be viewed by anyone, including you: they are stored as one-way hashes.
       </Alert>
 
@@ -56,7 +56,7 @@ export default async function AdminCustomersPage({
                   <td className="px-3 py-2.5">
                     <a href={`tel:${customer.phone}`} className="link">{customer.phone}</a>
                   </td>
-                  <td className="px-3 py-2.5 text-muted">{customer.email ?? '—'}</td>
+                  <td className="px-3 py-2.5 text-muted">{customer.email ?? '-'}</td>
                   <td className="px-3 py-2.5">
                     <Link href={`/admin/orders?q=${encodeURIComponent(customer.phone)}`} className="link">
                       {Number(customer.orderCount)}

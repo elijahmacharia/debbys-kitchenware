@@ -272,7 +272,7 @@ export function CheckoutForm({
                 <span className="block text-sm font-semibold">Deliver to me</span>
                 <span className="block text-xs text-muted">
                   {zones.length === 0
-                    ? 'No delivery areas set up yet — choose pickup or ask us.'
+                    ? 'No delivery areas set up yet, choose pickup or ask us.'
                     : 'Fee depends on your area.'}
                 </span>
               </span>
@@ -292,7 +292,7 @@ export function CheckoutForm({
                         onClick={() => applyAddress(address)}
                         className="rounded-full border border-line px-3 py-1.5 text-xs hover:border-brand-300 hover:bg-brand-50"
                       >
-                        {address.label} — {address.area}{address.isDefault ? ' (default)' : ''}
+                        {address.label}, {address.area}{address.isDefault ? ' (default)' : ''}
                       </button>
                     ))}
                   </div>
@@ -308,14 +308,14 @@ export function CheckoutForm({
                   <option value="">Choose your area…</option>
                   {zones.map((zone) => (
                     <option key={zone.id} value={zone.id}>
-                      {zone.name} — {zone.feeCents === 0 ? 'fee confirmed on WhatsApp' : formatKsh(zone.feeCents)} · {zone.etaText}
+                      {zone.name}, {zone.feeCents === 0 ? 'fee confirmed on WhatsApp' : formatKsh(zone.feeCents)} · {zone.etaText}
                     </option>
                   ))}
                 </SelectField>
                 {selectedZone?.note ? <p className="hint">{selectedZone.note}</p> : null}
                 {selectedZone && selectedZone.feeCents === 0 ? (
                   <Alert tone="info" className="mt-2">
-                    No fixed fee for this area yet. We will confirm the cost before dispatch — the total
+                    No fixed fee for this area yet. We will confirm the cost before dispatch, the total
                     below does not include it.
                   </Alert>
                 ) : null}

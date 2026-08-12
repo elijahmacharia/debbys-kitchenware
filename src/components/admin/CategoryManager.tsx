@@ -72,7 +72,7 @@ export function CategoryManager({ categories, flatOptions }: { categories: Admin
           />
           <div className="grid gap-4 sm:grid-cols-2">
             <SelectField name="parentId" label="Inside which category" defaultValue={category?.parentId ?? ''} error={errors.parentId} hint="Leave blank to make it a top-level department.">
-              <option value="">— Top level —</option>
+              <option value="">- Top level -</option>
               {flatOptions.filter((option) => option.id !== category?.id).map((option) => (
                 <option key={option.id} value={option.id}>{option.label}</option>
               ))}

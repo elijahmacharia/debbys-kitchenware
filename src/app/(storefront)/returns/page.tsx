@@ -23,7 +23,7 @@ export default async function ReturnsPage() {
       <p>
         If an item arrives damaged, is faulty, or is not what you ordered, <Link href="/contact">contact
         us</Link> as soon as you notice. Have your order number ready, and a photo if the item is damaged
-        — it usually settles the matter immediately.
+       , it usually settles the matter immediately.
       </p>
 
       <h2>What we will do</h2>
@@ -33,12 +33,12 @@ export default async function ReturnsPage() {
 
       <h2>The details the business still needs to confirm</h2>
       <ul>
-        <li>How many days you have to report a problem — [NUMBER] days from delivery or collection.</li>
+        <li>How many days you have to report a problem, [NUMBER] days from delivery or collection.</li>
         <li>Whether unopened items can be returned simply because you changed your mind, and within how long.</li>
-        <li>Which items cannot be returned once opened for hygiene reasons — [for example cleaning items, sponges].</li>
+        <li>Which items cannot be returned once opened for hygiene reasons, [for example cleaning items, sponges].</li>
         <li>Whether the item must be in its original packaging.</li>
         <li>Who pays return transport in each case.</li>
-        <li>How long a refund takes and how it is sent back — [for example M-Pesa to the paying number, within NUMBER days].</li>
+        <li>How long a refund takes and how it is sent back, [for example M-Pesa to the paying number, within NUMBER days].</li>
       </ul>
 
       <h2>Your legal rights</h2>

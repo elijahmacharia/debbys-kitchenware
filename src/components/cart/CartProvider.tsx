@@ -211,7 +211,7 @@ export function CartProvider({ children, isSignedIn }: { children: ReactNode; is
           push(`You already have all ${line.stock} available in your cart`, 'info');
           return current;
         }
-        if (capped < wanted) push(`Only ${line.stock} available — quantity set to ${capped}`, 'info');
+        if (capped < wanted) push(`Only ${line.stock} available, quantity set to ${capped}`, 'info');
         else push(`${line.name} added to cart`);
         return current.map((l) => (l.productId === line.productId ? { ...l, ...line, quantity: capped } : l));
       }

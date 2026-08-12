@@ -16,7 +16,7 @@ import { analytics, business, siteUrl } from '@/lib/config';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${business.name} — Kitchenware & Household Essentials in Kenya`,
+    default: `${business.name}, Kitchenware & Household Essentials in Kenya`,
     template: `%s | ${business.name}`,
   },
   description:
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     locale: 'en_KE',
     siteName: business.name,
     url: siteUrl,
-    title: `${business.name} — Kitchenware & Household Essentials`,
+    title: `${business.name}, Kitchenware & Household Essentials`,
     description:
       'Quality kitchenware, household essentials and everyday products at affordable prices. Pickup or local delivery, and ordering on WhatsApp.',
   },

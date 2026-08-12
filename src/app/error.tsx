@@ -19,7 +19,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
       <div className="max-w-md text-center">
         <h1>Something went wrong</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Sorry — that did not work. It is our problem, not yours. Try again, and if it keeps happening
+          Sorry, that did not work. It is our problem, not yours. Try again, and if it keeps happening
           please let us know.
         </p>
         {error.digest ? (

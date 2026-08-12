@@ -60,7 +60,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
         </span>
         <h1 className="mt-4">Thank you, we have your order</h1>
         <p className="mt-1.5 text-sm text-muted">
-          Order <strong className="font-mono text-base text-ink">{order.orderNumber}</strong> — keep this number.
+          Order <strong className="font-mono text-base text-ink">{order.orderNumber}</strong>, keep this number.
         </p>
       </div>
 
@@ -75,7 +75,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
 
       {paymentMethod ? (
         <section className="card mt-4 p-4" aria-labelledby="how-to-pay">
-          <h2 id="how-to-pay" className="text-sm font-bold">How to pay — {paymentMethod.label}</h2>
+          <h2 id="how-to-pay" className="text-sm font-bold">How to pay, {paymentMethod.label}</h2>
           <p className="mt-1 text-sm leading-relaxed text-muted">{paymentMethod.instructions}</p>
           <p className="mt-2 text-xs text-muted">Do not send money to any number we have not confirmed directly.</p>
         </section>

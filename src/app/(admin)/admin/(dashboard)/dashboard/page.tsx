@@ -134,7 +134,7 @@ export default async function AdminDashboardPage() {
       {stats.unreadMessages > 0 ? (
         <Alert tone="info">
           You have {stats.unreadMessages} unread message{stats.unreadMessages === 1 ? '' : 's'} from the
-          contact form. (A screen for reading these is not built yet — see the documentation.)
+          contact form. (A screen for reading these is not built yet, see the documentation.)
         </Alert>
       ) : null}
     </div>
