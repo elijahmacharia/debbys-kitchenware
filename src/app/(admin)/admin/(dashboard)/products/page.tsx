@@ -43,28 +43,28 @@ export default async function AdminProductsPage({
           />
         </div>
       ) : (
-        <div className="mt-5 overflow-x-auto rounded-card border border-line">
-          <table className="w-full min-w-[54rem] text-sm">
+        <div className="admin-panel mt-6 overflow-x-auto">
+          <table className="admin-table min-w-[54rem]">
             <caption className="sr-only">All products with price, stock and visibility</caption>
-            <thead className="bg-canvas text-left">
+            <thead>
               <tr>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Product</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Category</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Price</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Stock</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Shown as</th>
-                <th scope="col" className="px-3 py-2.5 text-right font-semibold">Actions</th>
+                <th scope="col">Product</th>
+                <th scope="col">Category</th>
+                <th scope="col">Price</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Shown as</th>
+                <th scope="col" className="text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line bg-surface">
+            <tbody>
               {products.map((product) => (
                 <tr key={product.id} className={product.isActive ? undefined : 'opacity-60'}>
-                  <th scope="row" className="px-3 py-2.5 text-left font-medium">
+                  <th scope="row">
                     <Link href={`/admin/products/${product.id}`} className="text-ink hover:text-clay-700">{product.name}</Link>
                     <span className="block font-mono text-[11px] font-normal text-subtle">{product.sku}</span>
                   </th>
-                  <td className="px-3 py-2.5 text-muted">{product.categoryName}</td>
-                  <td className="px-3 py-2.5">
+                  <td className="text-muted">{product.categoryName}</td>
+                  <td>
                     {product.salePriceCents ? (
                       <>
                         <span className="font-semibold">{formatKsh(product.salePriceCents)}</span>
@@ -74,20 +74,20 @@ export default async function AdminProductsPage({
                       <span className="font-semibold">{formatKsh(product.priceCents)}</span>
                     )}
                   </td>
-                  <td className="px-3 py-2.5">
+                  <td>
                     <span className={product.stock === 0 ? 'font-semibold text-danger' : product.stock <= product.lowStockAt ? 'font-semibold text-clay-700' : ''}>
                       {product.stock}
                     </span>
                     <span className="block text-[11px] text-subtle">{product.unitsSold} sold</span>
                   </td>
-                  <td className="px-3 py-2.5">
+                  <td>
                     <div className="flex flex-wrap gap-1">
                       {!product.isActive ? <Badge tone="danger">Hidden</Badge> : null}
                       {product.isFeatured ? <Badge tone="brand">Featured</Badge> : null}
                       {product.isNewArrival ? <Badge tone="neutral">New</Badge> : null}
                     </div>
                   </td>
-                  <td className="px-3 py-2.5">
+                  <td>
                     <ProductRowActions
                       productId={product.id}
                       name={product.name}

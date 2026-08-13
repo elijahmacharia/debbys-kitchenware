@@ -32,38 +32,38 @@ export default async function AdminCustomersPage({
       </form>
 
       {customers.length === 0 ? (
-        <p className="mt-6 rounded-card border border-dashed border-line bg-surface p-8 text-center text-sm text-muted">
+        <p className="mt-6 rounded-3xl bg-surface p-10 text-center text-sm text-muted shadow-soft">
           {q ? `No customers match “${q}”.` : 'No customer accounts yet.'}
         </p>
       ) : (
-        <div className="mt-5 overflow-x-auto rounded-card border border-line">
-          <table className="w-full min-w-[44rem] text-sm">
+        <div className="admin-panel mt-6 overflow-x-auto">
+          <table className="admin-table min-w-[44rem]">
             <caption className="sr-only">Customer accounts with order counts</caption>
-            <thead className="bg-canvas text-left">
+            <thead>
               <tr>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Name</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Phone</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Email</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Orders</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Spent</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Joined</th>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Orders</th>
+                <th scope="col">Spent</th>
+                <th scope="col">Joined</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line bg-surface">
+            <tbody>
               {customers.map((customer) => (
                 <tr key={customer.id}>
-                  <th scope="row" className="px-3 py-2.5 text-left font-medium text-ink">{customer.name}</th>
-                  <td className="px-3 py-2.5">
+                  <th scope="row">{customer.name}</th>
+                  <td>
                     <a href={`tel:${customer.phone}`} className="link">{customer.phone}</a>
                   </td>
-                  <td className="px-3 py-2.5 text-muted">{customer.email ?? '-'}</td>
-                  <td className="px-3 py-2.5">
+                  <td className="text-muted">{customer.email ?? '-'}</td>
+                  <td>
                     <Link href={`/admin/orders?q=${encodeURIComponent(customer.phone)}`} className="link">
                       {Number(customer.orderCount)}
                     </Link>
                   </td>
-                  <td className="px-3 py-2.5 font-semibold">{formatKsh(Number(customer.spentCents))}</td>
-                  <td className="px-3 py-2.5 text-xs text-muted">
+                  <td className="font-semibold">{formatKsh(Number(customer.spentCents))}</td>
+                  <td className="text-xs text-muted">
                     {new Date(customer.createdAt).toLocaleDateString('en-KE', { dateStyle: 'medium' })}
                   </td>
                 </tr>

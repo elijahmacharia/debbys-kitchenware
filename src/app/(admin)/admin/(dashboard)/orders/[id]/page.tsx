@@ -67,8 +67,8 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_22rem] lg:items-start">
         <div className="space-y-4">
-          <section className="card overflow-hidden" aria-labelledby="items">
-            <h2 id="items" className="border-b border-line px-4 py-3 text-sm font-bold">
+          <section className="admin-panel" aria-labelledby="items">
+            <h2 id="items" className="px-5 pb-3 pt-5 text-sm font-semibold">
               {order.items.length} item{order.items.length === 1 ? '' : 's'}
             </h2>
             <ul className="divide-y divide-line">
@@ -105,7 +105,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
           </section>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <section className="card p-4" aria-labelledby="customer">
+            <section className="rounded-3xl bg-surface p-5 shadow-soft" aria-labelledby="customer">
               <h2 id="customer" className="text-sm font-bold">Customer</h2>
               <div className="mt-2 space-y-1 text-sm text-muted">
                 <p className="font-medium text-ink">{order.customerName}</p>
@@ -115,7 +115,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
               </div>
             </section>
 
-            <section className="card p-4" aria-labelledby="fulfil">
+            <section className="rounded-3xl bg-surface p-5 shadow-soft" aria-labelledby="fulfil">
               <h2 id="fulfil" className="text-sm font-bold">{FULFILMENT_LABEL[order.fulfilment]}</h2>
               {order.fulfilment === 'DELIVERY' ? (
                 <div className="mt-2 space-y-0.5 text-sm text-muted">
@@ -145,8 +145,8 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
             </section>
           </div>
 
-          <section className="card overflow-hidden" aria-labelledby="history">
-            <h2 id="history" className="border-b border-line px-4 py-3 text-sm font-bold">History</h2>
+          <section className="admin-panel" aria-labelledby="history">
+            <h2 id="history" className="px-5 pb-3 pt-5 text-sm font-semibold">History</h2>
             <ul className="divide-y divide-line text-sm">
               {events.map((event) => (
                 <li key={event.id} className="px-4 py-2.5">

@@ -20,7 +20,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1>Dashboard</h1>
+        <h1 className="text-2xl sm:text-3xl">Dashboard</h1>
         <p className="mt-1 text-sm text-muted">How the shop is doing right now.</p>
       </div>
 
@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
       ) : null}
 
       <section aria-labelledby="sales">
-        <h2 id="sales" className="mb-3 text-base font-bold">Sales</h2>
+        <h2 id="sales" className="mb-3 text-sm font-semibold text-muted">Sales</h2>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Stat label="Sales this month" value={formatKsh(stats.salesThisMonthCents)} hint="Delivered orders only" />
           <Stat label="Sales all time" value={formatKsh(stats.salesAllTimeCents)} hint="Delivered orders only" />
@@ -42,7 +42,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section aria-labelledby="orders-stats">
-        <h2 id="orders-stats" className="mb-3 text-base font-bold">Orders</h2>
+        <h2 id="orders-stats" className="mb-3 text-sm font-semibold text-muted">Orders</h2>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Stat label="Awaiting action" value={String(stats.pendingOrders)} href="/admin/orders" tone={stats.pendingOrders > 0 ? 'warn' : undefined} />
           <Stat label="Completed" value={String(stats.completedOrders)} />
@@ -52,7 +52,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section aria-labelledby="stock-stats">
-        <h2 id="stock-stats" className="mb-3 text-base font-bold">Stock</h2>
+        <h2 id="stock-stats" className="mb-3 text-sm font-semibold text-muted">Stock</h2>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Stat label="Products" value={String(stats.productCount)} href="/admin/products" />
           <Stat label="Visible in the shop" value={String(stats.activeProducts)} />
@@ -62,18 +62,18 @@ export default async function AdminDashboardPage() {
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <section className="card overflow-hidden" aria-labelledby="recent-orders">
-          <div className="flex items-center justify-between border-b border-line px-4 py-3">
+        <section className="admin-panel" aria-labelledby="recent-orders">
+          <div className="flex items-center justify-between px-5 pb-3 pt-5">
             <h2 id="recent-orders" className="text-sm font-bold">Recent orders</h2>
             <Link href="/admin/orders" className="text-xs font-semibold text-clay-700 hover:underline">View all</Link>
           </div>
           {recent.length === 0 ? (
-            <p className="p-4 text-sm text-muted">No orders yet.</p>
+            <p className="px-5 pb-5 text-sm text-muted">No orders yet.</p>
           ) : (
             <ul className="divide-y divide-line">
               {recent.map((order) => (
                 <li key={order.id}>
-                  <Link href={`/admin/orders/${order.id}`} className="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-canvas">
+                  <Link href={`/admin/orders/${order.id}`} className="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-raise">
                     <span className="min-w-0">
                       <span className="block font-mono text-xs font-semibold">{order.orderNumber}</span>
                       <span className="block truncate text-xs text-muted">{order.customerName} · {order.customerPhone}</span>
@@ -92,14 +92,14 @@ export default async function AdminDashboardPage() {
         </section>
 
         <div className="space-y-4">
-          <section className="card overflow-hidden" aria-labelledby="popular">
-            <h2 id="popular" className="border-b border-line px-4 py-3 text-sm font-bold">Most popular products</h2>
+          <section className="admin-panel" aria-labelledby="popular">
+            <h2 id="popular" className="px-5 pb-3 pt-5 text-sm font-semibold">Most popular products</h2>
             {popular.length === 0 ? (
-              <p className="p-4 text-sm text-muted">No products yet.</p>
+              <p className="px-5 pb-5 text-sm text-muted">No products yet.</p>
             ) : (
               <ul className="divide-y divide-line">
                 {popular.map((product) => (
-                  <li key={product.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                  <li key={product.id} className="flex items-center justify-between gap-3 px-5 py-3">
                     <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-clay-700">{product.name}</Link>
                     <span className="shrink-0 text-xs text-muted">{product.unitsSold} sold · {product.viewCount} views</span>
                   </li>
@@ -108,17 +108,17 @@ export default async function AdminDashboardPage() {
             )}
           </section>
 
-          <section className="card overflow-hidden" aria-labelledby="low-stock">
-            <div className="flex items-center justify-between border-b border-line px-4 py-3">
+          <section className="admin-panel" aria-labelledby="low-stock">
+            <div className="flex items-center justify-between px-5 pb-3 pt-5">
               <h2 id="low-stock" className="text-sm font-bold">Running low</h2>
               <Link href="/admin/inventory" className="text-xs font-semibold text-clay-700 hover:underline">Manage stock</Link>
             </div>
             {lowStock.length === 0 ? (
-              <p className="p-4 text-sm text-muted">Nothing is running low. </p>
+              <p className="px-5 pb-5 text-sm text-muted">Nothing is running low. </p>
             ) : (
               <ul className="divide-y divide-line">
                 {lowStock.map((product) => (
-                  <li key={product.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                  <li key={product.id} className="flex items-center justify-between gap-3 px-5 py-3">
                     <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-clay-700">{product.name}</Link>
                     <span className={cn('shrink-0 text-xs font-semibold', product.stock === 0 ? 'text-danger' : 'text-clay-700')}>
                       {product.stock === 0 ? 'Out of stock' : `${product.stock} left`}
@@ -144,12 +144,16 @@ export default async function AdminDashboardPage() {
 function Stat({ label, value, hint, href, tone }: { label: string; value: string; hint?: string; href?: string; tone?: 'warn' | 'bad' }) {
   const body = (
     <>
-      <p className={cn('text-xl font-bold sm:text-2xl', tone === 'bad' ? 'text-danger' : tone === 'warn' ? 'text-clay-700' : 'text-ink')}>
+      <p className="text-xs font-medium text-muted">{label}</p>
+      <p className={cn('mt-1.5 text-2xl font-semibold tracking-tight sm:text-[1.75rem]',
+        tone === 'bad' ? 'text-danger' : tone === 'warn' ? 'text-clay-600' : 'text-ink')}>
         {value}
       </p>
-      <p className="text-xs text-muted">{label}</p>
-      {hint ? <p className="mt-0.5 text-[11px] text-subtle">{hint}</p> : null}
+      {hint ? <p className="mt-1 text-[11px] text-subtle">{hint}</p> : null}
     </>
   );
-  return href ? <Link href={href} className="card p-3.5 hover:border-clay-300">{body}</Link> : <div className="card p-3.5">{body}</div>;
+  const base = 'rounded-3xl bg-surface p-5 shadow-soft';
+  return href
+    ? <Link href={href} className={cn(base, 'transition hover:-translate-y-0.5')}>{body}</Link>
+    : <div className={base}>{body}</div>;
 }

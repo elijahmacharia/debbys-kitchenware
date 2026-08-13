@@ -37,7 +37,7 @@ export default async function AdminCategoriesPage() {
 
   return (
     <div className="max-w-4xl">
-      <h1>Categories</h1>
+      <h1 className="text-2xl sm:text-3xl">Categories</h1>
       <p className="mt-1 text-sm text-muted">
         Group your products into departments. A category with products in it cannot be deleted until
         those products are moved.

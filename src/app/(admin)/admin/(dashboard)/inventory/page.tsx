@@ -40,7 +40,7 @@ export default async function AdminInventoryPage({
 
   return (
     <div>
-      <h1>Inventory</h1>
+      <h1 className="text-2xl sm:text-3xl">Inventory</h1>
       <p className="mt-1 text-sm text-muted">
         Type the number you counted on the shelf and press Set. Every change is recorded with a reason,
         so you can trace how a figure got where it is.
@@ -70,37 +70,37 @@ export default async function AdminInventoryPage({
       ) : null}
 
       {rows.length === 0 ? (
-        <p className="mt-6 rounded-card border border-dashed border-line bg-surface p-8 text-center text-sm text-muted">
+        <p className="mt-6 rounded-3xl bg-surface p-10 text-center text-sm text-muted shadow-soft">
           Nothing here. 
         </p>
       ) : (
-        <div className="mt-5 overflow-x-auto rounded-card border border-line">
-          <table className="w-full min-w-[40rem] text-sm">
+        <div className="admin-panel mt-6 overflow-x-auto">
+          <table className="admin-table min-w-[40rem]">
             <caption className="sr-only">Products and their current stock levels</caption>
-            <thead className="bg-canvas text-left">
+            <thead>
               <tr>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Product</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Category</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">In stock</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Warn at</th>
-                <th scope="col" className="px-3 py-2.5 font-semibold">Set new count</th>
+                <th scope="col">Product</th>
+                <th scope="col">Category</th>
+                <th scope="col">In stock</th>
+                <th scope="col">Warn at</th>
+                <th scope="col">Set new count</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line bg-surface">
+            <tbody>
               {rows.map((row) => (
                 <tr key={row.id} className={row.isActive ? undefined : 'opacity-60'}>
-                  <th scope="row" className="px-3 py-2.5 text-left font-medium">
+                  <th scope="row">
                     <Link href={`/admin/products/${row.id}`} className="text-ink hover:text-clay-700">{row.name}</Link>
                     <span className="block font-mono text-[11px] font-normal text-subtle">{row.sku}</span>
                   </th>
-                  <td className="px-3 py-2.5 text-muted">{row.categoryName}</td>
-                  <td className="px-3 py-2.5">
+                  <td className="text-muted">{row.categoryName}</td>
+                  <td>
                     <span className={cn('font-semibold', row.stock === 0 ? 'text-danger' : row.stock <= row.lowStockAt ? 'text-clay-700' : 'text-ink')}>
                       {row.stock}
                     </span>
                   </td>
-                  <td className="px-3 py-2.5 text-muted">{row.lowStockAt}</td>
-                  <td className="px-3 py-2.5"><StockAdjustForm productId={row.id} currentStock={row.stock} /></td>
+                  <td className="text-muted">{row.lowStockAt}</td>
+                  <td><StockAdjustForm productId={row.id} currentStock={row.stock} /></td>
                 </tr>
               ))}
             </tbody>

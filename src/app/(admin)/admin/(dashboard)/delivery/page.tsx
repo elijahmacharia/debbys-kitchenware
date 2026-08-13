@@ -9,7 +9,7 @@ export default async function AdminDeliveryPage() {
 
   return (
     <div className="max-w-4xl">
-      <h1>Delivery zones</h1>
+      <h1 className="text-2xl sm:text-3xl">Delivery zones</h1>
       <p className="mt-1 text-sm text-muted">
         The areas you deliver to, what each costs and how long it takes. Customers choose from these at
         checkout, and the fee you set here is what gets added to their total.

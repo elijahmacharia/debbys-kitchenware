@@ -29,7 +29,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       </Link>
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-        <h1>{product.name}</h1>
+        <h1 className="text-2xl sm:text-3xl">{product.name}</h1>
         <Link href={`/product/${product.slug}`} target="_blank" className="btn-secondary btn-sm">
           <EyeIcon className="h-4 w-4" /> View in the shop
         </Link>
@@ -61,8 +61,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       </div>
 
       {movements.length > 0 ? (
-        <section className="card mt-6 overflow-hidden" aria-labelledby="stock-history">
-          <h2 id="stock-history" className="border-b border-line px-4 py-3 text-sm font-bold">Stock history</h2>
+        <section className="admin-panel mt-6" aria-labelledby="stock-history">
+          <h2 id="stock-history" className="px-5 pb-3 pt-5 text-sm font-semibold">Stock history</h2>
           <ul className="divide-y divide-line text-sm">
             {movements.map((movement) => (
               <li key={movement.id} className="flex items-center justify-between gap-3 px-4 py-2.5">

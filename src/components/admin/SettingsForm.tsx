@@ -16,7 +16,7 @@ export function SettingsForm({
       {(errors) => (
         <div className="space-y-4">
           {groups.map((group) => (
-            <section key={group} className="card space-y-4 p-4 sm:p-5">
+            <section key={group} className="rounded-3xl bg-surface p-5 shadow-soft space-y-4 sm:p-6">
               <h2 className="text-base font-bold">{group}</h2>
               {definitions
                 .filter((definition) => definition.group === group)

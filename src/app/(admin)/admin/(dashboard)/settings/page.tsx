@@ -32,7 +32,7 @@ export default async function AdminSettingsPage() {
 
   return (
     <div className="max-w-3xl">
-      <h1>Settings</h1>
+      <h1 className="text-2xl sm:text-3xl">Settings</h1>
       <p className="mt-1 text-sm text-muted">Text and policies you can change yourself, plus the details that live in configuration.</p>
 
       {missing.length > 0 ? (
@@ -42,8 +42,8 @@ export default async function AdminSettingsPage() {
         </Alert>
       ) : null}
 
-      <section className="card mt-5 overflow-hidden" aria-labelledby="env-settings">
-        <h2 id="env-settings" className="border-b border-line px-4 py-3 text-sm font-bold">Business details (set in configuration)</h2>
+      <section className="admin-panel mt-5" aria-labelledby="env-settings">
+        <h2 id="env-settings" className="px-5 pb-3 pt-5 text-sm font-semibold">Business details (set in configuration)</h2>
         <dl className="divide-y divide-line text-sm">
           {envRows.map((row) => (
             <div key={row.key} className="flex flex-wrap justify-between gap-2 px-4 py-2.5">
@@ -60,8 +60,8 @@ export default async function AdminSettingsPage() {
         </p>
       </section>
 
-      <section className="card mt-4 overflow-hidden" aria-labelledby="payment-settings">
-        <h2 id="payment-settings" className="border-b border-line px-4 py-3 text-sm font-bold">Payment methods offered</h2>
+      <section className="admin-panel mt-4" aria-labelledby="payment-settings">
+        <h2 id="payment-settings" className="px-5 pb-3 pt-5 text-sm font-semibold">Payment methods offered</h2>
         <ul className="divide-y divide-line text-sm">
           {paymentMethods.map((method) => (
             <li key={method.key} className="flex items-center justify-between gap-3 px-4 py-2.5">

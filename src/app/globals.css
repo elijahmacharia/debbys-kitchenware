@@ -81,6 +81,7 @@
     padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
   }
   @screen lg { body { padding-bottom: 0; } }
+  body:has(.no-tabbar) { padding-bottom: 0; }
 
   h1, h2, h3, h4 { @apply text-ink; letter-spacing: -0.02em; }
   h1 { @apply text-[1.9rem] font-semibold leading-[1.15] sm:text-[2.4rem] lg:text-[2.9rem]; }
@@ -163,6 +164,27 @@
   /* Hide the scrollbar on the chip rails without disabling scrolling. */
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* ---- Admin -------------------------------------------------------- */
+
+  /* A soft panel for grouping data. Borderless; the tint does the separating. */
+  .admin-panel { @apply overflow-hidden rounded-3xl bg-surface shadow-soft; }
+
+  /* Tables stay tables — they are the right tool for rows of figures — but
+     lose their heavy rules in favour of a tinted header and roomy cells. */
+  .admin-table { @apply w-full text-sm; }
+  .admin-table thead { @apply bg-raise text-left; }
+  .admin-table th { @apply px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted; }
+  .admin-table tbody tr { @apply border-t border-line transition-colors hover:bg-raise/60; }
+  .admin-table td, .admin-table tbody th { @apply px-4 py-3.5 align-middle; }
+  .admin-table tbody th { @apply text-left font-medium text-ink; }
+
+  /* Sidebar and tab links. */
+  .admin-nav-link {
+    @apply flex min-h-[42px] items-center gap-3 rounded-full px-4 text-sm font-medium
+           text-muted transition-colors hover:bg-raise hover:text-ink;
+  }
+  .admin-nav-link-active { @apply bg-ink text-white hover:bg-ink hover:text-white; }
 
   .prose-page { @apply max-w-2xl space-y-4 text-[0.95rem] leading-relaxed text-muted; }
   .prose-page h2 { @apply mt-9 text-xl text-ink; }

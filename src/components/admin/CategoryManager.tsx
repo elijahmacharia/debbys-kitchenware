@@ -24,7 +24,7 @@ export function CategoryManager({ categories, flatOptions }: { categories: Admin
 
   const renderRow = (category: AdminCategory, depth: number) => (
     <div key={category.id}>
-      <div className="flex flex-wrap items-center gap-2 border-b border-line px-3 py-2.5 last:border-0" style={{ paddingLeft: `${0.75 + depth * 1.25}rem` }}>
+      <div className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-3 last:border-0" style={{ paddingLeft: `${0.75 + depth * 1.25}rem` }}>
         <span className="min-w-0 flex-1">
           <span className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink">
             {category.name}
@@ -59,7 +59,7 @@ export function CategoryManager({ categories, flatOptions }: { categories: Admin
       action={(data) => saveCategoryAction(category?.id ?? null, data)}
       submitLabel={category ? 'Save changes' : 'Create category'}
       onSuccess={close}
-      className="card mt-4 p-4 sm:p-5"
+      className="mt-5 rounded-3xl bg-surface p-5 shadow-soft sm:p-6"
       secondary={<Button type="button" variant="secondary" onClick={close}>Cancel</Button>}
     >
       {(errors) => (
@@ -101,7 +101,7 @@ export function CategoryManager({ categories, flatOptions }: { categories: Admin
       ) : null}
 
       {categories.length > 0 ? (
-        <div className="overflow-hidden rounded-card border border-line bg-surface">
+        <div className="admin-panel">
           {categories.map((category) => renderRow(category, 0))}
         </div>
       ) : null}

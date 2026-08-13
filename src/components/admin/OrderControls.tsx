@@ -22,7 +22,7 @@ export function OrderControls({
 }) {
   return (
     <div className="space-y-4">
-      <section className="card p-4">
+      <section className="rounded-3xl bg-surface p-5 shadow-soft">
         <h2 className="text-sm font-bold">Update status</h2>
         {allowedStatuses.length === 0 ? (
           <Alert tone="info" className="mt-2">
@@ -50,7 +50,7 @@ export function OrderControls({
         )}
       </section>
 
-      <section className="card p-4">
+      <section className="rounded-3xl bg-surface p-5 shadow-soft">
         <h2 className="text-sm font-bold">Payment</h2>
         <p className="mt-1 text-xs text-muted">
           Only mark an order paid once you have actually seen the M-Pesa message. The website never sets
@@ -74,7 +74,7 @@ export function OrderControls({
         </AdminForm>
       </section>
 
-      <section className="card p-4">
+      <section className="rounded-3xl bg-surface p-5 shadow-soft">
         <h2 className="text-sm font-bold">Internal note</h2>
         <p className="mt-1 text-xs text-muted">Staff only. The customer never sees this.</p>
         <AdminForm action={(form) => saveOrderNoteAction(orderId, form)} submitLabel="Save note" className="mt-3">

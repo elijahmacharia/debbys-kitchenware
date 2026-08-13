@@ -41,7 +41,7 @@ export default async function AdminOrdersPage({
         {params.q ? <Link href={buildHref({ q: undefined, page: undefined })} className="btn-ghost border border-line">Clear</Link> : null}
       </form>
 
-      <nav className="mt-4 flex flex-wrap gap-1.5" aria-label="Filter by status">
+      <nav className="-mx-4 mt-5 flex gap-2 overflow-x-auto px-4 no-scrollbar sm:mx-0 sm:flex-wrap sm:px-0" aria-label="Filter by status">
         {statusTabs.map((status) => (
           <Link
             key={status}
@@ -58,28 +58,28 @@ export default async function AdminOrdersPage({
       </nav>
 
       {result.rows.length === 0 ? (
-        <p className="mt-6 rounded-card border border-dashed border-line bg-surface p-8 text-center text-sm text-muted">
+        <p className="mt-6 rounded-3xl bg-surface p-10 text-center text-sm text-muted shadow-soft">
           No orders match this view.
         </p>
       ) : (
         <>
-          <div className="mt-5 overflow-x-auto rounded-card border border-line">
-            <table className="w-full min-w-[48rem] text-sm">
+          <div className="admin-panel mt-6 overflow-x-auto">
+            <table className="admin-table min-w-[48rem]">
               <caption className="sr-only">Orders with customer, total and status</caption>
-              <thead className="bg-canvas text-left">
+              <thead>
                 <tr>
-                  <th scope="col" className="px-3 py-2.5 font-semibold">Order</th>
-                  <th scope="col" className="px-3 py-2.5 font-semibold">Customer</th>
-                  <th scope="col" className="px-3 py-2.5 font-semibold">Fulfilment</th>
-                  <th scope="col" className="px-3 py-2.5 font-semibold">Total</th>
-                  <th scope="col" className="px-3 py-2.5 font-semibold">Payment</th>
-                  <th scope="col" className="px-3 py-2.5 font-semibold">Status</th>
+                  <th scope="col">Order</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Fulfilment</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Payment</th>
+                  <th scope="col">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-line bg-surface">
+              <tbody>
                 {result.rows.map((order) => (
                   <tr key={order.id} className="hover:bg-canvas">
-                    <th scope="row" className="px-3 py-2.5 text-left">
+                    <th scope="row">
                       <Link href={`/admin/orders/${order.id}`} className="font-mono text-xs font-bold text-ink hover:text-clay-700">
                         {order.orderNumber}
                       </Link>
@@ -87,21 +87,21 @@ export default async function AdminOrdersPage({
                         {new Date(order.createdAt).toLocaleString('en-KE', { dateStyle: 'medium', timeStyle: 'short' })}
                       </span>
                     </th>
-                    <td className="px-3 py-2.5">
+                    <td>
                       <span className="block">{order.customerName}</span>
                       <span className="block text-[11px] text-subtle">{order.customerPhone}</span>
                     </td>
-                    <td className="px-3 py-2.5 text-muted">
+                    <td className="text-muted">
                       {FULFILMENT_LABEL[order.fulfilment]}
                       {order.deliveryZoneName ? <span className="block text-[11px] text-subtle">{order.deliveryZoneName}</span> : null}
                     </td>
-                    <td className="px-3 py-2.5 font-semibold">{formatKsh(order.totalCents)}</td>
-                    <td className="px-3 py-2.5">
+                    <td className="font-semibold">{formatKsh(order.totalCents)}</td>
+                    <td>
                       <span className={order.paymentStatus === 'PAID' ? 'text-xs font-semibold text-success' : 'text-xs font-semibold text-clay-700'}>
                         {PAYMENT_STATUS_LABEL[order.paymentStatus] ?? order.paymentStatus}
                       </span>
                     </td>
-                    <td className="px-3 py-2.5">
+                    <td>
                       <Badge tone={order.status === 'DELIVERED' ? 'success' : order.status === 'CANCELLED' ? 'danger' : 'brand'}>
                         {STATUS_META[order.status as keyof typeof STATUS_META]?.label ?? order.status}
                       </Badge>

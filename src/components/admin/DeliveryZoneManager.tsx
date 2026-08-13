@@ -28,7 +28,7 @@ export function DeliveryZoneManager({ zones }: { zones: AdminZone[] }) {
       action={(data) => saveDeliveryZoneAction(zone?.id ?? null, data)}
       submitLabel={zone ? 'Save changes' : 'Create zone'}
       onSuccess={close}
-      className="card mt-4 p-4 sm:p-5"
+      className="mt-5 rounded-3xl bg-surface p-5 shadow-soft sm:p-6"
       secondary={<Button type="button" variant="secondary" onClick={close}>Cancel</Button>}
     >
       {(errors) => (
@@ -66,7 +66,7 @@ export function DeliveryZoneManager({ zones }: { zones: AdminZone[] }) {
       ) : null}
 
       {zones.length > 0 ? (
-        <div className="overflow-x-auto rounded-card border border-line">
+        <div className="overflow-x-auto rounded-3xl">
           <table className="w-full min-w-[40rem] text-sm">
             <caption className="sr-only">Delivery zones with fees and availability</caption>
             <thead className="bg-canvas text-left">

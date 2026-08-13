@@ -40,7 +40,7 @@ export function ProductForm({
     >
       {(errors) => (
         <div className="space-y-4">
-          <section className="card space-y-4 p-4 sm:p-5">
+          <section className="rounded-3xl bg-surface p-5 shadow-soft space-y-4 sm:p-6">
             <h2 className="text-base font-bold">Basics</h2>
             <TextField name="name" label="Product name" required defaultValue={product?.name} error={errors.name} placeholder="e.g. 20L Plastic Bucket" />
             <div className="grid gap-4 sm:grid-cols-2">
@@ -66,7 +66,7 @@ export function ProductForm({
             />
           </section>
 
-          <section className="card space-y-4 p-4 sm:p-5">
+          <section className="rounded-3xl bg-surface p-5 shadow-soft space-y-4 sm:p-6">
             <h2 className="text-base font-bold">Price and stock</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <TextField
@@ -90,7 +90,7 @@ export function ProductForm({
             </div>
           </section>
 
-          <section className="card space-y-3 p-4 sm:p-5">
+          <section className="rounded-3xl bg-surface p-5 shadow-soft space-y-3 sm:p-6">
             <h2 className="text-base font-bold">Images</h2>
             <Alert tone="info">
               Upload is not built yet. Put an image file in <code>public/uploads/</code> and enter its path
@@ -99,7 +99,7 @@ export function ProductForm({
             </Alert>
 
             {images.map((image, index) => (
-              <div key={index} className="grid gap-3 rounded-card border border-line p-3 sm:grid-cols-[1fr_1fr_auto]">
+              <div key={index} className="grid gap-3 rounded-3xl p-3 sm:grid-cols-[1fr_1fr_auto]">
                 <TextField
                   name="imageUrl" label={`Image ${index + 1} path or URL`} hideLabel={index > 0}
                   value={image.url} onChange={(e) => setImage(index, 'url', e.target.value)}
@@ -130,7 +130,7 @@ export function ProductForm({
             ) : null}
           </section>
 
-          <section className="card space-y-3 p-4 sm:p-5">
+          <section className="rounded-3xl bg-surface p-5 shadow-soft space-y-3 sm:p-6">
             <h2 className="text-base font-bold">Where it appears</h2>
             <CheckboxField
               name="isActive" label="Visible in the shop" defaultChecked={product?.isActive ?? true}
@@ -140,7 +140,7 @@ export function ProductForm({
             <CheckboxField name="isNewArrival" label="Show in New arrivals" defaultChecked={product?.isNewArrival ?? false} />
           </section>
 
-          <section className="card space-y-4 p-4 sm:p-5">
+          <section className="rounded-3xl bg-surface p-5 shadow-soft space-y-4 sm:p-6">
             <h2 className="text-base font-bold">Search engine listing</h2>
             <p className="text-xs text-muted">Optional. Leave blank and we use the product name and description.</p>
             <TextField name="metaTitle" label="Page title" defaultValue={product?.metaTitle ?? ''} error={errors.metaTitle} maxLength={70} hint="Up to about 70 characters." />
