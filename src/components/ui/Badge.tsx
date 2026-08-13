@@ -4,10 +4,10 @@ import { cn } from '@/lib/cn';
 type Tone = 'brand' | 'accent' | 'success' | 'warning' | 'danger' | 'neutral';
 
 const TONE: Record<Tone, string> = {
-  brand: 'bg-brand-600 text-white',
-  accent: 'bg-accent-500 text-white',
+  brand: 'bg-clay-600 text-white',
+  accent: 'bg-clay-600 text-white',
   success: 'bg-success/10 text-success',
-  warning: 'bg-accent-50 text-accent-700',
+  warning: 'bg-clay-50 text-clay-700',
   danger: 'bg-danger/10 text-danger',
   neutral: 'border border-line bg-canvas text-muted',
 };

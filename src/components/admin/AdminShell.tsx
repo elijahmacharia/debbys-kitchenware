@@ -45,7 +45,7 @@ export function AdminShell({ adminName, role, children }: { adminName: string; r
           aria-current={isActive(href) ? 'page' : undefined}
           className={cn(
             'flex min-h-[42px] items-center gap-2.5 rounded-control px-3 text-sm font-medium',
-            isActive(href) ? 'bg-brand-600 text-white' : 'text-ink hover:bg-brand-50',
+            isActive(href) ? 'bg-clay-600 text-white' : 'text-ink hover:bg-clay-50',
           )}
         >
           <Icon className="h-4 w-4" />
@@ -60,7 +60,7 @@ export function AdminShell({ adminName, role, children }: { adminName: string; r
       <aside className="hidden w-60 shrink-0 flex-col border-r border-line bg-surface lg:flex">
         <div className="border-b border-line p-4">
           <Link href="/admin/dashboard" className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-600 text-sm font-bold text-white">D</span>
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-clay-600 text-sm font-bold text-white">D</span>
             <span>
               <span className="block text-sm font-bold leading-tight">Debby&apos;s admin</span>
               <span className="block text-[11px] text-muted">{adminName} · {role.toLowerCase()}</span>

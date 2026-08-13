@@ -33,24 +33,24 @@ export async function Header() {
 
   const whatsappHref = waLink(generalEnquiryMessage());
   const phoneHref = telHref();
-  const navLink = 'inline-flex h-11 items-center px-3 text-sm font-medium text-ink hover:text-brand-700';
+  const navLink = 'inline-flex h-11 items-center px-3 text-sm text-ink transition-colors hover:text-clay-700';
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/85">
+    <header className="sticky top-0 z-40 border-b border-line bg-canvas">
       <AnnouncementBar message={settings.announcement} />
 
       {/* Utility strip, desktop only, nothing essential lives here. */}
       <div className="hidden border-b border-line bg-canvas lg:block">
         <div className="container-site flex h-9 items-center justify-between text-xs text-muted">
-          <p>{business.tagline} · Pickup &amp; local delivery</p>
+          <p>Free pickup at the shop · Local delivery</p>
           <div className="flex items-center gap-4">
             {phoneHref ? (
-              <a href={phoneHref} className="inline-flex items-center gap-1.5 hover:text-brand-700">
+              <a href={phoneHref} className="inline-flex items-center gap-1.5 hover:text-clay-700">
                 <PhoneIcon className="h-3.5 w-3.5" /> {business.phone}
               </a>
             ) : null}
-            <Link href="/delivery" className="hover:text-brand-700">Delivery &amp; pickup</Link>
-            <Link href="/contact" className="hover:text-brand-700">Contact</Link>
+            <Link href="/delivery" className="hover:text-clay-700">Delivery &amp; pickup</Link>
+            <Link href="/contact" className="hover:text-clay-700">Contact</Link>
           </div>
         </div>
       </div>
@@ -82,18 +82,22 @@ export async function Header() {
 
       <nav aria-label="Main" className="hidden border-t border-line lg:block">
         <div className="container-site flex items-center gap-1">
-          <Link href="/" className={navLink}>Home</Link>
           <Link href="/shop" className={navLink}>Shop</Link>
           <CategoryMenu categories={categories} />
+          <Link href="/shop?sale=1" className={navLink}>Offers</Link>
+          <Link href="/shop?new=1" className={navLink}>New arrivals</Link>
           <Link href="/about" className={navLink}>About</Link>
           <Link href="/delivery" className={navLink}>Delivery</Link>
-          <Link href="/payment" className={navLink}>Payment</Link>
-          <Link href="/faq" className={navLink}>FAQ</Link>
           <Link href="/contact" className={navLink}>Contact</Link>
           {whatsappHref ? (
-            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-whatsapp btn-sm my-1.5 ml-auto">
-              <WhatsAppIcon className="h-4 w-4" />
-              Chat on WhatsApp
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-auto inline-flex h-11 items-center gap-2 px-3 text-sm text-ink hover:text-whatsapp"
+            >
+              <WhatsAppIcon className="h-4 w-4 text-whatsapp" />
+              WhatsApp
             </a>
           ) : null}
         </div>

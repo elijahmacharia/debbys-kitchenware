@@ -18,14 +18,14 @@ export function Footer() {
   const emailHref = mailtoHref();
   const year = new Date().getFullYear();
 
-  const columnLink = 'block py-1.5 text-sm text-brand-100/80 hover:text-white hover:underline';
+  const columnLink = 'block py-1.5 text-sm text-white/70 transition-colors hover:text-white';
 
   return (
-    <footer className="mt-16 bg-brand-900 text-brand-50">
+    <footer className="mt-20 bg-olive-900 text-white/85">
       <div className="container-site grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-5">
         <div className="sm:col-span-2 lg:col-span-1">
-          <p className="text-lg font-bold text-white">{business.name}</p>
-          <p className="mt-2 max-w-xs text-sm leading-relaxed text-brand-100/80">
+          <p className="font-display text-xl text-white">{business.name}</p>
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/65">
             Kitchenware, household essentials and everyday products. Shop online, collect at our shop
             or have your order delivered.
           </p>
@@ -51,7 +51,7 @@ export function Footer() {
         </div>
 
         <nav aria-labelledby="footer-shop">
-          <h2 id="footer-shop" className="text-sm font-semibold uppercase tracking-wide text-white">Shop</h2>
+          <h2 id="footer-shop" className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">Shop</h2>
           <div className="mt-3">
             <Link href="/shop" className={columnLink}>All products</Link>
             <Link href="/categories" className={columnLink}>Categories</Link>
@@ -62,7 +62,7 @@ export function Footer() {
         </nav>
 
         <nav aria-labelledby="footer-service">
-          <h2 id="footer-service" className="text-sm font-semibold uppercase tracking-wide text-white">Customer service</h2>
+          <h2 id="footer-service" className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">Customer service</h2>
           <div className="mt-3">
             <Link href="/delivery" className={columnLink}>Delivery &amp; pickup</Link>
             <Link href="/payment" className={columnLink}>How to pay</Link>
@@ -73,7 +73,7 @@ export function Footer() {
         </nav>
 
         <nav aria-labelledby="footer-account">
-          <h2 id="footer-account" className="text-sm font-semibold uppercase tracking-wide text-white">Account</h2>
+          <h2 id="footer-account" className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">Account</h2>
           <div className="mt-3">
             <Link href="/login" className={columnLink}>Sign in</Link>
             <Link href="/register" className={columnLink}>Create account</Link>
@@ -84,8 +84,8 @@ export function Footer() {
         </nav>
 
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-white">Get in touch</h2>
-          <ul className="mt-3 space-y-2.5 text-sm text-brand-100/80">
+          <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">Get in touch</h2>
+          <ul className="mt-3 space-y-2.5 text-sm text-white/70">
             {phoneHref ? (
               <li className="flex gap-2">
                 <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0" />
@@ -115,7 +115,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-site flex flex-col gap-3 py-5 text-xs text-brand-100/70 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-site flex flex-col gap-3 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} {business.name}. All rights reserved.</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1">
             <Link href="/privacy-policy" className="hover:text-white hover:underline">Privacy policy</Link>

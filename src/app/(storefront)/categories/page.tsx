@@ -34,9 +34,9 @@ export default async function CategoriesPage() {
           {tree.map((category) => (
             <section key={category.id} className="card p-4">
               <Link href={`/category/${category.slug}`} className="group flex items-start gap-3">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700"><GridIcon className="h-5 w-5" /></span>
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-clay-50 text-clay-700"><GridIcon className="h-5 w-5" /></span>
                 <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-1 text-base font-semibold text-ink group-hover:text-brand-700">
+                  <span className="flex items-center gap-1 text-base font-semibold text-ink group-hover:text-clay-700">
                     {category.name}
                     <ChevronRightIcon className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
                   </span>
@@ -50,7 +50,7 @@ export default async function CategoriesPage() {
                 <ul className="mt-3 flex flex-wrap gap-1.5 border-t border-line pt-3">
                   {category.children.map((child) => (
                     <li key={child.id}>
-                      <Link href={`/category/${child.slug}`} className="inline-block rounded-full border border-line px-2.5 py-1 text-xs text-ink hover:border-brand-300 hover:bg-brand-50">
+                      <Link href={`/category/${child.slug}`} className="inline-block rounded-full border border-line px-2.5 py-1 text-xs text-ink hover:border-clay-300 hover:bg-clay-50">
                         {child.name} <span className="text-subtle">({child.productCount})</span>
                       </Link>
                     </li>

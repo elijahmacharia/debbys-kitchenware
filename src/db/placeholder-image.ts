@@ -30,13 +30,13 @@ const escapeXml = (value: string) =>
 export function placeholderSvg(shape: Shape, name: string, sku: string): string {
   const label = escapeXml(name.length > 34 ? `${name.slice(0, 33)}…` : name);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500" role="img" aria-label="${escapeXml(name)} placeholder illustration">
-  <rect width="500" height="500" fill="#f6f7f5"/>
-  <g fill="none" stroke="#1f6b52" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".85">
+  <rect width="500" height="500" fill="#f3ece2"/>
+  <g fill="none" stroke="#ad4728" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".85">
     ${ART[shape]}
   </g>
-  <text x="250" y="392" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="24" font-weight="600" fill="#243026">${label}</text>
-  <text x="250" y="422" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="16" fill="#7c8a80">${escapeXml(sku)}</text>
-  <text x="250" y="466" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" letter-spacing="1.5" fill="#a3ada6">PLACEHOLDER IMAGE</text>
+  <text x="250" y="392" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="24" font-weight="600" fill="#191713">${label}</text>
+  <text x="250" y="422" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="16" fill="#8a7f72">${escapeXml(sku)}</text>
+  <text x="250" y="466" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" letter-spacing="1.5" fill="#b5a897">PLACEHOLDER IMAGE</text>
 </svg>`;
 }
 

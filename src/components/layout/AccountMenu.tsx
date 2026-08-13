@@ -31,7 +31,7 @@ export function AccountMenu({ name }: { name: string | null }) {
 
   if (!name) {
     return (
-      <Link href="/login" className="inline-flex h-11 items-center gap-1.5 rounded-control px-2 text-sm font-medium text-ink hover:bg-brand-50 sm:px-3">
+      <Link href="/login" className="inline-flex h-11 items-center gap-1.5 rounded-control px-2 text-sm font-medium text-ink hover:bg-clay-50 sm:px-3">
         <UserIcon className="h-5 w-5" />
         <span className="hidden sm:inline">Sign in</span>
       </Link>
@@ -57,7 +57,7 @@ export function AccountMenu({ name }: { name: string | null }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-11 max-w-[9rem] items-center gap-1.5 rounded-control px-2 text-sm font-medium text-ink hover:bg-brand-50 sm:px-3"
+        className="inline-flex h-11 max-w-[9rem] items-center gap-1.5 rounded-control px-2 text-sm font-medium text-ink hover:bg-clay-50 sm:px-3"
         aria-expanded={open}
         aria-haspopup="menu"
       >

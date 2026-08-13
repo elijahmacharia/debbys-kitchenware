@@ -60,7 +60,7 @@ export default async function AdminProductsPage({
               {products.map((product) => (
                 <tr key={product.id} className={product.isActive ? undefined : 'opacity-60'}>
                   <th scope="row" className="px-3 py-2.5 text-left font-medium">
-                    <Link href={`/admin/products/${product.id}`} className="text-ink hover:text-brand-700">{product.name}</Link>
+                    <Link href={`/admin/products/${product.id}`} className="text-ink hover:text-clay-700">{product.name}</Link>
                     <span className="block font-mono text-[11px] font-normal text-subtle">{product.sku}</span>
                   </th>
                   <td className="px-3 py-2.5 text-muted">{product.categoryName}</td>
@@ -75,7 +75,7 @@ export default async function AdminProductsPage({
                     )}
                   </td>
                   <td className="px-3 py-2.5">
-                    <span className={product.stock === 0 ? 'font-semibold text-danger' : product.stock <= product.lowStockAt ? 'font-semibold text-accent-700' : ''}>
+                    <span className={product.stock === 0 ? 'font-semibold text-danger' : product.stock <= product.lowStockAt ? 'font-semibold text-clay-700' : ''}>
                       {product.stock}
                     </span>
                     <span className="block text-[11px] text-subtle">{product.unitsSold} sold</span>

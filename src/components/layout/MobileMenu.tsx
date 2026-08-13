@@ -59,7 +59,7 @@ export function MobileMenu({
     };
   }, [open]);
 
-  const link = 'flex min-h-[46px] items-center rounded-control px-3 text-[15px] font-medium text-ink hover:bg-brand-50';
+  const link = 'flex min-h-[46px] items-center rounded-control px-3 text-[15px] font-medium text-ink hover:bg-clay-50';
 
   return (
     <>
@@ -67,7 +67,7 @@ export function MobileMenu({
         ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex h-11 w-11 items-center justify-center rounded-control text-ink hover:bg-brand-50 lg:hidden"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-control text-ink hover:bg-clay-50 lg:hidden"
         aria-label="Open menu"
         aria-expanded={open}
       >
@@ -107,7 +107,7 @@ export function MobileMenu({
                       <button
                         type="button"
                         onClick={() => setExpanded(expanded === category.slug ? null : category.slug)}
-                        className="inline-flex h-11 w-11 items-center justify-center rounded-control text-muted hover:bg-brand-50"
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-control text-muted hover:bg-clay-50"
                         aria-label={`${expanded === category.slug ? 'Hide' : 'Show'} ${category.name} subcategories`}
                         aria-expanded={expanded === category.slug}
                       >

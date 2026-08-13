@@ -46,7 +46,7 @@ export default function ContactPage() {
             <ul className="mt-3 space-y-3 text-sm">
               {phoneHref ? (
                 <li className="flex gap-2.5">
-                  <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
+                  <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
                   <span>
                     <span className="block text-xs text-muted">Phone</span>
                     <a href={phoneHref} className="link">{business.phone}</a>
@@ -64,7 +64,7 @@ export default function ContactPage() {
               ) : null}
               {emailHref ? (
                 <li className="flex gap-2.5">
-                  <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
+                  <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
                   <span>
                     <span className="block text-xs text-muted">Email</span>
                     <a href={emailHref} className="link break-all">{business.email}</a>
@@ -73,7 +73,7 @@ export default function ContactPage() {
               ) : null}
               {!isPlaceholder(business.address) ? (
                 <li className="flex gap-2.5">
-                  <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
+                  <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
                   <span>
                     <span className="block text-xs text-muted">Shop</span>
                     <span>{business.address}</span>
@@ -82,7 +82,7 @@ export default function ContactPage() {
               ) : null}
               {!isPlaceholder(business.hours) ? (
                 <li className="flex gap-2.5">
-                  <ClockIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
+                  <ClockIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
                   <span>
                     <span className="block text-xs text-muted">Opening hours</span>
                     <span>{business.hours}</span>

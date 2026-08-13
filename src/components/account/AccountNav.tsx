@@ -45,7 +45,7 @@ export function AccountNav({ customerName }: { customerName: string }) {
             aria-current={isActive(href, exact) ? 'page' : undefined}
             className={cn(
               'inline-flex min-h-[42px] shrink-0 items-center gap-2 rounded-control px-3 text-sm font-medium',
-              isActive(href, exact) ? 'bg-brand-600 text-white' : 'text-ink hover:bg-brand-50',
+              isActive(href, exact) ? 'bg-clay-600 text-white' : 'text-ink hover:bg-clay-50',
             )}
           >
             <Icon className="h-4 w-4" />

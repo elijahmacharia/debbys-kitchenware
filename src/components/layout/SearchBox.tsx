@@ -152,7 +152,7 @@ export function SearchBox({ className, autoFocus }: { className?: string; autoFo
                   role="option"
                   aria-selected={index === highlight}
                   onClick={() => setOpen(false)}
-                  className={cn('flex items-center justify-between gap-3 px-3 py-2.5 text-sm', index === highlight ? 'bg-brand-50' : 'hover:bg-canvas')}
+                  className={cn('flex items-center justify-between gap-3 px-3 py-2.5 text-sm', index === highlight ? 'bg-clay-50' : 'hover:bg-canvas')}
                 >
                   <span className="min-w-0">
                     <span className="block truncate font-medium text-ink">{item.name}</span>
@@ -167,7 +167,7 @@ export function SearchBox({ className, autoFocus }: { className?: string; autoFo
               <button
                 type="button"
                 onClick={submit}
-                className="w-full border-t border-line px-3 py-2.5 text-left text-sm font-medium text-brand-700 hover:bg-canvas"
+                className="w-full border-t border-line px-3 py-2.5 text-left text-sm font-medium text-clay-700 hover:bg-canvas"
               >
                 See all results for “{term.trim()}”
               </button>

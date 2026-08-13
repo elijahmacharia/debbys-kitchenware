@@ -9,10 +9,15 @@ import { business } from '@/lib/config';
 export function Logo({ className, compact }: { className?: string; compact?: boolean }) {
   return (
     <Link href="/" className={`group inline-flex items-center gap-2 ${className ?? ''}`} aria-label={`${business.name} home`}>
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-600 text-base font-bold text-white" aria-hidden="true">D</span>
-      <span className="min-w-0 leading-tight">
-        <span className="block truncate text-[15px] font-bold text-ink group-hover:text-brand-700 sm:text-base">{business.name}</span>
-        {!compact ? <span className="hidden truncate text-[11px] text-muted sm:block">{business.tagline}</span> : null}
+      <span className="min-w-0 leading-none">
+        <span className="block truncate font-display text-[1.15rem] tracking-tight text-ink sm:text-[1.3rem]">
+          {business.name}
+        </span>
+        {!compact ? (
+          <span className="mt-0.5 hidden text-[10px] uppercase tracking-[0.16em] text-clay-600 sm:block">
+            Kitchen &amp; home
+          </span>
+        ) : null}
       </span>
     </Link>
   );

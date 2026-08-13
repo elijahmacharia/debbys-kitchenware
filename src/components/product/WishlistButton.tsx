@@ -72,7 +72,7 @@ export function WishlistButton({
 
   if (variant === 'full') {
     return (
-      <button type="button" onClick={toggle} disabled={busy} className={cn('btn-secondary', saved && 'border-brand-300 bg-brand-50 text-brand-800')} aria-pressed={saved}>
+      <button type="button" onClick={toggle} disabled={busy} className={cn('btn-secondary', saved && 'border-clay-300 bg-clay-50 text-olive-800')} aria-pressed={saved}>
         <Icon className="h-4 w-4" />
         {saved ? 'Saved to wishlist' : 'Save to wishlist'}
       </button>
@@ -88,8 +88,8 @@ export function WishlistButton({
       aria-pressed={saved}
       title={label}
       className={cn(
-        'grid h-9 w-9 place-items-center rounded-full border bg-surface/95 shadow-card backdrop-blur transition',
-        saved ? 'border-brand-300 text-brand-700' : 'border-line text-muted hover:text-brand-700',
+        'grid h-9 w-9 place-items-center rounded-full border bg-surface/95 backdrop-blur transition',
+        saved ? 'border-clay-300 text-clay-700' : 'border-line text-muted hover:text-clay-700',
       )}
     >
       <Icon className="h-4 w-4" />

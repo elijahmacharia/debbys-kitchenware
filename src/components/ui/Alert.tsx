@@ -5,9 +5,9 @@ import { AlertIcon, CheckIcon, InfoIcon } from '@/components/icons';
 type Tone = 'info' | 'success' | 'warning' | 'error';
 
 const TONE: Record<Tone, { wrap: string; Icon: typeof InfoIcon }> = {
-  info: { wrap: 'border-brand-200 bg-brand-50 text-brand-900', Icon: InfoIcon },
-  success: { wrap: 'border-brand-300 bg-brand-50 text-brand-900', Icon: CheckIcon },
-  warning: { wrap: 'border-accent-100 bg-accent-50 text-accent-700', Icon: AlertIcon },
+  info: { wrap: 'border-clay-200 bg-clay-50 text-olive-900', Icon: InfoIcon },
+  success: { wrap: 'border-clay-300 bg-clay-50 text-olive-900', Icon: CheckIcon },
+  warning: { wrap: 'border-clay-200 bg-clay-50 text-clay-700', Icon: AlertIcon },
   error: { wrap: 'border-danger/30 bg-danger/5 text-danger', Icon: AlertIcon },
 };
 

@@ -28,7 +28,7 @@ export function CategoryMenu({ categories }: { categories: MenuCategory[] }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-11 items-center gap-1 px-3 text-sm font-medium text-ink hover:text-brand-700"
+        className="inline-flex h-11 items-center gap-1 px-3 text-sm font-medium text-ink hover:text-clay-700"
         aria-expanded={open}
         aria-haspopup="true"
       >
@@ -41,14 +41,14 @@ export function CategoryMenu({ categories }: { categories: MenuCategory[] }) {
           <div className="grid grid-cols-3 gap-x-5 gap-y-4">
             {categories.map((category) => (
               <div key={category.slug}>
-                <Link href={`/category/${category.slug}`} className="block text-sm font-semibold text-ink hover:text-brand-700">
+                <Link href={`/category/${category.slug}`} className="block text-sm font-semibold text-ink hover:text-clay-700">
                   {category.name}
                 </Link>
                 {category.children.length > 0 ? (
                   <ul className="mt-1.5 space-y-1">
                     {category.children.slice(0, 5).map((child) => (
                       <li key={child.slug}>
-                        <Link href={`/category/${child.slug}`} className="block text-[13px] text-muted hover:text-brand-700">
+                        <Link href={`/category/${child.slug}`} className="block text-[13px] text-muted hover:text-clay-700">
                           {child.name}
                         </Link>
                       </li>
@@ -58,7 +58,7 @@ export function CategoryMenu({ categories }: { categories: MenuCategory[] }) {
               </div>
             ))}
           </div>
-          <Link href="/categories" className="mt-4 inline-block border-t border-line pt-3 text-sm font-medium text-brand-700 hover:underline">
+          <Link href="/categories" className="mt-4 inline-block border-t border-line pt-3 text-sm font-medium text-clay-700 hover:underline">
             View all categories →
           </Link>
         </div>

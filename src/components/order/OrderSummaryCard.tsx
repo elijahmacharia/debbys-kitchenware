@@ -60,7 +60,7 @@ export function OrderSummaryCard({ order }: { order: OrderLike }) {
               </span>
               <span className="min-w-0 flex-1">
                 {item.slug ? (
-                  <Link href={`/product/${item.slug}`} className="line-clamp-2 text-sm font-medium text-ink hover:text-brand-700">{item.name}</Link>
+                  <Link href={`/product/${item.slug}`} className="line-clamp-2 text-sm font-medium text-ink hover:text-clay-700">{item.name}</Link>
                 ) : (
                   <span className="line-clamp-2 text-sm font-medium text-ink">{item.name}</span>
                 )}
@@ -114,7 +114,7 @@ export function OrderSummaryCard({ order }: { order: OrderLike }) {
           <h2 className="text-sm font-bold">Payment</h2>
           <p className="mt-1 text-sm text-muted">
             {paymentMethodLabel(order.paymentMethod)} ·{' '}
-            <span className={order.paymentStatus === 'PAID' ? 'font-semibold text-success' : 'font-semibold text-accent-700'}>
+            <span className={order.paymentStatus === 'PAID' ? 'font-semibold text-success' : 'font-semibold text-clay-700'}>
               {PAYMENT_STATUS_LABEL[order.paymentStatus] ?? order.paymentStatus}
             </span>
           </p>

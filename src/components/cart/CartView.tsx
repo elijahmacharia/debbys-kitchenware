@@ -81,7 +81,7 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
                 <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <Link href={`/product/${line.slug}`} className="line-clamp-2 text-sm font-semibold text-ink hover:text-brand-700">
+                      <Link href={`/product/${line.slug}`} className="line-clamp-2 text-sm font-semibold text-ink hover:text-clay-700">
                         {line.name}
                       </Link>
                       <p className="text-xs text-muted">
@@ -110,7 +110,7 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
                     <p className="text-sm font-bold text-ink">{formatKsh(line.unitPriceCents * line.quantity)}</p>
                   </div>
 
-                  {line.stock <= 5 ? <p className="text-xs font-medium text-accent-700">Only {line.stock} left in stock</p> : null}
+                  {line.stock <= 5 ? <p className="text-xs font-medium text-clay-700">Only {line.stock} left in stock</p> : null}
                 </div>
               </li>
             ))}

@@ -1,5 +1,5 @@
 import 'server-only';
-import { and, asc, desc, eq, gte, inArray, isNotNull, lte, ne, or, sql, type SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNotNull, lte, ne, notInArray, or, sql, type SQL } from 'drizzle-orm';
 import { db } from '@/db';
 import { categories, productImages, products } from '@/db/schema';
 import { SORT_OPTIONS, type SortKey } from '@/lib/productSort';
@@ -19,6 +19,8 @@ const effectivePrice = sql<number>`COALESCE(${products.salePriceCents}, ${produc
 
 export interface ProductFilters {
   q?: string;
+  /** Ids already shown elsewhere on the page. Keeps sections distinct. */
+  excludeIds?: string[];
   categorySlug?: string;
   minPriceCents?: number;
   maxPriceCents?: number;
@@ -148,6 +150,9 @@ export async function listProducts(filters: ProductFilters): Promise<{
   }
   if (filters.newArrivalsOnly) conditions.push(eq(products.isNewArrival, true) as SQL);
   if (filters.featuredOnly) conditions.push(eq(products.isFeatured, true) as SQL);
+  if (filters.excludeIds && filters.excludeIds.length > 0) {
+    conditions.push(notInArray(products.id, filters.excludeIds) as SQL);
+  }
 
   const where = and(...conditions);
 
@@ -264,14 +269,23 @@ export async function getRelatedProducts(productId: string, categoryId: string, 
   return attachPrimaryImages(rows);
 }
 
-export const getFeaturedProducts = (limit = 8) =>
-  listProducts({ featuredOnly: true, sort: 'featured', perPage: limit }).then((r) => r.items);
+export const getFeaturedProducts = (limit = 8, excludeIds: string[] = []) =>
+  listProducts({ featuredOnly: true, sort: 'featured', perPage: limit, excludeIds }).then((r) => r.items);
 
-export const getNewArrivals = (limit = 8) =>
-  listProducts({ newArrivalsOnly: true, sort: 'newest', perPage: limit }).then((r) => r.items);
+export const getNewArrivals = (limit = 8, excludeIds: string[] = []) =>
+  listProducts({ newArrivalsOnly: true, sort: 'newest', perPage: limit, excludeIds }).then((r) => r.items);
 
-export const getSaleProducts = (limit = 8) =>
-  listProducts({ onSaleOnly: true, sort: 'featured', perPage: limit }).then((r) => r.items);
+export const getSaleProducts = (limit = 8, excludeIds: string[] = []) =>
+  listProducts({ onSaleOnly: true, sort: 'featured', perPage: limit, excludeIds }).then((r) => r.items);
+
+/** Best sellers by units actually sold, for the "Popular right now" rail. */
+export const getPopularProducts = (limit = 8, excludeIds: string[] = []) =>
+  listProducts({ inStockOnly: true, sort: 'popular', perPage: limit, excludeIds }).then((r) => r.items);
+
+/** A curated rail for one top-level department, e.g. everything kitchen. */
+export const getProductsInCategory = (slug: string, limit = 4, excludeIds: string[] = []) =>
+  listProducts({ categorySlug: slug, sort: 'popular', perPage: limit, excludeIds, inStockOnly: true })
+    .then((r) => r.items);
 
 /** Typeahead results for the header search box. */
 export async function searchSuggestions(term: string, limit = 6) {

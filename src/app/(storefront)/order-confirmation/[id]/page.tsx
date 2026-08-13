@@ -55,7 +55,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
   return (
     <div className="container-site max-w-3xl py-8">
       <div className="text-center">
-        <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-brand-100 text-brand-700">
+        <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-clay-100 text-clay-700">
           <CheckIcon className="h-7 w-7" />
         </span>
         <h1 className="mt-4">Thank you, we have your order</h1>
@@ -95,9 +95,9 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
       <div className="mt-4"><OrderSummaryCard order={order} /></div>
 
       {!session ? (
-        <div className="card mt-6 bg-brand-50 p-4 text-center">
-          <p className="text-sm font-semibold text-brand-900">Want to track future orders more easily?</p>
-          <p className="mt-1 text-sm text-brand-800/80">
+        <div className="card mt-6 bg-clay-50 p-4 text-center">
+          <p className="text-sm font-semibold text-olive-900">Want to track future orders more easily?</p>
+          <p className="mt-1 text-sm text-olive-800/80">
             Keep your order history, addresses and wishlist in one place. Entirely optional.
           </p>
           <div className="mt-3 flex flex-wrap justify-center gap-2">

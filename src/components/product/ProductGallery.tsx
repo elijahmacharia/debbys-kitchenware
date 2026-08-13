@@ -65,7 +65,7 @@ export function ProductGallery({
               aria-current={index === active}
               className={cn(
                 'relative aspect-square overflow-hidden rounded-control border bg-surface',
-                index === active ? 'border-brand-600 ring-1 ring-brand-600' : 'border-line hover:border-brand-300',
+                index === active ? 'border-clay-600 ring-1 ring-clay-600' : 'border-line hover:border-clay-300',
               )}
             >
               <Image src={image.url} alt="" fill sizes="80px" loading="lazy" className="object-contain p-1" />

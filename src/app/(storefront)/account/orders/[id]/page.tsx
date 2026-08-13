@@ -48,7 +48,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
   return (
     <div>
-      <Link href="/account/orders" className="inline-flex items-center gap-1 text-sm text-muted hover:text-brand-700">
+      <Link href="/account/orders" className="inline-flex items-center gap-1 text-sm text-muted hover:text-clay-700">
         <ChevronLeftIcon className="h-4 w-4" />
         Back to my orders
       </Link>
@@ -71,8 +71,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       </section>
 
       {order.paymentStatus === 'PENDING' && paymentMethod && order.status !== 'CANCELLED' ? (
-        <section className="card mt-4 border-accent-100 bg-accent-50/60 p-4" aria-labelledby="pay">
-          <h2 id="pay" className="text-sm font-bold text-accent-700">Payment still outstanding</h2>
+        <section className="card mt-4 border-clay-200 bg-clay-50/60 p-4" aria-labelledby="pay">
+          <h2 id="pay" className="text-sm font-bold text-clay-700">Payment still outstanding</h2>
           <p className="mt-1 text-sm leading-relaxed text-ink">{paymentMethod.instructions}</p>
         </section>
       ) : null}

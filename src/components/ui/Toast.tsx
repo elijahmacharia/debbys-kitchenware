@@ -44,7 +44,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               key={toast.id}
               className={cn(
                 'pointer-events-auto flex w-full max-w-sm animate-slide-up items-start gap-2 rounded-card px-3.5 py-3 text-sm font-medium text-white shadow-pop',
-                toast.tone === 'error' ? 'bg-danger' : toast.tone === 'info' ? 'bg-ink' : 'bg-brand-700',
+                toast.tone === 'error' ? 'bg-danger' : toast.tone === 'info' ? 'bg-ink' : 'bg-clay-700',
               )}
             >
               <Icon className="mt-0.5 h-4 w-4 shrink-0" />

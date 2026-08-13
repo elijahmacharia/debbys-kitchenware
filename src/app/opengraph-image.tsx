@@ -26,7 +26,7 @@ export default async function Image() {
           flexDirection: 'column',
           justifyContent: 'center',
           padding: '80px',
-          background: '#1f6b52',
+          background: '#232b21',
           color: '#ffffff',
           fontFamily: 'sans-serif',
         }}
@@ -34,7 +34,7 @@ export default async function Image() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <div
             style={{
-              width: 96, height: 96, borderRadius: 24, background: '#ffffff', color: '#1f6b52',
+              width: 96, height: 96, borderRadius: 24, background: '#ffffff', color: '#232b21',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 60, fontWeight: 700,
             }}

@@ -41,7 +41,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
 
   return (
     <div>
-      <Link href="/admin/orders" className="inline-flex items-center gap-1 text-sm text-muted hover:text-brand-700">
+      <Link href="/admin/orders" className="inline-flex items-center gap-1 text-sm text-muted hover:text-clay-700">
         <ChevronLeftIcon className="h-4 w-4" /> Back to orders
       </Link>
 
@@ -131,7 +131,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
               <h2 id="payment" className="text-sm font-bold">Payment</h2>
               <p className="mt-1 text-sm text-muted">
                 {paymentMethodLabel(order.paymentMethod)} ·{' '}
-                <span className={order.paymentStatus === 'PAID' ? 'font-semibold text-success' : 'font-semibold text-accent-700'}>
+                <span className={order.paymentStatus === 'PAID' ? 'font-semibold text-success' : 'font-semibold text-clay-700'}>
                   {PAYMENT_STATUS_LABEL[order.paymentStatus] ?? order.paymentStatus}
                 </span>
                 {order.paymentReference ? <> · code <span className="font-mono">{order.paymentReference}</span></> : null}

@@ -115,7 +115,7 @@ export function InstallPrompt() {
       className="fixed inset-x-3 bottom-3 z-[55] mx-auto max-w-md animate-slide-up rounded-card border border-line bg-surface p-4 shadow-pop sm:bottom-24 sm:left-auto sm:right-6"
     >
       <div className="flex items-start gap-3">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-600 text-base font-bold text-white" aria-hidden="true">D</span>
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-clay-600 text-base font-bold text-white" aria-hidden="true">D</span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-ink">Shop faster with {business.name}</p>
           {showIosHelp ? (

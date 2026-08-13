@@ -119,7 +119,7 @@ export function CheckboxField({
         <input
           id={id}
           type="checkbox"
-          className="mt-0.5 h-5 w-5 shrink-0 rounded border-line text-brand-600 focus:ring-brand-600"
+          className="mt-0.5 h-5 w-5 shrink-0 rounded border-line text-clay-600 focus:ring-clay-600"
           aria-describedby={hint ? `${id}-hint` : undefined}
           {...props}
         />

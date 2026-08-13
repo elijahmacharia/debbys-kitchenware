@@ -3,49 +3,67 @@
 @tailwind utilities;
 
 /*
- * DESIGN TOKENS
- * -----------------------------------------------------------------------------
- * Every colour in the application resolves back to one of these variables, so
- * rebranding is a single edit here rather than a search across components.
- * Values are space-separated RGB channels so Tailwind can apply opacity
- * modifiers like `bg-brand-600/10`.
+ * DEBBY'S KITCHENWARE — VISUAL SYSTEM
+ * =============================================================================
+ * The palette is warm rather than corporate: an ivory paper ground, warm
+ * charcoal text, and a clay red drawn from earthenware and terracotta. That
+ * accent is doing the identity work — it belongs to cookware and homes, not to
+ * software, and it is the thing you would recognise across the shopfront, a
+ * carrier bag and this website.
  *
- * The palette is a deep green (clean, fresh, trustworthy — reads well for
- * household and food-adjacent retail) with a warm amber used sparingly for
- * sale badges and secondary calls to action. Body text on the page background
- * measures about 12:1 contrast and white on brand-600 about 5.4:1, both past
- * the WCAG AA threshold of 4.5:1.
+ * A deep olive carries the dark sections. WhatsApp green appears ONLY on
+ * WhatsApp controls, so it always means the same thing.
+ *
+ * Contrast: ink on ivory ~15:1, white on clay-600 ~5.3:1, muted on ivory
+ * ~5.9:1. All past the WCAG AA threshold of 4.5:1.
  */
 :root {
-  --brand-50: 240 249 245;
-  --brand-100: 219 240 229;
-  --brand-200: 184 225 205;
-  --brand-300: 134 203 172;
-  --brand-400: 78 173 137;
-  --brand-500: 45 141 108;
-  --brand-600: 31 107 82;
-  --brand-700: 26 86 68;
-  --brand-800: 23 69 56;
-  --brand-900: 20 57 47;
+  /* Clay — the brand accent. Prices, primary buttons, active states. */
+  --clay-50: 253 244 240;
+  --clay-100: 250 230 222;
+  --clay-200: 242 202 186;
+  --clay-300: 231 165 140;
+  --clay-400: 214 122 90;
+  --clay-500: 196 91 58;
+  --clay-600: 173 71 40;
+  --clay-700: 141 57 33;
+  --clay-800: 112 47 29;
+  --clay-900: 92 41 27;
 
-  --accent-50: 255 247 235;
-  --accent-100: 254 236 205;
-  --accent-500: 217 119 6;
-  --accent-600: 190 96 4;
-  --accent-700: 146 71 4;
+  /* Olive — dark bands, footer, editorial blocks. */
+  --olive-50: 242 244 240;
+  --olive-100: 226 231 221;
+  --olive-500: 74 88 68;
+  --olive-600: 58 70 54;
+  --olive-700: 45 55 42;
+  --olive-800: 35 43 33;
+  --olive-900: 27 33 26;
 
-  --ink: 26 36 31;
-  --muted: 88 102 94;
-  --subtle: 124 138 128;
+  /* Paper and ink. */
+  --canvas: 251 248 243;
   --surface: 255 255 255;
-  --canvas: 249 250 249;
-  --line: 224 229 226;
+  --raise: 246 241 233;
+  --ink: 25 23 19;
+  --muted: 107 99 90;
+  --subtle: 150 141 130;
+  --line: 230 223 212;
+  --line-strong: 214 204 190;
 
-  --success: 21 128 61;
-  --warning: 180 83 9;
-  --danger: 185 28 28;
+  --success: 47 110 66;
+  --warning: 170 100 20;
+  --danger: 168 45 34;
   --whatsapp: 37 176 90;
 
+  /*
+   * A serif for editorial headings against a sans for interface text. The
+   * pairing is what stops a shop reading like a dashboard. Both are system
+   * faces, so nothing is downloaded and text paints on the first frame.
+   *
+   * To use a licensed typeface later, add it with next/font in
+   * src/app/layout.tsx and set --font-display to its CSS variable. Nothing
+   * else needs to change.
+   */
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -69,75 +87,93 @@
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4 { @apply font-semibold tracking-tight text-ink; }
-  h1 { @apply text-2xl sm:text-3xl lg:text-4xl; }
-  h2 { @apply text-xl sm:text-2xl; }
-  h3 { @apply text-base sm:text-lg; }
+  /*
+   * Headings are serif and tightly set. Sizes step deliberately rather than
+   * uniformly, so a page has a clear top note instead of five similar sizes.
+   */
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    @apply text-ink;
+    letter-spacing: -0.015em;
+  }
+  h1 { @apply text-[2rem] leading-[1.1] sm:text-[2.6rem] lg:text-[3.1rem]; }
+  h2 { @apply text-2xl leading-tight sm:text-[1.9rem]; }
+  h3 { @apply text-lg leading-snug sm:text-xl; }
+  h4 { @apply text-base font-semibold; }
 
-  /* A single, consistent focus ring everywhere, including keyboard-only use. */
   :focus-visible {
-    @apply outline-none ring-2 ring-brand-600 ring-offset-2 ring-offset-canvas rounded-sm;
+    @apply outline-none ring-2 ring-clay-600 ring-offset-2 ring-offset-canvas rounded-sm;
   }
 
-  /* Hide native number spinners; quantity uses explicit +/- buttons. */
   input[type='number']::-webkit-outer-spin-button,
   input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   input[type='number'] { -moz-appearance: textfield; }
+
+  ::selection { background: rgb(var(--clay-200)); color: rgb(var(--ink)); }
 }
 
 @layer components {
-  .container-site { @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-8; }
+  .container-site { @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-10; }
 
-  /* 44px minimum height on interactive controls — the smallest comfortable
-     touch target on a phone. */
+  /*
+   * Buttons are square-ish and flat. Heavy rounding plus a drop shadow on
+   * every control is the single clearest tell of a generated interface.
+   */
   .btn {
-    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-control
-           px-4 text-sm font-semibold transition-colors
-           disabled:cursor-not-allowed disabled:opacity-55;
+    @apply inline-flex min-h-[46px] items-center justify-center gap-2 rounded-[3px]
+           px-5 text-[0.9rem] font-semibold tracking-tight transition-colors duration-150
+           disabled:cursor-not-allowed disabled:opacity-50;
   }
-  .btn-primary   { @apply btn bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800; }
-  .btn-secondary { @apply btn border border-line bg-surface text-ink hover:border-brand-200 hover:bg-brand-50; }
-  .btn-accent    { @apply btn bg-accent-500 text-white hover:bg-accent-600; }
-  .btn-ghost     { @apply btn text-ink hover:bg-brand-50; }
+  .btn-primary   { @apply btn bg-clay-600 text-white hover:bg-clay-700 active:bg-clay-800; }
+  .btn-dark      { @apply btn bg-olive-800 text-white hover:bg-olive-900; }
+  .btn-secondary { @apply btn border border-line-strong bg-transparent text-ink hover:border-ink hover:bg-raise; }
+  .btn-ghost     { @apply btn text-ink hover:bg-raise; }
   .btn-danger    { @apply btn bg-danger text-white hover:opacity-90; }
   .btn-whatsapp  { @apply btn bg-whatsapp text-white hover:brightness-95; }
-  .btn-sm        { @apply min-h-[36px] px-3 text-xs; }
+  .btn-sm        { @apply min-h-[38px] px-3.5 text-xs; }
 
-  .card { @apply rounded-card border border-line bg-surface shadow-card; }
+  /* Kept for genuinely card-like things: an order, a summary panel, a form. */
+  .card { @apply rounded-[4px] border border-line bg-surface; }
+
+  /* A quieter alternative used where a border alone is enough separation. */
+  .panel { @apply border-t border-line pt-5; }
 
   .input {
-    @apply block min-h-[44px] w-full rounded-control border border-line bg-surface px-3 py-2
+    @apply block min-h-[46px] w-full rounded-[3px] border border-line-strong bg-surface px-3.5 py-2
            text-base text-ink placeholder:text-subtle
-           focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-600/25
-           disabled:bg-canvas disabled:text-muted;
+           focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink
+           disabled:bg-raise disabled:text-muted;
   }
-  .input-error { @apply border-danger focus:border-danger focus:ring-danger/25; }
+  .input-error { @apply border-danger focus:border-danger focus:ring-danger; }
 
-  .label { @apply mb-1.5 block text-sm font-medium text-ink; }
+  .label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted; }
   .hint  { @apply mt-1 text-xs text-muted; }
   .error-text { @apply mt-1 flex items-start gap-1 text-xs font-medium text-danger; }
 
-  .badge { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold leading-5; }
-
-  .link { @apply text-brand-700 underline underline-offset-2 hover:text-brand-800; }
-
-  .skeleton { @apply animate-pulse rounded bg-line/70; }
-
-  /* Screen-reader-only text that becomes visible when focused (skip link). */
-  .sr-only-focusable {
-    @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50
-           focus:rounded-control focus:bg-brand-700 focus:px-4 focus:py-2 focus:text-white;
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-[2px] px-1.5 py-0.5
+           text-[10px] font-bold uppercase tracking-wider leading-4;
   }
 
-  .prose-page { @apply max-w-3xl space-y-4 text-sm leading-relaxed text-muted; }
-  .prose-page h2 { @apply mt-8 text-lg font-bold text-ink; }
+  /* Section label: small caps above an editorial heading. */
+  .eyebrow { @apply text-[11px] font-bold uppercase tracking-[0.14em] text-clay-600; }
+
+  .link { @apply text-ink underline decoration-clay-400 underline-offset-4 hover:decoration-clay-600; }
+
+  .skeleton { @apply animate-pulse rounded-[3px] bg-line/70; }
+
+  .sr-only-focusable {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50
+           focus:rounded-[3px] focus:bg-ink focus:px-4 focus:py-2 focus:text-white;
+  }
+
+  .prose-page { @apply max-w-2xl space-y-4 text-[0.95rem] leading-relaxed text-muted; }
+  .prose-page h2 { @apply mt-9 text-xl text-ink; }
   .prose-page h3 { @apply mt-6 text-base font-semibold text-ink; }
-  .prose-page ul { @apply list-disc space-y-1 pl-5; }
+  .prose-page ul { @apply list-disc space-y-1.5 pl-5; }
   .prose-page a { @apply link; }
 }
 
-/* Standalone (installed PWA) tweak: keep content clear of the iOS home
-   indicator. The website in a normal browser tab is unaffected. */
 @media all and (display-mode: standalone) {
   body { padding-bottom: env(safe-area-inset-bottom); }
 }

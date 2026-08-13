@@ -29,13 +29,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
         style={{
           width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
           justifyContent: 'space-between', padding: '70px',
-          background: '#f9faf9', color: '#1a241f', fontFamily: 'sans-serif',
+          background: '#fbf8f3', color: '#191713', fontFamily: 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
           <div
             style={{
-              width: 64, height: 64, borderRadius: 16, background: '#1f6b52', color: '#ffffff',
+              width: 64, height: 64, borderRadius: 16, background: '#ad4728', color: '#ffffff',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, fontWeight: 700,
             }}
           >
@@ -45,11 +45,11 @@ export default async function Image({ params }: { params: { slug: string } }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {category ? <div style={{ fontSize: 26, color: '#586659', marginBottom: 12 }}>{category}</div> : null}
+          {category ? <div style={{ fontSize: 26, color: '#6b635a', marginBottom: 12 }}>{category}</div> : null}
           <div style={{ fontSize: 68, fontWeight: 700, lineHeight: 1.1 }}>{name}</div>
           {price ? (
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginTop: 28 }}>
-              <div style={{ fontSize: 56, fontWeight: 700, color: '#1f6b52' }}>{price}</div>
+              <div style={{ fontSize: 56, fontWeight: 700, color: '#ad4728' }}>{price}</div>
               {wasPrice ? (
                 <div style={{ fontSize: 32, color: '#7c8a80', textDecoration: 'line-through' }}>{wasPrice}</div>
               ) : null}
@@ -57,7 +57,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           ) : null}
         </div>
 
-        <div style={{ fontSize: 26, color: '#586659' }}>Shop pickup · Local delivery · Order on WhatsApp</div>
+        <div style={{ fontSize: 26, color: '#6b635a' }}>Shop pickup · Local delivery · Order on WhatsApp</div>
       </div>
     ),
     size,

@@ -22,7 +22,7 @@ export function Price({
       {isOnSale(product) ? (
         <>
           <s className={cn('text-subtle', size === 'lg' ? 'text-base' : 'text-xs')}>{formatKsh(product.priceCents)}</s>
-          <span className="badge bg-accent-500 text-white">-{discountPercent(product)}%</span>
+          <span className="badge bg-clay-600 text-white">-{discountPercent(product)}%</span>
         </>
       ) : null}
     </div>

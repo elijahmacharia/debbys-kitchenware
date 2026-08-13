@@ -65,7 +65,7 @@ export default async function AdminDashboardPage() {
         <section className="card overflow-hidden" aria-labelledby="recent-orders">
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
             <h2 id="recent-orders" className="text-sm font-bold">Recent orders</h2>
-            <Link href="/admin/orders" className="text-xs font-semibold text-brand-700 hover:underline">View all</Link>
+            <Link href="/admin/orders" className="text-xs font-semibold text-clay-700 hover:underline">View all</Link>
           </div>
           {recent.length === 0 ? (
             <p className="p-4 text-sm text-muted">No orders yet.</p>
@@ -100,7 +100,7 @@ export default async function AdminDashboardPage() {
               <ul className="divide-y divide-line">
                 {popular.map((product) => (
                   <li key={product.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
-                    <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-brand-700">{product.name}</Link>
+                    <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-clay-700">{product.name}</Link>
                     <span className="shrink-0 text-xs text-muted">{product.unitsSold} sold · {product.viewCount} views</span>
                   </li>
                 ))}
@@ -111,7 +111,7 @@ export default async function AdminDashboardPage() {
           <section className="card overflow-hidden" aria-labelledby="low-stock">
             <div className="flex items-center justify-between border-b border-line px-4 py-3">
               <h2 id="low-stock" className="text-sm font-bold">Running low</h2>
-              <Link href="/admin/inventory" className="text-xs font-semibold text-brand-700 hover:underline">Manage stock</Link>
+              <Link href="/admin/inventory" className="text-xs font-semibold text-clay-700 hover:underline">Manage stock</Link>
             </div>
             {lowStock.length === 0 ? (
               <p className="p-4 text-sm text-muted">Nothing is running low. </p>
@@ -119,8 +119,8 @@ export default async function AdminDashboardPage() {
               <ul className="divide-y divide-line">
                 {lowStock.map((product) => (
                   <li key={product.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
-                    <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-brand-700">{product.name}</Link>
-                    <span className={cn('shrink-0 text-xs font-semibold', product.stock === 0 ? 'text-danger' : 'text-accent-700')}>
+                    <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-clay-700">{product.name}</Link>
+                    <span className={cn('shrink-0 text-xs font-semibold', product.stock === 0 ? 'text-danger' : 'text-clay-700')}>
                       {product.stock === 0 ? 'Out of stock' : `${product.stock} left`}
                     </span>
                   </li>
@@ -144,12 +144,12 @@ export default async function AdminDashboardPage() {
 function Stat({ label, value, hint, href, tone }: { label: string; value: string; hint?: string; href?: string; tone?: 'warn' | 'bad' }) {
   const body = (
     <>
-      <p className={cn('text-xl font-bold sm:text-2xl', tone === 'bad' ? 'text-danger' : tone === 'warn' ? 'text-accent-700' : 'text-ink')}>
+      <p className={cn('text-xl font-bold sm:text-2xl', tone === 'bad' ? 'text-danger' : tone === 'warn' ? 'text-clay-700' : 'text-ink')}>
         {value}
       </p>
       <p className="text-xs text-muted">{label}</p>
       {hint ? <p className="mt-0.5 text-[11px] text-subtle">{hint}</p> : null}
     </>
   );
-  return href ? <Link href={href} className="card p-3.5 hover:border-brand-300">{body}</Link> : <div className="card p-3.5">{body}</div>;
+  return href ? <Link href={href} className="card p-3.5 hover:border-clay-300">{body}</Link> : <div className="card p-3.5">{body}</div>;
 }

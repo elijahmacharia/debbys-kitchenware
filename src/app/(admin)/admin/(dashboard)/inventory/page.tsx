@@ -54,7 +54,7 @@ export default async function AdminInventoryPage({
             aria-current={(filter ?? '') === tab.key ? 'page' : undefined}
             className={cn(
               'rounded-full border px-3 py-1.5 text-sm',
-              (filter ?? '') === tab.key ? 'border-brand-600 bg-brand-600 text-white' : 'border-line bg-surface hover:bg-brand-50',
+              (filter ?? '') === tab.key ? 'border-clay-600 bg-clay-600 text-white' : 'border-line bg-surface hover:bg-clay-50',
             )}
           >
             {tab.label}
@@ -90,12 +90,12 @@ export default async function AdminInventoryPage({
               {rows.map((row) => (
                 <tr key={row.id} className={row.isActive ? undefined : 'opacity-60'}>
                   <th scope="row" className="px-3 py-2.5 text-left font-medium">
-                    <Link href={`/admin/products/${row.id}`} className="text-ink hover:text-brand-700">{row.name}</Link>
+                    <Link href={`/admin/products/${row.id}`} className="text-ink hover:text-clay-700">{row.name}</Link>
                     <span className="block font-mono text-[11px] font-normal text-subtle">{row.sku}</span>
                   </th>
                   <td className="px-3 py-2.5 text-muted">{row.categoryName}</td>
                   <td className="px-3 py-2.5">
-                    <span className={cn('font-semibold', row.stock === 0 ? 'text-danger' : row.stock <= row.lowStockAt ? 'text-accent-700' : 'text-ink')}>
+                    <span className={cn('font-semibold', row.stock === 0 ? 'text-danger' : row.stock <= row.lowStockAt ? 'text-clay-700' : 'text-ink')}>
                       {row.stock}
                     </span>
                   </td>

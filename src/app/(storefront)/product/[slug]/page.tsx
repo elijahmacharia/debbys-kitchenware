@@ -83,7 +83,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <ProductGallery images={product.images} productName={product.name} />
 
         <div>
-          <Link href={`/category/${product.categorySlug}`} className="text-xs font-medium uppercase tracking-wide text-brand-700 hover:underline">
+          <Link href={`/category/${product.categorySlug}`} className="eyebrow hover:underline">
             {product.categoryName}
           </Link>
 
@@ -129,18 +129,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted">{product.description}</p>
           </section>
 
-          <div className="mt-6 grid gap-2 sm:grid-cols-2">
-            <div className="card flex gap-2.5 p-3">
-              <StoreIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
+          <div className="mt-7 grid gap-x-8 sm:grid-cols-2">
+            <div className="flex gap-3 border-t border-line py-4">
+              <StoreIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
               <div>
                 <p className="text-sm font-semibold">Collect at the shop</p>
-                <p className="text-xs leading-snug text-muted">Free. We will tell you when it is ready.</p>
+                <p className="text-xs leading-snug text-muted">Free. We tell you when it is ready.</p>
               </div>
             </div>
-            <div className="card flex gap-2.5 p-3">
-              <TruckIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
+            <div className="flex gap-3 border-t border-line py-4">
+              <TruckIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
               <div>
-                <p className="text-sm font-semibold">Delivery</p>
+                <p className="text-sm font-semibold">We deliver</p>
                 <p className="text-xs leading-snug text-muted">
                   {zones.length > 0
                     ? `${zones.length} area${zones.length === 1 ? '' : 's'}. Fee shown at checkout.`

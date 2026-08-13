@@ -49,7 +49,7 @@ export default async function AdminOrdersPage({
             aria-current={activeStatus === status ? 'page' : undefined}
             className={cn(
               'rounded-full border px-3 py-1.5 text-xs font-medium',
-              activeStatus === status ? 'border-brand-600 bg-brand-600 text-white' : 'border-line bg-surface hover:bg-brand-50',
+              activeStatus === status ? 'border-clay-600 bg-clay-600 text-white' : 'border-line bg-surface hover:bg-clay-50',
             )}
           >
             {status === 'ALL' ? 'All' : STATUS_META[status as keyof typeof STATUS_META]?.label ?? status}
@@ -80,7 +80,7 @@ export default async function AdminOrdersPage({
                 {result.rows.map((order) => (
                   <tr key={order.id} className="hover:bg-canvas">
                     <th scope="row" className="px-3 py-2.5 text-left">
-                      <Link href={`/admin/orders/${order.id}`} className="font-mono text-xs font-bold text-ink hover:text-brand-700">
+                      <Link href={`/admin/orders/${order.id}`} className="font-mono text-xs font-bold text-ink hover:text-clay-700">
                         {order.orderNumber}
                       </Link>
                       <span className="block text-[11px] font-normal text-subtle">
@@ -97,7 +97,7 @@ export default async function AdminOrdersPage({
                     </td>
                     <td className="px-3 py-2.5 font-semibold">{formatKsh(order.totalCents)}</td>
                     <td className="px-3 py-2.5">
-                      <span className={order.paymentStatus === 'PAID' ? 'text-xs font-semibold text-success' : 'text-xs font-semibold text-accent-700'}>
+                      <span className={order.paymentStatus === 'PAID' ? 'text-xs font-semibold text-success' : 'text-xs font-semibold text-clay-700'}>
                         {PAYMENT_STATUS_LABEL[order.paymentStatus] ?? order.paymentStatus}
                       </span>
                     </td>

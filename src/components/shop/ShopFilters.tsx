@@ -98,7 +98,7 @@ export function ShopFilters({
             <button
               type="button"
               onClick={() => update({ category: null })}
-              className={cn('block w-full rounded px-2 py-1.5 text-left text-sm', !activeCategory ? 'bg-brand-50 font-semibold text-brand-800' : 'text-muted hover:bg-canvas')}
+              className={cn('block w-full rounded px-2 py-1.5 text-left text-sm', !activeCategory ? 'bg-clay-50 font-semibold text-olive-800' : 'text-muted hover:bg-canvas')}
             >
               All categories
             </button>
@@ -107,7 +107,7 @@ export function ShopFilters({
                 <button
                   type="button"
                   onClick={() => update({ category: category.slug })}
-                  className={cn('flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-sm', activeCategory === category.slug ? 'bg-brand-50 font-semibold text-brand-800' : 'text-ink hover:bg-canvas')}
+                  className={cn('flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-sm', activeCategory === category.slug ? 'bg-clay-50 font-semibold text-olive-800' : 'text-ink hover:bg-canvas')}
                 >
                   <span>{category.name}</span>
                   <span className="text-xs text-subtle">{category.productCount}</span>
@@ -119,7 +119,7 @@ export function ShopFilters({
                         key={child.slug}
                         type="button"
                         onClick={() => update({ category: child.slug })}
-                        className={cn('flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-[13px]', activeCategory === child.slug ? 'bg-brand-50 font-semibold text-brand-800' : 'text-muted hover:bg-canvas')}
+                        className={cn('flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-[13px]', activeCategory === child.slug ? 'bg-clay-50 font-semibold text-olive-800' : 'text-muted hover:bg-canvas')}
                       >
                         <span>{child.name}</span>
                         <span className="text-xs text-subtle">{child.productCount}</span>
@@ -151,15 +151,15 @@ export function ShopFilters({
         <legend className="mb-2 text-sm font-semibold text-ink">Show only</legend>
         <div className="space-y-1">
           <label className={checkbox}>
-            <input type="checkbox" checked={inStock} onChange={(e) => update({ stock: e.target.checked ? '1' : null })} className="h-5 w-5 rounded border-line text-brand-600 focus:ring-brand-600" />
+            <input type="checkbox" checked={inStock} onChange={(e) => update({ stock: e.target.checked ? '1' : null })} className="h-5 w-5 rounded border-line text-clay-600 focus:ring-clay-600" />
             In stock
           </label>
           <label className={checkbox}>
-            <input type="checkbox" checked={onSale} onChange={(e) => update({ sale: e.target.checked ? '1' : null })} className="h-5 w-5 rounded border-line text-brand-600 focus:ring-brand-600" />
+            <input type="checkbox" checked={onSale} onChange={(e) => update({ sale: e.target.checked ? '1' : null })} className="h-5 w-5 rounded border-line text-clay-600 focus:ring-clay-600" />
             On sale
           </label>
           <label className={checkbox}>
-            <input type="checkbox" checked={newOnly} onChange={(e) => update({ new: e.target.checked ? '1' : null })} className="h-5 w-5 rounded border-line text-brand-600 focus:ring-brand-600" />
+            <input type="checkbox" checked={newOnly} onChange={(e) => update({ new: e.target.checked ? '1' : null })} className="h-5 w-5 rounded border-line text-clay-600 focus:ring-clay-600" />
             New arrivals
           </label>
         </div>
@@ -184,7 +184,7 @@ export function ShopFilters({
           <FilterIcon className="h-4 w-4" />
           Filters
           {activeFilters.length > 0 ? (
-            <span className="ml-0.5 grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-brand-600 px-1 text-[11px] text-white">
+            <span className="ml-0.5 grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-clay-600 px-1 text-[11px] text-white">
               {activeFilters.length}
             </span>
           ) : null}
@@ -199,7 +199,7 @@ export function ShopFilters({
               key={filter.key}
               type="button"
               onClick={() => update({ [filter.key]: null })}
-              className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink hover:border-brand-300"
+              className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink hover:border-clay-300"
             >
               {filter.label}
               <XIcon className="h-3 w-3" />

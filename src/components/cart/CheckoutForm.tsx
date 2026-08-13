@@ -252,9 +252,9 @@ export function CheckoutForm({
             <button
               type="button" role="radio" aria-checked={fulfilment === 'PICKUP'} onClick={() => setFulfilment('PICKUP')}
               className={cn('flex items-start gap-3 rounded-card border p-3 text-left transition',
-                fulfilment === 'PICKUP' ? 'border-brand-600 bg-brand-50 ring-1 ring-brand-600' : 'border-line hover:border-brand-300')}
+                fulfilment === 'PICKUP' ? 'border-clay-600 bg-clay-50 ring-1 ring-clay-600' : 'border-line hover:border-clay-300')}
             >
-              <StoreIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
+              <StoreIcon className="mt-0.5 h-5 w-5 shrink-0 text-clay-600" />
               <span>
                 <span className="block text-sm font-semibold">Collect at the shop</span>
                 <span className="block text-xs text-muted">Free. {shopAddress ?? 'We will confirm where.'}</span>
@@ -265,9 +265,9 @@ export function CheckoutForm({
               type="button" role="radio" aria-checked={fulfilment === 'DELIVERY'} disabled={zones.length === 0}
               onClick={() => setFulfilment('DELIVERY')}
               className={cn('flex items-start gap-3 rounded-card border p-3 text-left transition disabled:cursor-not-allowed disabled:opacity-55',
-                fulfilment === 'DELIVERY' ? 'border-brand-600 bg-brand-50 ring-1 ring-brand-600' : 'border-line hover:border-brand-300')}
+                fulfilment === 'DELIVERY' ? 'border-clay-600 bg-clay-50 ring-1 ring-clay-600' : 'border-line hover:border-clay-300')}
             >
-              <TruckIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
+              <TruckIcon className="mt-0.5 h-5 w-5 shrink-0 text-clay-600" />
               <span>
                 <span className="block text-sm font-semibold">Deliver to me</span>
                 <span className="block text-xs text-muted">
@@ -290,7 +290,7 @@ export function CheckoutForm({
                         key={address.id}
                         type="button"
                         onClick={() => applyAddress(address)}
-                        className="rounded-full border border-line px-3 py-1.5 text-xs hover:border-brand-300 hover:bg-brand-50"
+                        className="rounded-full border border-line px-3 py-1.5 text-xs hover:border-clay-300 hover:bg-clay-50"
                       >
                         {address.label}, {address.area}{address.isDefault ? ' (default)' : ''}
                       </button>
@@ -378,12 +378,12 @@ export function CheckoutForm({
               <label
                 key={method.key}
                 className={cn('flex cursor-pointer gap-3 rounded-card border p-3 transition',
-                  paymentMethod === method.key ? 'border-brand-600 bg-brand-50 ring-1 ring-brand-600' : 'border-line hover:border-brand-300')}
+                  paymentMethod === method.key ? 'border-clay-600 bg-clay-50 ring-1 ring-clay-600' : 'border-line hover:border-clay-300')}
               >
                 <input
                   type="radio" name="paymentMethod" value={method.key} checked={paymentMethod === method.key}
                   onChange={() => { setPaymentMethod(method.key); setErrors((c) => ({ ...c, paymentMethod: '' })); }}
-                  className="mt-0.5 h-5 w-5 shrink-0 border-line text-brand-600 focus:ring-brand-600"
+                  className="mt-0.5 h-5 w-5 shrink-0 border-line text-clay-600 focus:ring-clay-600"
                 />
                 <span className="min-w-0">
                   <span className="block text-sm font-semibold text-ink">{method.label}</span>

@@ -18,7 +18,7 @@ export default async function AdminLoginPage() {
     <div className="flex flex-1 items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <span className="mx-auto grid h-11 w-11 place-items-center rounded-lg bg-brand-600 text-lg font-bold text-white">D</span>
+          <span className="mx-auto grid h-11 w-11 place-items-center rounded-lg bg-clay-600 text-lg font-bold text-white">D</span>
           <h1 className="mt-3 text-xl font-bold">{business.name}</h1>
           <p className="text-sm text-muted">Staff dashboard</p>
         </div>

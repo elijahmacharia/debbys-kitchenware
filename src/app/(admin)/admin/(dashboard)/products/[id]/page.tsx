@@ -24,7 +24,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
 
   return (
     <div className="max-w-3xl">
-      <Link href="/admin/products" className="inline-flex items-center gap-1 text-sm text-muted hover:text-brand-700">
+      <Link href="/admin/products" className="inline-flex items-center gap-1 text-sm text-muted hover:text-clay-700">
         <ChevronLeftIcon className="h-4 w-4" /> Back to products
       </Link>
 

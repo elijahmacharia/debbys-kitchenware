@@ -24,7 +24,7 @@ export function Pagination({
   return (
     <nav aria-label="Pagination" className="mt-8 flex flex-wrap items-center justify-center gap-1.5">
       {page > 1 ? (
-        <Link href={buildHref(page - 1)} rel="prev" className={cn(base, 'border-line bg-surface hover:bg-brand-50')} aria-label="Previous page">
+        <Link href={buildHref(page - 1)} rel="prev" className={cn(base, 'border-line bg-surface hover:bg-clay-50')} aria-label="Previous page">
           <ChevronLeftIcon className="h-4 w-4" />
           <span className="ml-1 hidden sm:inline">Previous</span>
         </Link>
@@ -39,7 +39,7 @@ export function Pagination({
             href={buildHref(entry)}
             aria-current={entry === page ? 'page' : undefined}
             aria-label={`Page ${entry}`}
-            className={cn(base, entry === page ? 'border-brand-600 bg-brand-600 text-white' : 'border-line bg-surface hover:bg-brand-50')}
+            className={cn(base, entry === page ? 'border-clay-600 bg-clay-600 text-white' : 'border-line bg-surface hover:bg-clay-50')}
           >
             {entry}
           </Link>
@@ -47,7 +47,7 @@ export function Pagination({
       )}
 
       {page < totalPages ? (
-        <Link href={buildHref(page + 1)} rel="next" className={cn(base, 'border-line bg-surface hover:bg-brand-50')} aria-label="Next page">
+        <Link href={buildHref(page + 1)} rel="next" className={cn(base, 'border-line bg-surface hover:bg-clay-50')} aria-label="Next page">
           <span className="mr-1 hidden sm:inline">Next</span>
           <ChevronRightIcon className="h-4 w-4" />
         </Link>

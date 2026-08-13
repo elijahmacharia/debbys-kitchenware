@@ -76,7 +76,7 @@ export default async function CategoryPage({
       {category.children.length > 0 ? (
         <nav aria-label="Subcategories" className="mt-4 flex flex-wrap gap-1.5">
           {category.children.map((child) => (
-            <Link key={child.id} href={`/category/${child.slug}`} className="rounded-full border border-line bg-surface px-3 py-1.5 text-sm hover:border-brand-300 hover:bg-brand-50">
+            <Link key={child.id} href={`/category/${child.slug}`} className="rounded-full border border-line bg-surface px-3 py-1.5 text-sm hover:border-clay-300 hover:bg-clay-50">
               {child.name}
             </Link>
           ))}

@@ -45,7 +45,7 @@ export const viewport: Viewport = {
   // Zoom stays enabled. Disabling it is an accessibility failure for anyone
   // who needs to enlarge text.
   maximumScale: 5,
-  themeColor: '#1f6b52',
+  themeColor: '#fbf8f3',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

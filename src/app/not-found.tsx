@@ -12,7 +12,7 @@ export default function NotFound() {
   return (
     <div className="container-site flex min-h-[70vh] items-center justify-center py-12">
       <div className="max-w-md text-center">
-        <p className="text-5xl font-bold text-brand-600">404</p>
+        <p className="text-5xl font-bold text-clay-600">404</p>
         <h1 className="mt-3">We cannot find that page</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           The link may be old, or the product may have been withdrawn from sale. Try searching for what
