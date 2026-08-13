@@ -24,11 +24,11 @@ export function QuantityStepper({
   const ceiling = Math.max(min, max);
   const clamp = (next: number) => Math.max(min, Math.min(Math.floor(next) || min, ceiling));
   const buttonClass = compact
-    ? 'grid h-9 w-9 place-items-center text-ink disabled:opacity-40'
-    : 'grid h-11 w-11 place-items-center text-ink disabled:opacity-40';
+    ? 'grid h-8 w-8 place-items-center rounded-full bg-surface text-ink shadow-soft transition active:scale-90 disabled:opacity-35 disabled:shadow-none'
+    : 'grid h-10 w-10 place-items-center rounded-full bg-surface text-ink shadow-soft transition active:scale-90 disabled:opacity-35 disabled:shadow-none';
 
   return (
-    <div className="inline-flex items-center rounded-control border border-line bg-surface" role="group" aria-label={label}>
+    <div className="inline-flex items-center rounded-full bg-raise p-0.5" role="group" aria-label={label}>
       <button type="button" onClick={() => onChange(clamp(value - 1))} disabled={disabled || value <= min} className={buttonClass} aria-label="Decrease quantity">
         <MinusIcon className="h-4 w-4" />
       </button>
@@ -42,7 +42,7 @@ export function QuantityStepper({
         onChange={(event) => onChange(clamp(Number(event.target.value)))}
         onBlur={(event) => onChange(clamp(Number(event.target.value)))}
         aria-label={label}
-        className={`${compact ? 'h-9 w-11 text-sm' : 'h-11 w-14'} border-x border-line bg-transparent text-center font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-inset focus:ring-clay-600/40`}
+        className={`${compact ? 'h-8 w-9 text-sm' : 'h-10 w-12'} bg-transparent text-center font-semibold text-ink focus:outline-none`}
       />
       <button type="button" onClick={() => onChange(clamp(value + 1))} disabled={disabled || value >= ceiling} className={buttonClass} aria-label="Increase quantity">
         <PlusIcon className="h-4 w-4" />

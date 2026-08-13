@@ -1,62 +1,81 @@
 # The visual system
 
-Everything here is driven by CSS custom properties in `src/app/globals.css`.
-Change a value there and the whole shop follows. Tailwind only gives the
-variables names.
+Everything is driven by CSS custom properties in `src/app/globals.css`. Change a
+value there and the whole shop follows; Tailwind only gives the variables names.
+
+## Direction
+
+Near-white ground, near-black controls, soft grey surfaces, generous rounding.
+Colour is left to the product photography, with one exception: **clay red
+carries prices and sale badges**, so the number a shopper scans for is the only
+coloured thing on the page.
 
 ## Palette
 
 | Token | Use |
 | --- | --- |
-| `canvas` `#fbf8f3` | Page background. Warm ivory, not white |
-| `surface` `#ffffff` | Product frames, form panels |
-| `raise` `#f6f1e9` | Tinted bands, image backgrounds |
-| `ink` `#191713` | Text. Warm charcoal, not black |
+| `canvas` | Page background, a hair off white |
+| `surface` | Cards, sheets, the header |
+| `raise` / `raise-deep` | Image panels, quiet blocks, input fills |
+| `ink` | Text **and** every primary button |
 | `muted` / `subtle` | Secondary and tertiary text |
-| `clay-600` `#ad4728` | **The brand accent.** Prices, primary buttons, active nav |
-| `olive-900` `#1b211a` | Dark bands, footer |
-| `whatsapp` | WhatsApp controls only, so the colour always means one thing |
+| `clay-600` | **Prices and sale badges only** |
+| `whatsapp` | WhatsApp controls only |
 
-Clay was chosen because it belongs to earthenware and cookware. It reads as a
-home-goods shop rather than software, and it is distinctive enough to recognise
-on a carrier bag.
+Contrast: ink on canvas ~18:1, white on ink ~18:1, clay-600 on white ~5.3:1,
+muted on canvas ~5.2:1. All above the WCAG AA threshold of 4.5:1.
 
-Contrast: ink on canvas ~15:1, white on clay-600 ~5.3:1, muted on canvas ~5.9:1.
-All above the WCAG AA threshold of 4.5:1.
+## Shape language
+
+| Element | Radius |
+| --- | --- |
+| Buttons, inputs, chips, steppers | Full pill |
+| Cards, image panels, sheets | `rounded-3xl` (24px) |
+| Badges | Full pill |
+
+Borders are used sparingly. Separation comes from the tinted `raise` background
+and from whitespace. Shadows appear only on things that genuinely float — the
+tab bar's cart button, drawers, toasts, the wishlist heart.
+
+## Patterns
+
+- **Mobile tab bar** (`BottomNav`) — Home, Shop, raised Cart, Saved, Account.
+  Hidden on large screens and inside checkout. `body` reserves height for it, so
+  nothing hides underneath.
+- **Filter chips** (`CategoryChips`) — a horizontally scrollable pill rail.
+  Real links, so views are shareable and the back button works.
+- **Product tile** — soft image panel, heart top-right, one circular add button
+  straddling the bottom edge, name and price centred beneath. No border.
+- **Cart line** — thumbnail left, name and SKU chip, line total right, then
+  remove and quantity on their own row, matching the reference.
+- **Order summary** — its own soft block, total in clay, full-width pill
+  checkout.
+
+## Rules the components follow
+
+- **One action per product tile.** The image and name link through; enquiries
+  use the floating WhatsApp button.
+- **One badge maximum.** A discount outranks a New flag; nothing stacks.
+- **Sections earn their place.** A homepage rail renders only if at least three
+  products qualify (`MIN_RAIL`). A short honest page beats a padded one.
+- **No product appears twice.** Each section excludes ids used above it, and the
+  hero claims its product first.
 
 ## Typography
 
-A serif for headings, a sans for interface text. That pairing is the single
-biggest reason the site no longer reads as a dashboard.
+One geometric sans throughout; weight and size create hierarchy rather than a
+second typeface. System faces, so nothing downloads and text paints on the first
+frame.
 
-Both are system faces, so nothing downloads and text paints on the first frame.
-
-**To use a real typeface**, add it in `src/app/layout.tsx`:
+**To use a licensed face**, add it in `src/app/layout.tsx`:
 
 ```ts
-import { Fraunces } from 'next/font/google';
-const display = Fraunces({ subsets: ['latin'], variable: '--font-display' });
-// then add display.variable to the <html> className
+import { Manrope } from 'next/font/google';
+const sans = Manrope({ subsets: ['latin'], variable: '--font-sans' });
+// add sans.variable to the <html> className
 ```
 
-Nothing else changes — every heading already reads `--font-display`.
-
-## Principles the components follow
-
-- **Not everything is a card.** Product listings use whitespace and a tinted
-  image panel, no borders. `.card` is reserved for things that genuinely are
-  panels: an order summary, a form, an admin table.
-- **Elevation is for things that float.** Drawers, dropdowns and toasts get
-  `shadow-pop`. Static content never gets a shadow.
-- **Corners are 3–4px.** Heavy rounding everywhere is a generated-interface tell.
-- **One action per product card.** Add to cart. The image and title link
-  through; enquiries use the floating WhatsApp button.
-- **One badge maximum** on a product. Sale beats New; nothing stacks.
-- **Sections earn their place.** A homepage rail renders only if at least three
-  products qualify (`MIN_RAIL` in the homepage). A short honest page beats a
-  padded one.
-- **No product appears twice.** Each homepage section excludes ids already used
-  by the sections above it, and the hero claims its product first.
+Nothing else changes.
 
 ## Images
 
@@ -68,5 +87,5 @@ Nothing else changes — every heading already reads `--font-display`.
 | `src/app/icon.svg`, `apple-icon.png` | Favicon and Apple touch icon |
 | `src/app/opengraph-image.tsx` | Share preview, rendered as PNG |
 
-All the illustrations are placeholders. Replace any file with a real photograph
-of the same name and no code changes are needed.
+All illustrations are placeholders. Replace any file with a real photograph of
+the same name; no code changes needed.

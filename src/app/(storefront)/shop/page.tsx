@@ -8,6 +8,7 @@ import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 import { buildPageHref, parseProductSearchParams, type RawSearchParams } from '@/lib/searchParams';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { ShopFilters } from '@/components/shop/ShopFilters';
+import { CategoryChips } from '@/components/shop/CategoryChips';
 import { SortSelect } from '@/components/shop/SortSelect';
 import { Pagination } from '@/components/ui/Pagination';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -58,6 +59,10 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
           </p>
         </div>
         <SortSelect />
+      </div>
+
+      <div className="mt-5">
+        <CategoryChips categories={categories.map((c) => ({ name: c.name, slug: c.slug }))} />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[16rem_1fr] lg:items-start">

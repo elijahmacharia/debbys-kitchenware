@@ -69,8 +69,9 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
         <div>
           <ul className="space-y-3">
             {lines.map((line) => (
-              <li key={line.productId} className="card flex gap-3 p-3">
-                <Link href={`/product/${line.slug}`} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-control border border-line bg-canvas sm:h-24 sm:w-24">
+              <li key={line.productId} className="card p-3 shadow-soft sm:p-4">
+                <div className="flex gap-3.5">
+                <Link href={`/product/${line.slug}`} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-raise sm:h-[5.5rem] sm:w-[5.5rem]">
                   {line.imageUrl ? (
                     <Image src={line.imageUrl} alt={line.name} fill sizes="96px" className="object-contain p-1" />
                   ) : (
@@ -78,28 +79,37 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
                   )}
                 </Link>
 
-                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <Link href={`/product/${line.slug}`} className="line-clamp-2 text-sm font-semibold text-ink hover:text-clay-700">
-                        {line.name}
-                      </Link>
-                      <p className="text-xs text-muted">
-                        {formatKsh(line.unitPriceCents)} per {line.unit}
-                        {line.listPriceCents > line.unitPriceCents ? <s className="ml-1.5 text-subtle">{formatKsh(line.listPriceCents)}</s> : null}
-                      </p>
-                    </div>
+                <div className="flex min-w-0 flex-1 items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <Link href={`/product/${line.slug}`} className="line-clamp-2 text-[0.92rem] font-medium leading-snug hover:underline hover:underline-offset-4">
+                      {line.name}
+                    </Link>
+                    <p className="mt-0.5 text-xs text-subtle">{formatKsh(line.unitPriceCents)} per {line.unit}</p>
+                    <span className="badge mt-2 bg-raise text-muted">{line.sku}</span>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <p className="text-[0.95rem] font-bold text-clay-600">{formatKsh(line.unitPriceCents * line.quantity)}</p>
+                    {line.listPriceCents > line.unitPriceCents ? (
+                      <s className="text-xs text-subtle">{formatKsh(line.listPriceCents * line.quantity)}</s>
+                    ) : null}
+                  </div>
+                </div>
+                </div>
+
+                {/* Controls sit on their own row, as in the reference. */}
+                <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
+                  {line.stock <= 5 ? (
+                    <span className="text-xs font-medium text-clay-600">Only {line.stock} left</span>
+                  ) : <span />}
+                  <div className="flex items-center gap-1">
                     <button
                       type="button"
                       onClick={() => remove(line.productId)}
-                      className="-mr-1 -mt-1 rounded p-2 text-subtle hover:bg-canvas hover:text-danger"
+                      className="grid h-9 w-9 place-items-center rounded-full text-subtle transition hover:bg-raise hover:text-danger"
                       aria-label={`Remove ${line.name} from cart`}
                     >
                       <TrashIcon className="h-4 w-4" />
                     </button>
-                  </div>
-
-                  <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
                     <QuantityStepper
                       compact
                       value={line.quantity}
@@ -107,10 +117,7 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
                       max={line.stock}
                       label={`Quantity for ${line.name}`}
                     />
-                    <p className="text-sm font-bold text-ink">{formatKsh(line.unitPriceCents * line.quantity)}</p>
                   </div>
-
-                  {line.stock <= 5 ? <p className="text-xs font-medium text-clay-700">Only {line.stock} left in stock</p> : null}
                 </div>
               </li>
             ))}
@@ -128,8 +135,8 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
           </div>
         </div>
 
-        <aside className="card sticky top-24 p-4" aria-label="Order summary">
-          <h2 className="text-base font-bold">Order summary</h2>
+        <aside className="card sticky top-24 p-5 shadow-soft" aria-label="Order summary">
+          <h2 className="text-base font-semibold">Order summary</h2>
 
           <dl className="mt-3 space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-muted">Subtotal</dt><dd className="font-semibold">{formatKsh(subtotalCents)}</dd></div>
@@ -137,8 +144,9 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
               <dt className="text-muted">Delivery</dt>
               <dd className="text-right text-xs text-muted">{deliveryAvailable ? 'Calculated at checkout' : 'Ask us about your area'}</dd>
             </div>
-            <div className="flex justify-between border-t border-line pt-2 text-base">
-              <dt className="font-semibold">Total so far</dt><dd className="font-bold">{formatKsh(subtotalCents)}</dd>
+            <div className="flex justify-between border-t border-line pt-3 text-base">
+              <dt className="font-semibold">Total</dt>
+              <dd className="text-lg font-bold text-clay-600">{formatKsh(subtotalCents)}</dd>
             </div>
           </dl>
 

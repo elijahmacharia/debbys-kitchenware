@@ -96,8 +96,8 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
 
       {!session ? (
         <div className="card mt-6 bg-clay-50 p-4 text-center">
-          <p className="text-sm font-semibold text-olive-900">Want to track future orders more easily?</p>
-          <p className="mt-1 text-sm text-olive-800/80">
+          <p className="text-sm font-semibold text-ink">Want to track future orders more easily?</p>
+          <p className="mt-1 text-sm text-ink/80">
             Keep your order history, addresses and wishlist in one place. Entirely optional.
           </p>
           <div className="mt-3 flex flex-wrap justify-center gap-2">

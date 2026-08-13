@@ -66,7 +66,7 @@ export function ServiceWorkerManager() {
   if (!waitingWorker || dismissed) return null;
 
   return (
-    <div className="fixed inset-x-4 bottom-4 z-[65] mx-auto max-w-sm animate-slide-up rounded-card border border-line bg-surface p-3.5 shadow-pop sm:left-auto sm:right-6">
+    <div className="fixed inset-x-4 bottom-[5.5rem] z-[65] mx-auto max-w-sm animate-slide-up rounded-3xl bg-surface p-4 shadow-pop lg:bottom-6 lg:left-auto lg:right-6">
       <p className="text-sm font-semibold text-ink">A new version is available</p>
       <p className="mt-0.5 text-xs text-muted">Update to get the latest products and fixes.</p>
       <div className="mt-3 flex gap-2">

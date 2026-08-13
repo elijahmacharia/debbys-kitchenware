@@ -17,7 +17,7 @@ export function CategoryCard({
     <Link
       href={`/category/${slug}`}
       className={cn(
-        'group relative block overflow-hidden rounded-[4px] bg-raise',
+        'group relative block overflow-hidden rounded-3xl bg-raise',
         tall ? 'aspect-[4/5] sm:row-span-2 sm:aspect-auto sm:h-full' : 'aspect-[4/3]',
       )}
     >
@@ -32,7 +32,7 @@ export function CategoryCard({
       {/* Scrim, so white text stays legible whatever the picture underneath. */}
       <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-4">
-        <p className="font-display text-lg leading-tight text-white sm:text-xl">{name}</p>
+        <p className="text-base font-semibold leading-tight text-white sm:text-lg">{name}</p>
         <p className="mt-0.5 text-xs text-white/75">{productCount} products</p>
       </div>
     </Link>

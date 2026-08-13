@@ -27,11 +27,10 @@ export function WhatsAppFab({ href }: { href: string | null }) {
           body: JSON.stringify({ type: 'WHATSAPP_CLICK', label: 'fab' }),
         }).catch(() => undefined);
       }}
-      className="fixed bottom-4 right-4 z-40 inline-flex h-14 items-center gap-2 rounded-full bg-whatsapp pl-4 pr-5 font-semibold text-white shadow-pop transition hover:brightness-95 sm:bottom-6 sm:right-6"
+      className="fixed bottom-24 right-4 z-40 grid h-12 w-12 place-items-center rounded-full bg-whatsapp text-white shadow-pop transition active:scale-95 hover:brightness-95 lg:bottom-6 lg:right-6 lg:h-14 lg:w-14"
       aria-label="Chat with us on WhatsApp"
     >
       <WhatsAppIcon className="h-6 w-6" />
-      <span className="hidden text-sm sm:inline">WhatsApp</span>
     </a>
   );
 }

@@ -16,6 +16,9 @@ import { CategoryCard } from '@/components/product/CategoryCard';
 import { ButtonLink } from '@/components/ui/Button';
 import { WebsiteSearchJsonLd } from '@/components/seo/JsonLd';
 import { ArrowRightIcon, StoreIcon, TruckIcon, WhatsAppIcon } from '@/components/icons';
+import { SearchBox } from '@/components/layout/SearchBox';
+import { CategoryChips } from '@/components/shop/CategoryChips';
+import { formatKsh } from '@/lib/money';
 
 export const metadata: Metadata = {
   title: `${business.name} — Kitchenware & Household Essentials in Kenya`,
@@ -78,79 +81,76 @@ export default async function HomePage() {
       <WebsiteSearchJsonLd />
 
       {/* ============================================================ HERO ==
-          Asymmetric: type on the left, a single real product on the right.
-          Not a centred headline over a gradient. */}
-      <section className="border-b border-line bg-raise">
-        <div className="container-site grid gap-10 py-12 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16 lg:py-20">
-          <div>
-            <p className="eyebrow">Kitchen &amp; home, Nairobi</p>
-            <h1 className="mt-4 max-w-[13ch]">Everything your kitchen needs, in one place.</h1>
-            <p className="mt-5 max-w-md text-[1.02rem] leading-relaxed text-muted">
-              Kitchen essentials, storage, cleaning products and everyday household items. Collect at
-              the shop, or we deliver.
-            </p>
+          A short two-line greeting, the search, then the pill rail. The page
+          starts with the thing people came to do rather than with a slogan. */}
+      <section className="container-site pt-6 sm:pt-10">
+        <p className="text-sm text-muted">Kitchen &amp; home, Nairobi</p>
+        <h1 className="mt-1 max-w-[14ch]">
+          Everything your kitchen needs
+        </h1>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/shop" className="sm:px-8">
-                Shop kitchenware
-                <ArrowRightIcon className="h-4 w-4" />
-              </ButtonLink>
-              {whatsappHref ? (
-                <ButtonLink href={whatsappHref} external variant="secondary">
-                  <WhatsAppIcon className="h-4 w-4 text-whatsapp" />
-                  Chat on WhatsApp
-                </ButtonLink>
-              ) : null}
-            </div>
+        <div className="mt-6 lg:hidden">
+          <SearchBox />
+        </div>
 
-            <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4 border-t border-line-strong pt-6 text-sm">
-              <div className="flex items-center gap-2.5">
-                <StoreIcon className="h-4 w-4 shrink-0 text-clay-600" />
-                <div>
-                  <dt className="font-semibold text-ink">Free pickup</dt>
-                  <dd className="text-xs text-muted">Collect at the shop</dd>
-                </div>
+        <div className="mt-5">
+          <CategoryChips categories={categories.map((c) => ({ name: c.name, slug: c.slug }))} />
+        </div>
+
+        {heroProduct ? (
+          <Link href={`/product/${heroProduct.slug}`} className="group mt-6 block overflow-hidden rounded-3xl bg-raise">
+            <div className="grid gap-0 sm:grid-cols-2 sm:items-center">
+              <div className="order-2 p-6 sm:order-1 sm:p-10">
+                <p className="text-xs text-muted">{heroProduct.categoryName}</p>
+                <p className="mt-1.5 text-xl font-semibold leading-tight sm:text-2xl">{heroProduct.name}</p>
+                <p className="mt-2 text-lg font-bold text-clay-600">
+                  {formatKsh(heroProduct.salePriceCents ?? heroProduct.priceCents)}
+                </p>
+                <span className="btn-primary btn-sm mt-5 inline-flex">
+                  Shop now
+                  <ArrowRightIcon className="h-4 w-4" />
+                </span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <TruckIcon className="h-4 w-4 shrink-0 text-clay-600" />
-                <div>
-                  <dt className="font-semibold text-ink">Delivery</dt>
-                  <dd className="text-xs text-muted">
-                    {zones.length > 0 ? `${zones.length} areas, fee shown at checkout` : 'Ask about your area'}
-                  </dd>
-                </div>
-              </div>
-            </dl>
-          </div>
-
-          {/* One product, presented properly, instead of a grid of tiles. */}
-          {heroProduct ? (
-            <Link href={`/product/${heroProduct.slug}`} className="group relative block">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[4px] bg-surface sm:aspect-[5/4] lg:aspect-[4/5]">
+              <div className="relative order-1 aspect-[4/3] sm:order-2 sm:aspect-square">
                 {heroProduct.imageUrl ? (
                   <Image
                     src={heroProduct.imageUrl}
                     alt={heroProduct.imageAlt ?? heroProduct.name}
                     fill
                     priority
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    className="object-contain p-10 transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                    sizes="(max-width: 640px) 100vw, 45vw"
+                    className="object-contain p-8 transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                 ) : null}
               </div>
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3 bg-surface/95 p-3.5 backdrop-blur-sm">
-                <div className="min-w-0">
-                  <p className="text-[11px] uppercase tracking-wide text-muted">{heroProduct.categoryName}</p>
-                  <p className="truncate font-display text-lg">{heroProduct.name}</p>
-                </div>
-                <span className="shrink-0 text-sm font-bold text-clay-700">
-                  {new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES', maximumFractionDigits: 0 })
-                    .format((heroProduct.salePriceCents ?? heroProduct.priceCents) / 100)}
-                </span>
-              </div>
-            </Link>
+            </div>
+          </Link>
+        ) : null}
+
+        <div className="mt-5 flex flex-wrap gap-3">
+          <ButtonLink href="/shop" className="flex-1 sm:flex-none">Shop all products</ButtonLink>
+          {whatsappHref ? (
+            <ButtonLink href={whatsappHref} external variant="secondary" className="flex-1 sm:flex-none">
+              <WhatsAppIcon className="h-4 w-4 text-whatsapp" />
+              WhatsApp
+            </ButtonLink>
           ) : null}
         </div>
+
+        <dl className="mt-7 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-raise p-4">
+            <StoreIcon className="h-5 w-5 text-ink" />
+            <dt className="mt-2 text-sm font-semibold">Free pickup</dt>
+            <dd className="text-xs text-muted">Collect at the shop</dd>
+          </div>
+          <div className="rounded-2xl bg-raise p-4">
+            <TruckIcon className="h-5 w-5 text-ink" />
+            <dt className="mt-2 text-sm font-semibold">We deliver</dt>
+            <dd className="text-xs text-muted">
+              {zones.length > 0 ? `${zones.length} areas` : 'Ask about your area'}
+            </dd>
+          </div>
+        </dl>
       </section>
 
       {/* ====================================================== CATEGORIES == */}
@@ -159,9 +159,9 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="eyebrow">Departments</p>
-              <h2 id="departments" className="mt-2">Find it by room</h2>
+              <h2 id="departments" className="mt-1">Shop by category</h2>
             </div>
-            <Link href="/categories" className="text-sm font-semibold underline decoration-clay-400 underline-offset-4 hover:decoration-clay-600">
+            <Link href="/categories" className="link text-sm">
               All categories
             </Link>
           </div>
@@ -187,9 +187,9 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-3 border-t border-line-strong pt-8">
             <div>
               <p className="eyebrow">Selling well</p>
-              <h2 id="popular" className="mt-2">Popular right now</h2>
+              <h2 id="popular" className="mt-1">Popular right now</h2>
             </div>
-            <Link href="/shop?sort=popular" className="text-sm font-semibold underline decoration-clay-400 underline-offset-4 hover:decoration-clay-600">
+            <Link href="/shop?sort=popular" className="link text-sm">
               See all
             </Link>
           </div>
@@ -200,17 +200,17 @@ export default async function HomePage() {
       {/* =========================================================== DEALS ==
           A dark band breaks the rhythm of pale sections. */}
       {deals.length >= MIN_RAIL ? (
-        <section className="bg-olive-900 py-14 text-white sm:py-20" aria-labelledby="deals">
+        <section className="bg-raise py-12 sm:py-16" aria-labelledby="deals">
           <div className="container-site">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-clay-300">Reduced</p>
-                <h2 id="deals" className="mt-2 text-white">Worth a look</h2>
-                <p className="mt-2 max-w-md text-sm text-white/70">
+                <p className="eyebrow">Reduced</p>
+                <h2 id="deals" className="mt-1">Worth a look</h2>
+                <p className="mt-2 max-w-md text-sm text-muted">
                   The price you see is the reduced price. No codes, nothing to enter.
                 </p>
               </div>
-              <Link href="/shop?sale=1" className="text-sm font-semibold text-white underline decoration-clay-400 underline-offset-4">
+              <Link href="/shop?sale=1" className="link text-sm">
                 All offers
               </Link>
             </div>
@@ -225,9 +225,9 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="eyebrow">Just in</p>
-              <h2 id="new" className="mt-2">New arrivals</h2>
+              <h2 id="new" className="mt-1">New arrivals</h2>
             </div>
-            <Link href="/shop?new=1" className="text-sm font-semibold underline decoration-clay-400 underline-offset-4 hover:decoration-clay-600">
+            <Link href="/shop?new=1" className="link text-sm">
               See all
             </Link>
           </div>
@@ -236,8 +236,8 @@ export default async function HomePage() {
       ) : null}
 
       {/* ================================================ EDITORIAL / HOW == */}
-      <section className="border-y border-line bg-raise py-14 sm:py-20" aria-labelledby="how">
-        <div className="container-site grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      <section className="container-site py-12 sm:py-16" aria-labelledby="how">
+        <div className="grid gap-8 rounded-3xl bg-raise p-6 sm:p-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
           <div>
             <p className="eyebrow">How it works</p>
             <h2 id="how" className="mt-2 max-w-[16ch]">Order the way that suits you.</h2>
@@ -254,7 +254,7 @@ export default async function HomePage() {
           </div>
 
           {/* Numbered steps separated by rules, not stacked in cards. */}
-          <ol className="divide-y divide-line-strong border-t border-line-strong">
+          <ol className="divide-y divide-line">
             {[
               ['01', 'Choose what you need', 'Browse by department or search. Stock is live, so what you see is what we have.'],
               ['02', 'Checkout without an account', 'Name and phone number is enough. Sign up only if you want your details kept.'],
@@ -262,7 +262,7 @@ export default async function HomePage() {
               ['04', 'Collect it, or we deliver', 'Pickup is free. Delivery costs are shown before you confirm the order.'],
             ].map(([n, title, text]) => (
               <li key={n} className="flex gap-5 py-5">
-                <span className="font-display text-lg text-clay-500">{n}</span>
+                <span className="text-sm font-bold text-clay-600">{n}</span>
                 <div>
                   <p className="font-semibold text-ink">{title}</p>
                   <p className="mt-1 text-sm leading-relaxed text-muted">{text}</p>
@@ -279,9 +279,9 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="eyebrow">Curated</p>
-              <h2 id="kitchen" className="mt-2">Kitchen essentials</h2>
+              <h2 id="kitchen" className="mt-1">Kitchen essentials</h2>
             </div>
-            <Link href="/category/kitchenware" className="text-sm font-semibold underline decoration-clay-400 underline-offset-4 hover:decoration-clay-600">
+            <Link href="/category/kitchenware" className="link text-sm">
               All kitchenware
             </Link>
           </div>
@@ -296,8 +296,8 @@ export default async function HomePage() {
           <h2 id="said" className="mt-2">What people say</h2>
           <div className="mt-7 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((item) => (
-              <figure key={item.id} className="border-t border-line-strong pt-5">
-                <blockquote className="font-display text-lg leading-snug text-ink">“{item.body}”</blockquote>
+              <figure key={item.id} className="rounded-3xl bg-raise p-6">
+                <blockquote className="text-lg font-medium leading-snug text-ink">“{item.body}”</blockquote>
                 <figcaption className="mt-3 text-xs uppercase tracking-wide text-muted">
                   {item.authorName}{item.location ? `, ${item.location}` : ''}
                 </figcaption>
@@ -309,7 +309,7 @@ export default async function HomePage() {
 
       {/* ============================================================= CTA == */}
       <section className="container-site pb-16 sm:pb-24">
-        <div className="flex flex-col items-start justify-between gap-6 border-t border-line-strong pt-10 sm:flex-row sm:items-end">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-raise p-6 sm:flex-row sm:items-end sm:p-10">
           <div>
             <h2 className="max-w-[18ch]">Looking for something you cannot see?</h2>
             <p className="mt-3 max-w-md text-sm text-muted">

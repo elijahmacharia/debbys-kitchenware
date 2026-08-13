@@ -21,10 +21,10 @@ export function Footer() {
   const columnLink = 'block py-1.5 text-sm text-white/70 transition-colors hover:text-white';
 
   return (
-    <footer className="mt-20 bg-olive-900 text-white/85">
+    <footer className="mt-20 bg-ink text-white/85">
       <div className="container-site grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-5">
         <div className="sm:col-span-2 lg:col-span-1">
-          <p className="font-display text-xl text-white">{business.name}</p>
+          <p className="font-semibold tracking-tight text-xl text-white">{business.name}</p>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/65">
             Kitchenware, household essentials and everyday products. Shop online, collect at our shop
             or have your order delivered.

@@ -98,7 +98,7 @@ export function ShopFilters({
             <button
               type="button"
               onClick={() => update({ category: null })}
-              className={cn('block w-full rounded px-2 py-1.5 text-left text-sm', !activeCategory ? 'bg-clay-50 font-semibold text-olive-800' : 'text-muted hover:bg-canvas')}
+              className={cn('block w-full rounded px-2 py-1.5 text-left text-sm', !activeCategory ? 'bg-clay-50 font-semibold text-ink' : 'text-muted hover:bg-canvas')}
             >
               All categories
             </button>
@@ -107,7 +107,7 @@ export function ShopFilters({
                 <button
                   type="button"
                   onClick={() => update({ category: category.slug })}
-                  className={cn('flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-sm', activeCategory === category.slug ? 'bg-clay-50 font-semibold text-olive-800' : 'text-ink hover:bg-canvas')}
+                  className={cn('flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-sm', activeCategory === category.slug ? 'bg-clay-50 font-semibold text-ink' : 'text-ink hover:bg-canvas')}
                 >
                   <span>{category.name}</span>
                   <span className="text-xs text-subtle">{category.productCount}</span>
@@ -119,7 +119,7 @@ export function ShopFilters({
                         key={child.slug}
                         type="button"
                         onClick={() => update({ category: child.slug })}
-                        className={cn('flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-[13px]', activeCategory === child.slug ? 'bg-clay-50 font-semibold text-olive-800' : 'text-muted hover:bg-canvas')}
+                        className={cn('flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-[13px]', activeCategory === child.slug ? 'bg-clay-50 font-semibold text-ink' : 'text-muted hover:bg-canvas')}
                       >
                         <span>{child.name}</span>
                         <span className="text-xs text-subtle">{child.productCount}</span>

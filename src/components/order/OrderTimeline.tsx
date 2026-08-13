@@ -51,7 +51,7 @@ export function OrderTimeline({
             <div className={cn('pb-5', index === stages.length - 1 && 'pb-0')}>
               <p className={cn('text-sm font-semibold', done ? 'text-ink' : 'text-subtle')}>
                 {stageLabel(stage, fulfilment)}
-                {index === currentIndex ? <span className="badge ml-2 bg-clay-100 text-olive-800">Current</span> : null}
+                {index === currentIndex ? <span className="badge ml-2 bg-clay-100 text-ink">Current</span> : null}
               </p>
               <p className="text-xs text-muted">{done ? STATUS_META[stage].customerText : 'Not yet'}</p>
               {timestamp ? (

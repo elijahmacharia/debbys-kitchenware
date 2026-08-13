@@ -34,7 +34,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         WhatsApp button so the two never overlap.
       */}
       <div
-        className="pointer-events-none fixed inset-x-0 bottom-20 z-[60] flex flex-col items-center gap-2 px-4 sm:bottom-24"
+        className="pointer-events-none fixed inset-x-0 bottom-[5.5rem] z-[60] flex flex-col items-center gap-2 px-4 lg:bottom-6"
         aria-live="polite"
       >
         {toasts.map((toast) => {
@@ -43,8 +43,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <div
               key={toast.id}
               className={cn(
-                'pointer-events-auto flex w-full max-w-sm animate-slide-up items-start gap-2 rounded-card px-3.5 py-3 text-sm font-medium text-white shadow-pop',
-                toast.tone === 'error' ? 'bg-danger' : toast.tone === 'info' ? 'bg-ink' : 'bg-clay-700',
+                'pointer-events-auto flex w-full max-w-sm animate-slide-up items-start gap-2 rounded-2xl px-4 py-3 text-sm font-medium text-white shadow-pop',
+                toast.tone === 'error' ? 'bg-danger' : 'bg-ink',
               )}
             >
               <Icon className="mt-0.5 h-4 w-4 shrink-0" />

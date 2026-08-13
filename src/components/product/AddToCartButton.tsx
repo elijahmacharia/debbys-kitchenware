@@ -36,7 +36,7 @@ export function AddToCartButton({
       onClick={handleClick}
       disabled={soldOut}
       className={cn(
-        justAdded ? 'btn-secondary border-clay-300 bg-clay-50 text-olive-800' : 'btn-primary',
+        justAdded ? 'btn-secondary border-clay-300 bg-clay-50 text-ink' : 'btn-primary',
         size === 'sm' && 'btn-sm',
         fullWidth && 'w-full',
         className,

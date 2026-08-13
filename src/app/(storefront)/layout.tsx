@@ -2,6 +2,7 @@ import Script from 'next/script';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { WhatsAppFab } from '@/components/layout/WhatsAppFab';
+import { BottomNav } from '@/components/layout/BottomNav';
 import { CartProvider } from '@/components/cart/CartProvider';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { ServiceWorkerManager } from '@/components/pwa/ServiceWorkerManager';
@@ -25,6 +26,7 @@ export default async function StorefrontLayout({ children }: { children: React.R
         <main id="main" className="flex-1">{children}</main>
         <Footer />
         <WhatsAppFab href={whatsappHref} />
+        <BottomNav />
         <InstallPrompt />
         <ServiceWorkerManager />
       </CartProvider>

@@ -72,7 +72,7 @@ export function WishlistButton({
 
   if (variant === 'full') {
     return (
-      <button type="button" onClick={toggle} disabled={busy} className={cn('btn-secondary', saved && 'border-clay-300 bg-clay-50 text-olive-800')} aria-pressed={saved}>
+      <button type="button" onClick={toggle} disabled={busy} className={cn('btn-secondary', saved && 'border-clay-300 bg-clay-50 text-ink')} aria-pressed={saved}>
         <Icon className="h-4 w-4" />
         {saved ? 'Saved to wishlist' : 'Save to wishlist'}
       </button>

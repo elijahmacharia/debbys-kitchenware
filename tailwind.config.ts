@@ -16,16 +16,13 @@ const config: Config = {
           300: rgb('clay-300'), 400: rgb('clay-400'), 500: rgb('clay-500'),
           600: rgb('clay-600'), 700: rgb('clay-700'), 800: rgb('clay-800'), 900: rgb('clay-900'),
         },
-        olive: {
-          50: rgb('olive-50'), 100: rgb('olive-100'), 500: rgb('olive-500'),
-          600: rgb('olive-600'), 700: rgb('olive-700'), 800: rgb('olive-800'), 900: rgb('olive-900'),
-        },
         ink: rgb('ink'),
         muted: rgb('muted'),
         subtle: rgb('subtle'),
         surface: rgb('surface'),
         canvas: rgb('canvas'),
         raise: rgb('raise'),
+        'raise-deep': rgb('raise-deep'),
         line: rgb('line'),
         'line-strong': rgb('line-strong'),
         success: rgb('success'),
@@ -33,10 +30,7 @@ const config: Config = {
         danger: rgb('danger'),
         whatsapp: rgb('whatsapp'),
       },
-      fontFamily: {
-        display: ['var(--font-display)'],
-        sans: ['var(--font-sans)'],
-      },
+      fontFamily: { sans: ['var(--font-sans)'], display: ['var(--font-sans)'] },
       maxWidth: { site: '82rem' },
       /*
        * The old class names are kept but given flatter values, so every
@@ -44,12 +38,13 @@ const config: Config = {
        * touching a hundred files. Softness comes from the palette now, not
        * from rounding everything.
        */
-      borderRadius: { card: '4px', control: '3px' },
+      borderRadius: { card: '1.5rem', control: '9999px' },
       boxShadow: {
         // Elevation is reserved for things that genuinely float above the
         // page: drawers, dropdowns, toasts. Never on static cards.
         card: 'none',
-        pop: '0 12px 34px -12px rgb(25 23 19 / 0.28)',
+        soft: '0 2px 14px -6px rgb(17 17 16 / 0.10)',
+        pop: '0 16px 40px -12px rgb(17 17 16 / 0.22)',
       },
       spacing: { '4.5': '1.125rem', '5.5': '1.375rem' },
       keyframes: {

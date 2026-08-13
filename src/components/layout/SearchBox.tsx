@@ -98,7 +98,7 @@ export function SearchBox({ className, autoFocus }: { className?: string; autoFo
       <form onSubmit={submit} role="search">
         <label htmlFor="site-search" className="sr-only">Search products</label>
         <div className="relative">
-          <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle" />
+          <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-subtle" />
           <input
             id="site-search"
             name="q"
@@ -110,7 +110,7 @@ export function SearchBox({ className, autoFocus }: { className?: string; autoFo
             onFocus={() => suggestions.length > 0 && setOpen(true)}
             onKeyDown={onKeyDown}
             placeholder="Search buckets, plates, brooms…"
-            className="input pl-9 pr-16"
+            className="input pl-11 pr-16"
             role="combobox"
             aria-expanded={open}
             aria-controls="search-suggestions"
@@ -136,7 +136,7 @@ export function SearchBox({ className, autoFocus }: { className?: string; autoFo
         <div
           id="search-suggestions"
           role="listbox"
-          className="absolute inset-x-0 top-full z-50 mt-1.5 max-h-[70vh] overflow-auto rounded-card border border-line bg-surface py-1 shadow-pop"
+          className="absolute inset-x-0 top-full z-50 mt-2 max-h-[70vh] overflow-auto rounded-3xl bg-surface py-2 shadow-pop"
         >
           {suggestions.length === 0 ? (
             <div className="px-3 py-4 text-sm text-muted">
@@ -167,7 +167,7 @@ export function SearchBox({ className, autoFocus }: { className?: string; autoFo
               <button
                 type="button"
                 onClick={submit}
-                className="w-full border-t border-line px-3 py-2.5 text-left text-sm font-medium text-clay-700 hover:bg-canvas"
+                className="mt-1 w-full border-t border-line px-4 py-2.5 text-left text-sm font-medium text-ink hover:bg-raise"
               >
                 See all results for “{term.trim()}”
               </button>

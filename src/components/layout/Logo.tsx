@@ -10,7 +10,7 @@ export function Logo({ className, compact }: { className?: string; compact?: boo
   return (
     <Link href="/" className={`group inline-flex items-center gap-2 ${className ?? ''}`} aria-label={`${business.name} home`}>
       <span className="min-w-0 leading-none">
-        <span className="block truncate font-display text-[1.15rem] tracking-tight text-ink sm:text-[1.3rem]">
+        <span className="block truncate font-semibold tracking-tight text-[1.15rem] tracking-tight text-ink sm:text-[1.3rem]">
           {business.name}
         </span>
         {!compact ? (
