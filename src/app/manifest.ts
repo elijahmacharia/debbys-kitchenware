@@ -17,8 +17,12 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: '/',
     display: 'standalone',
     orientation: 'portrait',
-    background_color: '#fbf8f3',
-    theme_color: '#ad4728',
+    // Matches --canvas and --ink in globals.css. background_color is the colour
+    // of the splash screen while an installed app boots; theme_color tints the
+    // system bars. Keep these in step with the stylesheet or the app flashes a
+    // stale colour on launch.
+    background_color: '#f9f9f8',
+    theme_color: '#111110',
     lang: 'en-KE',
     categories: ['shopping', 'business'],
     icons: [

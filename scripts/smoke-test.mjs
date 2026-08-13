@@ -344,6 +344,34 @@ check('manifest is standalone', manifest.json?.display === 'standalone');
 check('manifest has theme colour', Boolean(manifest.json?.theme_color));
 check('manifest has 192 and 512 icons', (manifest.json?.icons ?? []).length >= 3);
 check('manifest has a maskable icon', (manifest.json?.icons ?? []).some((i) => i.purpose === 'maskable'));
+
+results.push('\n== Brand mark ==');
+// Every icon the browser or the OS can ask for, checked for real bytes rather
+// than a 404 page served with a 200. A broken icon fails silently otherwise:
+// the browser just shows its blank default and nobody notices.
+const favicon = await req('/icon.svg');
+check('favicon is served', favicon.status === 200, `got ${favicon.status}`);
+check('favicon is SVG', (favicon.headers.get('content-type') ?? '').includes('svg'));
+// The pot body path is the fingerprint. If someone drops in new artwork this
+// check should be updated, not deleted — its job is catching an accidental
+// revert to the old letter mark.
+check('favicon draws the pot, not a letter', favicon.text.includes('M14.37 27.36') && !/M20 15h13\.5/.test(favicon.text));
+for (const [label, path, minBytes] of [
+  ['apple touch icon', '/apple-icon.png', 400],
+  ['app icon 192', '/icons/icon-192.png', 400],
+  ['app icon 512', '/icons/icon-512.png', 1000],
+  ['maskable icon', '/icons/maskable-512.png', 1000],
+]) {
+  const res = await fetch(`${BASE}${path}`);
+  const bytes = res.ok ? (await res.arrayBuffer()).byteLength : 0;
+  check(`${label} is a real PNG`, res.status === 200
+    && (res.headers.get('content-type') ?? '').includes('png')
+    && bytes >= minBytes, `status ${res.status}, ${bytes} bytes`);
+}
+const ogRoot = await fetch(`${BASE}/opengraph-image`);
+check('share image still renders after the mark change', ogRoot.status === 200
+  && (ogRoot.headers.get('content-type') ?? '').includes('png'), `got ${ogRoot.status}`);
+
 const sw = await req('/sw.js');
 check('service worker never caches /api', sw.text.includes("'/api/'"));
 check('service worker never caches /account', sw.text.includes("'/account'"));

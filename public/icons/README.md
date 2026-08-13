@@ -1,15 +1,35 @@
-# App icons — PLACEHOLDERS
+# App icons
 
-These are generated placeholder icons showing a white "D" on the brand green.
-They are real, valid PNGs so the app is installable today, but they are not a logo.
+The mark is a lidded cooking pot on a near-black tile, with the shop name
+underneath on the sizes large enough to read it. Generated, not photographed,
+so it is crisp and tiny — the whole set is under 6 KB.
 
-## Replacing them
+| File | Size | Shows | Used by |
+| --- | --- | --- | --- |
+| `icon-192.png` | 192x192 | pot + DEBBY'S | most Android launchers |
+| `icon-512.png` | 512x512 | pot + DEBBY'S | splash screens, app listings |
+| `maskable-512.png` | 512x512 | pot only | Android, cropped to a circle or squircle |
 
-Export the real logo at these exact sizes and overwrite the files, keeping the names:
+Two other files carry the same mark and live elsewhere:
 
-- `icon-192.png` — 192x192, the icon most Android launchers use
-- `icon-512.png` — 512x512, used for splash screens and app listings
-- `maskable-512.png` — 512x512, **keep the logo inside the middle 80%**; Android crops
-  this one to a circle or squircle and anything near the edge will be cut off
+- `src/app/icon.svg` — the browser tab favicon. Pot only. The name is left off
+  deliberately: browsers render favicons at 16px, where any lettering becomes
+  grey mush. The name appears in the tab title beside it instead.
+- `src/app/apple-icon.png` — 180x180, the iPhone home screen icon.
 
-No code change is needed — `src/app/manifest.ts` already points at these paths.
+## Why the maskable one is different
+
+Android crops maskable icons and throws away everything outside the middle 80%.
+The pot is scaled down to sit well inside that safe zone, and the name is
+dropped because it would be sliced off. This is not an oversight.
+
+## Replacing them with a real logo
+
+Export at the exact sizes above and overwrite the files, keeping the names. No
+code change is needed — `src/app/manifest.ts` already points at these paths.
+Keep the maskable safe zone rule in mind.
+
+The current files were drawn by a script rather than an image editor, because
+the build environment has no image libraries and no fonts. That script is in
+the project history if the shape ever needs regenerating; a designer replacing
+these should just export from their own tool and ignore it.

@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { business } from '@/lib/config';
+import { potMarkDark } from '@/lib/brand-mark';
 
 /**
  * The picture that appears when someone shares a link to this site on
@@ -26,7 +27,7 @@ export default async function Image() {
           flexDirection: 'column',
           justifyContent: 'center',
           padding: '80px',
-          background: '#232b21',
+          background: '#111110',
           color: '#ffffff',
           fontFamily: 'sans-serif',
         }}
@@ -34,12 +35,12 @@ export default async function Image() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <div
             style={{
-              width: 96, height: 96, borderRadius: 24, background: '#ffffff', color: '#232b21',
+              width: 96, height: 96, borderRadius: 26, background: '#ffffff',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 60, fontWeight: 700,
             }}
           >
-            D
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={potMarkDark} alt="" width={66} height={66} />
           </div>
           <div style={{ fontSize: 30, opacity: 0.85 }}>{business.tagline}</div>
         </div>

@@ -2,6 +2,7 @@ import { ImageResponse } from 'next/og';
 import { getProductBySlug } from '@/lib/queries/products';
 import { business } from '@/lib/config';
 import { effectivePriceCents, formatKsh, isOnSale } from '@/lib/money';
+import { potMarkLight } from '@/lib/brand-mark';
 
 /**
  * The share preview for a single product — its name and current price.
@@ -29,35 +30,36 @@ export default async function Image({ params }: { params: { slug: string } }) {
         style={{
           width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
           justifyContent: 'space-between', padding: '70px',
-          background: '#fbf8f3', color: '#191713', fontFamily: 'sans-serif',
+          background: '#f9f9f8', color: '#111110', fontFamily: 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
           <div
             style={{
-              width: 64, height: 64, borderRadius: 16, background: '#ad4728', color: '#ffffff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, fontWeight: 700,
+              width: 64, height: 64, borderRadius: 18, background: '#111110',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
           >
-            D
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={potMarkLight} alt="" width={44} height={44} />
           </div>
           <div style={{ fontSize: 30, fontWeight: 600 }}>{business.name}</div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {category ? <div style={{ fontSize: 26, color: '#6b635a', marginBottom: 12 }}>{category}</div> : null}
+          {category ? <div style={{ fontSize: 26, color: '#6e6e6a', marginBottom: 12 }}>{category}</div> : null}
           <div style={{ fontSize: 68, fontWeight: 700, lineHeight: 1.1 }}>{name}</div>
           {price ? (
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginTop: 28 }}>
               <div style={{ fontSize: 56, fontWeight: 700, color: '#ad4728' }}>{price}</div>
               {wasPrice ? (
-                <div style={{ fontSize: 32, color: '#7c8a80', textDecoration: 'line-through' }}>{wasPrice}</div>
+                <div style={{ fontSize: 32, color: '#9a9a95', textDecoration: 'line-through' }}>{wasPrice}</div>
               ) : null}
             </div>
           ) : null}
         </div>
 
-        <div style={{ fontSize: 26, color: '#6b635a' }}>Shop pickup · Local delivery · Order on WhatsApp</div>
+        <div style={{ fontSize: 26, color: '#6e6e6a' }}>Shop pickup · Local delivery · Order on WhatsApp</div>
       </div>
     ),
     size,
