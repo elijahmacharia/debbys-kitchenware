@@ -23,7 +23,7 @@ export function ProductGallery({
 
   if (images.length === 0) {
     return (
-      <div className="grid aspect-square place-items-center rounded-card border border-line bg-canvas text-subtle">
+      <div className="grid aspect-square place-items-center rounded-2xl border border-line bg-canvas text-subtle">
         <div className="text-center">
           <ImageIcon className="mx-auto h-12 w-12" />
           <p className="mt-2 text-sm">No photo yet</p>
@@ -37,7 +37,7 @@ export function ProductGallery({
 
   return (
     <div>
-      <div className="relative aspect-square overflow-hidden rounded-card border border-line bg-surface">
+      <div className="relative aspect-square overflow-hidden rounded-2xl border border-line bg-surface">
         {currentFailed ? (
           <div className="grid h-full place-items-center text-subtle"><ImageIcon className="h-12 w-12" /></div>
         ) : (
@@ -64,8 +64,8 @@ export function ProductGallery({
               aria-label={`Show image ${index + 1} of ${images.length}`}
               aria-current={index === active}
               className={cn(
-                'relative aspect-square overflow-hidden rounded-control border bg-surface',
-                index === active ? 'border-clay-600 ring-1 ring-clay-600' : 'border-line hover:border-clay-300',
+                'relative aspect-square overflow-hidden rounded-full border bg-surface',
+                index === active ? 'border-clay-600 ring-1 ring-clay-600' : 'border-line hover:border-ink',
               )}
             >
               <Image src={image.url} alt="" fill sizes="80px" loading="lazy" className="object-contain p-1" />

@@ -41,7 +41,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
 
   return (
     <div>
-      <Link href="/admin/orders" className="inline-flex items-center gap-1 text-sm text-muted hover:text-clay-700">
+      <Link href="/admin/orders" className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
         <ChevronLeftIcon className="h-4 w-4" /> Back to orders
       </Link>
 

@@ -19,7 +19,7 @@ export function Alert({
     <div
       // role="alert" makes screen readers announce errors as they appear.
       role={tone === 'error' ? 'alert' : undefined}
-      className={cn('flex gap-2.5 rounded-card border p-3 text-sm', wrap, className)}
+      className={cn('flex gap-2.5 rounded-2xl border p-3 text-sm', wrap, className)}
     >
       <Icon className="mt-0.5 h-4 w-4 shrink-0" />
       <div className="min-w-0 flex-1">

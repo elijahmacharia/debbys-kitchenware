@@ -40,7 +40,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${business.name} on ${item.name}`}
-                    className="grid h-10 w-10 place-items-center rounded-control bg-white/10 text-white hover:bg-white/20"
+                    className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20"
                   >
                     <Icon className="h-4 w-4" />
                   </a>

@@ -79,7 +79,7 @@ export default async function AboutPage() {
         ) : null}
 
         {isPlaceholder(business.address) ? (
-          <p className="rounded-card border border-dashed border-line bg-canvas p-3 text-xs">
+          <p className="rounded-2xl border border-dashed border-line bg-canvas p-3 text-xs">
             <strong className="text-ink">Note for the shop owner:</strong> the shop address, phone number
             and opening hours have not been added yet. Fill them into your <code>.env</code> file and they
             will appear here, in the footer and on the contact page automatically.

@@ -12,7 +12,7 @@ export function SectionHeader({
         {description ? <p className="mt-1 text-sm text-muted">{description}</p> : null}
       </div>
       {href ? (
-        <Link href={href} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-clay-700 hover:underline">
+        <Link href={href} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-ink hover:underline">
           {linkLabel}
           <ArrowRightIcon className="h-4 w-4" />
         </Link>

@@ -15,7 +15,7 @@ export function OrderTimeline({
   if (status === 'CANCELLED') {
     const cancelled = events.find((e) => e.status === 'CANCELLED');
     return (
-      <div className="rounded-card border border-danger/30 bg-danger/5 p-4">
+      <div className="rounded-2xl border border-danger/30 bg-danger/5 p-4">
         <p className="text-sm font-semibold text-danger">This order was cancelled</p>
         {cancelled?.note ? <p className="mt-1 text-sm text-muted">{cancelled.note}</p> : null}
         <p className="mt-1 text-xs text-muted">If you did not expect this, please contact us and we will look into it.</p>
@@ -38,7 +38,7 @@ export function OrderTimeline({
             <div className="flex flex-col items-center">
               <span
                 className={cn('grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 text-[11px] font-bold',
-                  done ? 'border-clay-600 bg-clay-600 text-white' : 'border-line bg-surface text-subtle')}
+                  done ? 'border-clay-600 bg-ink text-white' : 'border-line bg-surface text-subtle')}
                 aria-hidden="true"
               >
                 {done ? <CheckIcon className="h-3.5 w-3.5" /> : index + 1}

@@ -31,7 +31,7 @@ export function AccountMenu({ name }: { name: string | null }) {
 
   if (!name) {
     return (
-      <Link href="/login" className="inline-flex h-11 items-center gap-1.5 rounded-control px-2 text-sm font-medium text-ink hover:bg-clay-50 sm:px-3">
+      <Link href="/login" className="inline-flex h-11 items-center gap-1.5 rounded-full px-2 text-sm font-medium text-ink hover:bg-raise sm:px-3">
         <UserIcon className="h-5 w-5" />
         <span className="hidden sm:inline">Sign in</span>
       </Link>
@@ -57,7 +57,7 @@ export function AccountMenu({ name }: { name: string | null }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-11 max-w-[9rem] items-center gap-1.5 rounded-control px-2 text-sm font-medium text-ink hover:bg-clay-50 sm:px-3"
+        className="inline-flex h-11 max-w-[9rem] items-center gap-1.5 rounded-full px-2 text-sm font-medium text-ink hover:bg-raise sm:px-3"
         aria-expanded={open}
         aria-haspopup="menu"
       >
@@ -66,7 +66,7 @@ export function AccountMenu({ name }: { name: string | null }) {
       </button>
 
       {open ? (
-        <div role="menu" className="absolute right-0 top-full z-50 mt-1 w-52 overflow-hidden rounded-card border border-line bg-surface py-1 shadow-pop">
+        <div role="menu" className="absolute right-0 top-full z-50 mt-1 w-52 overflow-hidden rounded-2xl border border-line bg-surface py-1 shadow-pop">
           <p className="truncate border-b border-line px-3 pb-2 pt-1 text-xs text-muted">Signed in as {name}</p>
           <Link href="/account" role="menuitem" className={item} onClick={() => setOpen(false)}>My account</Link>
           <Link href="/account/orders" role="menuitem" className={item} onClick={() => setOpen(false)}>My orders</Link>

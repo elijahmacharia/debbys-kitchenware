@@ -60,7 +60,7 @@ export function OrderSummaryCard({ order }: { order: OrderLike }) {
               </span>
               <span className="min-w-0 flex-1">
                 {item.slug ? (
-                  <Link href={`/product/${item.slug}`} className="line-clamp-2 text-sm font-medium text-ink hover:text-clay-700">{item.name}</Link>
+                  <Link href={`/product/${item.slug}`} className="line-clamp-2 text-sm font-medium text-ink hover:text-ink">{item.name}</Link>
                 ) : (
                   <span className="line-clamp-2 text-sm font-medium text-ink">{item.name}</span>
                 )}

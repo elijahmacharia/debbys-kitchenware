@@ -199,7 +199,7 @@ export function ShopFilters({
               key={filter.key}
               type="button"
               onClick={() => update({ [filter.key]: null })}
-              className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink hover:border-clay-300"
+              className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink hover:border-ink"
             >
               {filter.label}
               <XIcon className="h-3 w-3" />
@@ -217,7 +217,7 @@ export function ShopFilters({
           <div role="dialog" aria-modal="true" aria-label="Filters" className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-surface p-4 shadow-pop">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-base font-bold">Filters</h2>
-              <button type="button" onClick={() => setOpen(false)} className="inline-flex h-10 w-10 items-center justify-center rounded-control hover:bg-canvas" aria-label="Close filters">
+              <button type="button" onClick={() => setOpen(false)} className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-canvas" aria-label="Close filters">
                 <XIcon className="h-5 w-5" />
               </button>
             </div>

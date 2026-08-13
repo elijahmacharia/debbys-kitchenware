@@ -69,7 +69,7 @@ export function DeliveryZoneManager({ zones }: { zones: AdminZone[] }) {
         <div className="overflow-x-auto rounded-3xl">
           <table className="w-full min-w-[40rem] text-sm">
             <caption className="sr-only">Delivery zones with fees and availability</caption>
-            <thead className="bg-canvas text-left">
+            <thead className="text-left">
               <tr>
                 <th scope="col" className="px-3 py-2.5 font-semibold">Area</th>
                 <th scope="col" className="px-3 py-2.5 font-semibold">County</th>
@@ -111,7 +111,7 @@ export function DeliveryZoneManager({ zones }: { zones: AdminZone[] }) {
           </table>
         </div>
       ) : (
-        <p className="rounded-card border border-dashed border-line bg-surface p-8 text-center text-sm text-muted">
+        <p className="rounded-2xl bg-surface shadow-soft p-8 text-center text-sm text-muted">
           No delivery zones yet. Add one to start offering delivery.
         </p>
       )}

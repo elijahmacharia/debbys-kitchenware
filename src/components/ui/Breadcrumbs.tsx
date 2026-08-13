@@ -28,7 +28,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
             <li key={`${item.name}-${index}`} className="flex items-center gap-1">
               {index > 0 ? <ChevronRightIcon className="h-3.5 w-3.5 text-subtle" /> : null}
               {item.href && index < items.length - 1 ? (
-                <Link href={item.href} className="hover:text-clay-700 hover:underline">{item.name}</Link>
+                <Link href={item.href} className="hover:text-ink hover:underline">{item.name}</Link>
               ) : (
                 <span
                   className={index === items.length - 1 ? 'font-medium text-ink' : undefined}

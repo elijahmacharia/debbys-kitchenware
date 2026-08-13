@@ -18,7 +18,7 @@ export function Price({
 
   return (
     <div className={cn('flex flex-wrap items-baseline gap-x-2 gap-y-0.5', className)}>
-      <span className={cn('font-bold text-ink', sizes[size])}>{formatKsh(now)}</span>
+      <span className={cn('font-bold text-clay-600', sizes[size])}>{formatKsh(now)}</span>
       {isOnSale(product) ? (
         <>
           <s className={cn('text-subtle', size === 'lg' ? 'text-base' : 'text-xs')}>{formatKsh(product.priceCents)}</s>

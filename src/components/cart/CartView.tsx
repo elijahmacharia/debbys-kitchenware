@@ -27,9 +27,9 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
     return (
       <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
         <div className="space-y-3">
-          {Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-28 w-full rounded-card" />)}
+          {Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-28 w-full rounded-2xl" />)}
         </div>
-        <Skeleton className="h-64 w-full rounded-card" />
+        <Skeleton className="h-64 w-full rounded-2xl" />
       </div>
     );
   }

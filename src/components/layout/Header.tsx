@@ -33,7 +33,7 @@ export async function Header() {
 
   const whatsappHref = waLink(generalEnquiryMessage());
   const phoneHref = telHref();
-  const navLink = 'inline-flex h-11 items-center px-3 text-sm text-ink transition-colors hover:text-clay-700';
+  const navLink = 'inline-flex h-11 items-center px-3 text-sm text-ink transition-colors hover:text-ink';
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-canvas">
@@ -45,12 +45,12 @@ export async function Header() {
           <p>Free pickup at the shop · Local delivery</p>
           <div className="flex items-center gap-4">
             {phoneHref ? (
-              <a href={phoneHref} className="inline-flex items-center gap-1.5 hover:text-clay-700">
+              <a href={phoneHref} className="inline-flex items-center gap-1.5 hover:text-ink">
                 <PhoneIcon className="h-3.5 w-3.5" /> {business.phone}
               </a>
             ) : null}
-            <Link href="/delivery" className="hover:text-clay-700">Delivery &amp; pickup</Link>
-            <Link href="/contact" className="hover:text-clay-700">Contact</Link>
+            <Link href="/delivery" className="hover:text-ink">Delivery &amp; pickup</Link>
+            <Link href="/contact" className="hover:text-ink">Contact</Link>
           </div>
         </div>
       </div>

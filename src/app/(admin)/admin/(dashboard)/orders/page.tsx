@@ -49,7 +49,7 @@ export default async function AdminOrdersPage({
             aria-current={activeStatus === status ? 'page' : undefined}
             className={cn(
               'rounded-full border px-3 py-1.5 text-xs font-medium',
-              activeStatus === status ? 'border-clay-600 bg-clay-600 text-white' : 'border-line bg-surface hover:bg-clay-50',
+              activeStatus === status ? 'border-clay-600 bg-ink text-white' : 'border-line bg-surface hover:bg-raise',
             )}
           >
             {status === 'ALL' ? 'All' : STATUS_META[status as keyof typeof STATUS_META]?.label ?? status}
@@ -80,7 +80,7 @@ export default async function AdminOrdersPage({
                 {result.rows.map((order) => (
                   <tr key={order.id} className="hover:bg-canvas">
                     <th scope="row">
-                      <Link href={`/admin/orders/${order.id}`} className="font-mono text-xs font-bold text-ink hover:text-clay-700">
+                      <Link href={`/admin/orders/${order.id}`} className="font-mono text-xs font-bold text-ink hover:text-ink">
                         {order.orderNumber}
                       </Link>
                       <span className="block text-[11px] font-normal text-subtle">

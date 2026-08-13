@@ -67,7 +67,7 @@ export default async function AccountPage() {
       <section aria-labelledby="recent-orders">
         <div className="mb-3 flex items-center justify-between">
           <h2 id="recent-orders" className="text-base font-bold">Recent orders</h2>
-          {allOrders.length > 3 ? <Link href="/account/orders" className="text-sm font-semibold text-clay-700 hover:underline">View all</Link> : null}
+          {allOrders.length > 3 ? <Link href="/account/orders" className="text-sm font-semibold text-ink hover:underline">View all</Link> : null}
         </div>
 
         {recent.length === 0 ? (
@@ -81,7 +81,7 @@ export default async function AccountPage() {
           <ul className="space-y-2">
             {recent.map((order) => (
               <li key={order.id}>
-                <Link href={`/account/orders/${order.publicId}`} className="card flex flex-wrap items-center justify-between gap-3 p-3 hover:border-clay-300">
+                <Link href={`/account/orders/${order.publicId}`} className="card flex flex-wrap items-center justify-between gap-3 p-3 hover:border-ink">
                   <div className="min-w-0">
                     <p className="font-mono text-sm font-semibold text-ink">{order.orderNumber}</p>
                     <p className="text-xs text-muted">
@@ -103,14 +103,14 @@ export default async function AccountPage() {
       </section>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <Link href="/account/addresses" className="card flex items-center gap-3 p-4 hover:border-clay-300">
+        <Link href="/account/addresses" className="card flex items-center gap-3 p-4 hover:border-ink">
           <MapPinIcon className="h-5 w-5 shrink-0 text-clay-600" />
           <span>
             <span className="block text-sm font-semibold">Saved addresses</span>
             <span className="block text-xs text-muted">Make repeat orders faster</span>
           </span>
         </Link>
-        <Link href="/account/wishlist" className="card flex items-center gap-3 p-4 hover:border-clay-300">
+        <Link href="/account/wishlist" className="card flex items-center gap-3 p-4 hover:border-ink">
           <HeartIcon className="h-5 w-5 shrink-0 text-clay-600" />
           <span>
             <span className="block text-sm font-semibold">Wishlist</span>
@@ -135,5 +135,5 @@ function Stat({ label, value, href }: { label: string; value: string; href?: str
       <p className="text-xs text-muted">{label}</p>
     </>
   );
-  return href ? <Link href={href} className="card p-3 hover:border-clay-300">{body}</Link> : <div className="card p-3">{body}</div>;
+  return href ? <Link href={href} className="card p-3 hover:border-ink">{body}</Link> : <div className="card p-3">{body}</div>;
 }

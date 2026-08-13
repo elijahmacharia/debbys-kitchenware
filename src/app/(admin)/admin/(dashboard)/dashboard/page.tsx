@@ -65,7 +65,7 @@ export default async function AdminDashboardPage() {
         <section className="admin-panel" aria-labelledby="recent-orders">
           <div className="flex items-center justify-between px-5 pb-3 pt-5">
             <h2 id="recent-orders" className="text-sm font-bold">Recent orders</h2>
-            <Link href="/admin/orders" className="text-xs font-semibold text-clay-700 hover:underline">View all</Link>
+            <Link href="/admin/orders" className="text-xs font-semibold text-ink hover:underline">View all</Link>
           </div>
           {recent.length === 0 ? (
             <p className="px-5 pb-5 text-sm text-muted">No orders yet.</p>
@@ -100,7 +100,7 @@ export default async function AdminDashboardPage() {
               <ul className="divide-y divide-line">
                 {popular.map((product) => (
                   <li key={product.id} className="flex items-center justify-between gap-3 px-5 py-3">
-                    <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-clay-700">{product.name}</Link>
+                    <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-ink">{product.name}</Link>
                     <span className="shrink-0 text-xs text-muted">{product.unitsSold} sold · {product.viewCount} views</span>
                   </li>
                 ))}
@@ -111,7 +111,7 @@ export default async function AdminDashboardPage() {
           <section className="admin-panel" aria-labelledby="low-stock">
             <div className="flex items-center justify-between px-5 pb-3 pt-5">
               <h2 id="low-stock" className="text-sm font-bold">Running low</h2>
-              <Link href="/admin/inventory" className="text-xs font-semibold text-clay-700 hover:underline">Manage stock</Link>
+              <Link href="/admin/inventory" className="text-xs font-semibold text-ink hover:underline">Manage stock</Link>
             </div>
             {lowStock.length === 0 ? (
               <p className="px-5 pb-5 text-sm text-muted">Nothing is running low. </p>
@@ -119,7 +119,7 @@ export default async function AdminDashboardPage() {
               <ul className="divide-y divide-line">
                 {lowStock.map((product) => (
                   <li key={product.id} className="flex items-center justify-between gap-3 px-5 py-3">
-                    <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-clay-700">{product.name}</Link>
+                    <Link href={`/admin/products/${product.id}`} className="min-w-0 truncate text-sm hover:text-ink">{product.name}</Link>
                     <span className={cn('shrink-0 text-xs font-semibold', product.stock === 0 ? 'text-danger' : 'text-clay-700')}>
                       {product.stock === 0 ? 'Out of stock' : `${product.stock} left`}
                     </span>

@@ -60,7 +60,7 @@ export default async function AdminProductsPage({
               {products.map((product) => (
                 <tr key={product.id} className={product.isActive ? undefined : 'opacity-60'}>
                   <th scope="row">
-                    <Link href={`/admin/products/${product.id}`} className="text-ink hover:text-clay-700">{product.name}</Link>
+                    <Link href={`/admin/products/${product.id}`} className="text-ink hover:text-ink">{product.name}</Link>
                     <span className="block font-mono text-[11px] font-normal text-subtle">{product.sku}</span>
                   </th>
                   <td className="text-muted">{product.categoryName}</td>

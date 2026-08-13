@@ -14,7 +14,7 @@ export function CartButton() {
   return (
     <Link
       href="/cart"
-      className="relative inline-flex h-11 w-11 items-center justify-center rounded-control text-ink hover:bg-clay-50"
+      className="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-ink hover:bg-raise"
       aria-label={ready && count > 0 ? `Cart, ${count} item${count === 1 ? '' : 's'}` : 'Cart'}
     >
       <CartIcon className="h-5 w-5" />

@@ -59,7 +59,7 @@ export function MobileMenu({
     };
   }, [open]);
 
-  const link = 'flex min-h-[46px] items-center rounded-control px-3 text-[15px] font-medium text-ink hover:bg-clay-50';
+  const link = 'flex min-h-[46px] items-center rounded-full px-3 text-[15px] font-medium text-ink hover:bg-raise';
 
   return (
     <>
@@ -67,7 +67,7 @@ export function MobileMenu({
         ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex h-11 w-11 items-center justify-center rounded-control text-ink hover:bg-clay-50 lg:hidden"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-full text-ink hover:bg-raise lg:hidden"
         aria-label="Open menu"
         aria-expanded={open}
       >
@@ -89,7 +89,7 @@ export function MobileMenu({
               <span className="text-sm font-semibold text-muted">
                 {isSignedIn && customerName ? `Hi, ${customerName.split(' ')[0]} 👋` : 'Menu'}
               </span>
-              <button type="button" onClick={() => setOpen(false)} className="inline-flex h-10 w-10 items-center justify-center rounded-control hover:bg-canvas" aria-label="Close menu">
+              <button type="button" onClick={() => setOpen(false)} className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-canvas" aria-label="Close menu">
                 <XIcon className="h-5 w-5" />
               </button>
             </div>
@@ -107,7 +107,7 @@ export function MobileMenu({
                       <button
                         type="button"
                         onClick={() => setExpanded(expanded === category.slug ? null : category.slug)}
-                        className="inline-flex h-11 w-11 items-center justify-center rounded-control text-muted hover:bg-clay-50"
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full text-muted hover:bg-raise"
                         aria-label={`${expanded === category.slug ? 'Hide' : 'Show'} ${category.name} subcategories`}
                         aria-expanded={expanded === category.slug}
                       >

@@ -238,7 +238,7 @@ export function CheckoutForm({
           </div>
 
           {!isSignedIn ? (
-            <p className="mt-3 rounded-control bg-canvas p-2.5 text-xs text-muted">
+            <p className="mt-3 rounded-full bg-canvas p-2.5 text-xs text-muted">
               Checking out as a guest.{' '}
               <Link href="/login?next=/checkout" className="link">Sign in</Link> to save this order to your account.
             </p>
@@ -251,8 +251,8 @@ export function CheckoutForm({
           <div className="mt-3 grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Pickup or delivery">
             <button
               type="button" role="radio" aria-checked={fulfilment === 'PICKUP'} onClick={() => setFulfilment('PICKUP')}
-              className={cn('flex items-start gap-3 rounded-card border p-3 text-left transition',
-                fulfilment === 'PICKUP' ? 'border-clay-600 bg-clay-50 ring-1 ring-clay-600' : 'border-line hover:border-clay-300')}
+              className={cn('flex items-start gap-3 rounded-2xl border p-3 text-left transition',
+                fulfilment === 'PICKUP' ? 'border-ink bg-raise ring-1 ring-ink' : 'border-line hover:border-ink')}
             >
               <StoreIcon className="mt-0.5 h-5 w-5 shrink-0 text-clay-600" />
               <span>
@@ -264,8 +264,8 @@ export function CheckoutForm({
             <button
               type="button" role="radio" aria-checked={fulfilment === 'DELIVERY'} disabled={zones.length === 0}
               onClick={() => setFulfilment('DELIVERY')}
-              className={cn('flex items-start gap-3 rounded-card border p-3 text-left transition disabled:cursor-not-allowed disabled:opacity-55',
-                fulfilment === 'DELIVERY' ? 'border-clay-600 bg-clay-50 ring-1 ring-clay-600' : 'border-line hover:border-clay-300')}
+              className={cn('flex items-start gap-3 rounded-2xl border p-3 text-left transition disabled:cursor-not-allowed disabled:opacity-55',
+                fulfilment === 'DELIVERY' ? 'border-ink bg-raise ring-1 ring-ink' : 'border-line hover:border-ink')}
             >
               <TruckIcon className="mt-0.5 h-5 w-5 shrink-0 text-clay-600" />
               <span>
@@ -290,7 +290,7 @@ export function CheckoutForm({
                         key={address.id}
                         type="button"
                         onClick={() => applyAddress(address)}
-                        className="rounded-full border border-line px-3 py-1.5 text-xs hover:border-clay-300 hover:bg-clay-50"
+                        className="rounded-full border border-line px-3 py-1.5 text-xs hover:border-ink hover:bg-raise"
                       >
                         {address.label}, {address.area}{address.isDefault ? ' (default)' : ''}
                       </button>
@@ -354,7 +354,7 @@ export function CheckoutForm({
               ) : null}
             </div>
           ) : (
-            <div className="mt-4 rounded-control bg-canvas p-3 text-sm text-muted">
+            <div className="mt-4 rounded-full bg-canvas p-3 text-sm text-muted">
               <p className="font-medium text-ink">Collect at our shop</p>
               <p className="mt-0.5">{shopAddress ?? 'We will send you the pickup details when we confirm your order.'}</p>
               <p className="mt-1 text-xs">We will let you know as soon as your order is packed and ready.</p>
@@ -377,8 +377,8 @@ export function CheckoutForm({
             {availablePayments.map((method) => (
               <label
                 key={method.key}
-                className={cn('flex cursor-pointer gap-3 rounded-card border p-3 transition',
-                  paymentMethod === method.key ? 'border-clay-600 bg-clay-50 ring-1 ring-clay-600' : 'border-line hover:border-clay-300')}
+                className={cn('flex cursor-pointer gap-3 rounded-2xl border p-3 transition',
+                  paymentMethod === method.key ? 'border-ink bg-raise ring-1 ring-ink' : 'border-line hover:border-ink')}
               >
                 <input
                   type="radio" name="paymentMethod" value={method.key} checked={paymentMethod === method.key}
@@ -393,7 +393,7 @@ export function CheckoutForm({
             ))}
           </div>
           {errors.paymentMethod ? <p className="error-text">{errors.paymentMethod}</p> : null}
-          {paymentInstructions ? <p className="mt-3 rounded-control bg-canvas p-2.5 text-xs text-muted">{paymentInstructions}</p> : null}
+          {paymentInstructions ? <p className="mt-3 rounded-full bg-canvas p-2.5 text-xs text-muted">{paymentInstructions}</p> : null}
         </section>
 
         <section className={cardClass} aria-labelledby="step-notes">

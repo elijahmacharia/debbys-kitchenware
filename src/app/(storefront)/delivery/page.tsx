@@ -40,10 +40,10 @@ export default async function DeliveryPage() {
           No zones are switched on yet. Choose shop pickup at checkout, or ask us about your area.
         </Alert>
       ) : (
-        <div className="mt-5 overflow-hidden rounded-card border border-line">
+        <div className="mt-5 overflow-hidden rounded-2xl border border-line">
           <table className="w-full text-sm">
             <caption className="sr-only">Delivery areas, fees and estimated times</caption>
-            <thead className="bg-canvas text-left">
+            <thead className="text-left">
               <tr>
                 <th scope="col" className="px-4 py-2.5 font-semibold">Area</th>
                 <th scope="col" className="px-4 py-2.5 font-semibold">County</th>

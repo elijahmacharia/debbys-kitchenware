@@ -89,7 +89,7 @@ export function WishlistButton({
       title={label}
       className={cn(
         'grid h-9 w-9 place-items-center rounded-full border bg-surface/95 backdrop-blur transition',
-        saved ? 'border-clay-300 text-clay-700' : 'border-line text-muted hover:text-clay-700',
+        saved ? 'border-clay-300 text-clay-700' : 'border-line text-muted hover:text-ink',
       )}
     >
       <Icon className="h-4 w-4" />

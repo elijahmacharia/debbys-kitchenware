@@ -54,7 +54,7 @@ export default async function AdminInventoryPage({
             aria-current={(filter ?? '') === tab.key ? 'page' : undefined}
             className={cn(
               'rounded-full border px-3 py-1.5 text-sm',
-              (filter ?? '') === tab.key ? 'border-clay-600 bg-clay-600 text-white' : 'border-line bg-surface hover:bg-clay-50',
+              (filter ?? '') === tab.key ? 'border-clay-600 bg-ink text-white' : 'border-line bg-surface hover:bg-raise',
             )}
           >
             {tab.label}
@@ -90,7 +90,7 @@ export default async function AdminInventoryPage({
               {rows.map((row) => (
                 <tr key={row.id} className={row.isActive ? undefined : 'opacity-60'}>
                   <th scope="row">
-                    <Link href={`/admin/products/${row.id}`} className="text-ink hover:text-clay-700">{row.name}</Link>
+                    <Link href={`/admin/products/${row.id}`} className="text-ink hover:text-ink">{row.name}</Link>
                     <span className="block font-mono text-[11px] font-normal text-subtle">{row.sku}</span>
                   </th>
                   <td className="text-muted">{row.categoryName}</td>

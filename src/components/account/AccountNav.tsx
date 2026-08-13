@@ -44,8 +44,8 @@ export function AccountNav({ customerName }: { customerName: string }) {
             href={href}
             aria-current={isActive(href, exact) ? 'page' : undefined}
             className={cn(
-              'inline-flex min-h-[42px] shrink-0 items-center gap-2 rounded-control px-3 text-sm font-medium',
-              isActive(href, exact) ? 'bg-clay-600 text-white' : 'text-ink hover:bg-clay-50',
+              'inline-flex min-h-[42px] shrink-0 items-center gap-2 rounded-full px-3 text-sm font-medium',
+              isActive(href, exact) ? 'bg-ink text-white' : 'text-ink hover:bg-raise',
             )}
           >
             <Icon className="h-4 w-4" />
@@ -57,7 +57,7 @@ export function AccountNav({ customerName }: { customerName: string }) {
           type="button"
           onClick={signOut}
           disabled={signingOut}
-          className="inline-flex min-h-[42px] shrink-0 items-center gap-2 rounded-control px-3 text-sm font-medium text-danger hover:bg-danger/5 disabled:opacity-60"
+          className="inline-flex min-h-[42px] shrink-0 items-center gap-2 rounded-full px-3 text-sm font-medium text-danger hover:bg-danger/5 disabled:opacity-60"
         >
           <LogOutIcon className="h-4 w-4" />
           {signingOut ? 'Signing out…' : 'Sign out'}

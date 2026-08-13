@@ -12,7 +12,7 @@ export default async function NewProductPage() {
 
   return (
     <div className="max-w-3xl">
-      <Link href="/admin/products" className="inline-flex items-center gap-1 text-sm text-muted hover:text-clay-700">
+      <Link href="/admin/products" className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
         <ChevronLeftIcon className="h-4 w-4" /> Back to products
       </Link>
       <h1 className="mt-3">Add a product</h1>
