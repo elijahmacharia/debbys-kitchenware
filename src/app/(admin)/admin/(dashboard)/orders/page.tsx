@@ -6,20 +6,23 @@ import { FULFILMENT_LABEL, ORDER_STATUSES, PAYMENT_STATUS_LABEL, STATUS_META } f
 import { Badge } from '@/components/ui/Badge';
 import { Pagination } from '@/components/ui/Pagination';
 import { cn } from '@/lib/cn';
+import { MarkPaidButton } from '@/components/admin/MarkPaidButton';
 
 export const metadata: Metadata = { title: 'Orders', robots: { index: false, follow: false } };
 
 export default async function AdminOrdersPage({
   searchParams,
-}: { searchParams: Promise<{ status?: string; q?: string; page?: string }> }) {
+}: { searchParams: Promise<{ status?: string; q?: string; payment?: string; page?: string }> }) {
   const params = await searchParams;
   const page = Number(params.page) > 0 ? Number(params.page) : 1;
 
-  const result = await listAdminOrders({ status: params.status, q: params.q, page, perPage: 25 });
+  const result = await listAdminOrders({
+    status: params.status, q: params.q, payment: params.payment, page, perPage: 25,
+  });
 
   const buildHref = (overrides: Record<string, string | undefined>) => {
     const next = new URLSearchParams();
-    const merged = { status: params.status, q: params.q, page: params.page, ...overrides };
+    const merged = { status: params.status, q: params.q, payment: params.payment, page: params.page, ...overrides };
     for (const [key, value] of Object.entries(merged)) if (value) next.set(key, value);
     const query = next.toString();
     return query ? `/admin/orders?${query}` : '/admin/orders';
@@ -57,6 +60,24 @@ export default async function AdminOrdersPage({
         ))}
       </nav>
 
+      {/* Separate from the status rail: an order can be delivered and still
+          unpaid, so the two questions need answering independently. */}
+      <nav className="-mx-4 mt-2 flex gap-2 overflow-x-auto px-4 no-scrollbar sm:mx-0 sm:flex-wrap sm:px-0" aria-label="Filter by payment">
+        {[['ALL', 'Any payment'], ['UNPAID', 'Not paid yet'], ['PAID', 'Paid']].map(([value, label]) => (
+          <Link
+            key={value}
+            href={buildHref({ payment: value === 'ALL' ? undefined : value, page: undefined })}
+            aria-current={(params.payment ?? 'ALL') === value ? 'page' : undefined}
+            className={cn(
+              'rounded-full border px-3 py-1.5 text-xs font-medium',
+              (params.payment ?? 'ALL') === value ? 'border-ink bg-ink text-white' : 'border-line bg-surface hover:bg-raise',
+            )}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
+
       {result.rows.length === 0 ? (
         <p className="mt-6 rounded-3xl bg-surface p-10 text-center text-sm text-muted shadow-soft">
           No orders match this view.
@@ -74,6 +95,7 @@ export default async function AdminOrdersPage({
                   <th scope="col">Total</th>
                   <th scope="col">Payment</th>
                   <th scope="col">Status</th>
+                  <th scope="col"><span className="sr-only">Actions</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -105,6 +127,9 @@ export default async function AdminOrdersPage({
                       <Badge tone={order.status === 'DELIVERED' ? 'success' : order.status === 'CANCELLED' ? 'danger' : 'brand'}>
                         {STATUS_META[order.status as keyof typeof STATUS_META]?.label ?? order.status}
                       </Badge>
+                    </td>
+                    <td className="text-right">
+                      {order.paymentStatus === 'PAID' ? null : <MarkPaidButton orderId={order.id} />}
                     </td>
                   </tr>
                 ))}

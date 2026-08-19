@@ -166,6 +166,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
           currentStatus={order.status}
           allowedStatuses={allowedNextStatuses(order.status, order.fulfilment)}
           paymentStatus={order.paymentStatus}
+          paymentMethod={order.paymentMethod}
           paymentReference={order.paymentReference}
           adminNote={order.adminNote}
         />

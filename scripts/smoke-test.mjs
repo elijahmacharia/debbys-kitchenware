@@ -203,15 +203,22 @@ if (productId) {
 results.push('\n== Customer accounts ==');
 const customer = jar();
 const phone = `07${stamp}11`.slice(0, 10);
+// Signing up asks for an email and a password only. Name and phone are no
+// longer part of this call: they are collected at checkout, and Google
+// sign-in cannot supply a phone number at all.
+const email = `qa${stamp}@example.com`;
 const reg = await req('/api/auth/register', { method: 'POST', cookies: customer,
-  body: { name: 'Test Customer', phone, email: `qa${stamp}@example.com`, password: 'testpass123' } });
+  body: { email, password: 'testpass123' } });
 check('registration succeeds', reg.status === 201, `got ${reg.status} ${reg.text.slice(0, 140)}`);
-check('duplicate phone rejected', (await req('/api/auth/register', { method: 'POST', cookies: jar(), body: { name: 'Dupe', phone, password: 'testpass123' } })).status === 409);
-check('weak password rejected', (await req('/api/auth/register', { method: 'POST', cookies: jar(), body: { name: 'Weak Pass', phone: '0733000111', password: 'short' } })).status === 422);
+check('registration does not require a name or phone', reg.status === 201);
+check('duplicate email rejected', (await req('/api/auth/register', { method: 'POST', cookies: jar(), body: { email, password: 'testpass123' } })).status === 409);
+check('weak password rejected', (await req('/api/auth/register', { method: 'POST', cookies: jar(), body: { email: `weak${stamp}@example.com`, password: 'short' } })).status === 422);
+check('malformed email rejected', (await req('/api/auth/register', { method: 'POST', cookies: jar(), body: { email: 'not-an-email', password: 'testpass123' } })).status === 422);
 
 const account = await req('/account', { cookies: customer });
 check('signed-in customer reaches /account', account.status === 200, `got ${account.status}`);
-check('account greets by first name', /Hello,\s*(<!-- -->)?Test/.test(account.text));
+// With no name on the account the greeting falls back to the email local part.
+check('account greets using the email name', new RegExp(`Hello,\\s*(<!-- -->)?qa${stamp}`).test(account.text));
 const anon = await req('/account');
 check('signed-out /account redirects', anon.status === 307 || anon.status === 302, `got ${anon.status}`);
 check('redirect points at /login', (anon.headers.get('location') ?? '').includes('/login'));
@@ -235,7 +242,7 @@ check('first address becomes default', addrList.json?.addresses?.[0]?.isDefault 
 check('addresses page renders it', (await req('/account/addresses', { cookies: customer })).text.includes('Kasarani'));
 
 const other = jar();
-await req('/api/auth/register', { method: 'POST', cookies: other, body: { name: 'Other Person', phone: `07${stamp}22`.slice(0, 10), password: 'testpass123' } });
+await req('/api/auth/register', { method: 'POST', cookies: other, body: { email: `other${stamp}@example.com`, password: 'testpass123' } });
 check('another customer cannot delete your address',
   (await req(`/api/account/addresses/${addrList.json.addresses[0].id}`, { method: 'DELETE', cookies: other })).status === 404);
 check('another customer cannot edit your address',
@@ -255,16 +262,20 @@ if (productId) {
 
 results.push('\n== Login / logout ==');
 const login = jar();
-const badLogin = await req('/api/auth/login', { method: 'POST', cookies: login, body: { identifier: phone, password: 'wrongpassword' } });
-const unknownLogin = await req('/api/auth/login', { method: 'POST', cookies: jar(), body: { identifier: '0799999999', password: 'whatever1' } });
+// Sign-in is by email. A phone still works for accounts that have one, which
+// is checked further down once the profile has been filled in.
+const badLogin = await req('/api/auth/login', { method: 'POST', cookies: login, body: { identifier: email, password: 'wrongpassword' } });
+const unknownLogin = await req('/api/auth/login', { method: 'POST', cookies: jar(), body: { identifier: 'nobody@example.com', password: 'whatever1' } });
 check('wrong password rejected', badLogin.status === 401);
 check('unknown account gives the same 401', unknownLogin.status === 401);
 check('errors do not reveal which field was wrong', badLogin.json?.error === unknownLogin.json?.error);
-const goodLogin = await req('/api/auth/login', { method: 'POST', cookies: login, body: { identifier: phone, password: 'testpass123' } });
+const goodLogin = await req('/api/auth/login', { method: 'POST', cookies: login, body: { identifier: email, password: 'testpass123' } });
 check('correct password signs in', goodLogin.status === 200, `got ${goodLogin.status}`);
 check('login returns saved cart for merging', Array.isArray(goodLogin.json?.savedCart));
-check('email login also works', (await req('/api/auth/login', { method: 'POST', cookies: jar(), body: { identifier: `qa${stamp}@example.com`, password: 'testpass123' } })).status === 200);
-check('profile update works', (await req('/api/account/profile', { method: 'PATCH', cookies: login, body: { name: 'Renamed Customer', phone, email: `qa${stamp}@example.com` } })).status === 200);
+check('profile can add a name and phone later', (await req('/api/account/profile', { method: 'PATCH', cookies: login, body: { name: 'Renamed Customer', phone, email } })).status === 200);
+check('phone login works once a phone has been added',
+  (await req('/api/auth/login', { method: 'POST', cookies: jar(), body: { identifier: phone, password: 'testpass123' } })).status === 200);
+check('profile accepts a blank phone', (await req('/api/account/profile', { method: 'PATCH', cookies: login, body: { name: 'Renamed Customer', phone: '', email } })).status === 200);
 check('password change needs the current password', (await req('/api/account/password', { method: 'POST', cookies: login, body: { currentPassword: 'nope', newPassword: 'newpass123' } })).status === 400);
 check('forgot-password never reveals existence', (await req('/api/auth/forgot-password', { method: 'POST', body: { identifier: '0799999999' } })).status === 200);
 check('invalid reset token is refused', (await req('/api/auth/reset-password', { method: 'POST', body: { token: 'a'.repeat(64), password: 'newpass123' } })).status === 400);
@@ -306,6 +317,34 @@ check('customer search works', (await req(`/admin/customers?q=Renamed`, { cookie
 check('product search works', (await req('/admin/products?q=bucket', { cookies: admin })).text.includes('Bucket'));
 check('settings shows placeholder warning', (await req('/admin/settings', { cookies: admin })).text.includes('still missing'));
 check('admin cookie does not open customer APIs', (await req('/api/account/addresses', { cookies: admin })).status === 401);
+
+results.push('\n== Recording payments ==');
+// The owner mostly takes cash and M-Pesa outside the website, so marking an
+// order paid has to be one press from the list, not a dropdown three clicks in.
+const ordersHtml = (await req('/admin/orders', { cookies: admin })).text;
+check('orders list offers a Mark paid button', ordersHtml.includes('Mark paid'));
+check('orders list has a payment filter', ordersHtml.includes('Not paid yet'));
+const unpaid = await req('/admin/orders?payment=UNPAID', { cookies: admin });
+const paid = await req('/admin/orders?payment=PAID', { cookies: admin });
+check('unpaid filter loads', unpaid.status === 200);
+check('paid filter loads', paid.status === 200);
+const numbers = (html) => new Set(html.match(/DK-\d{4}-\d{4}/g) ?? []);
+check('the two payment filters do not overlap',
+  [...numbers(unpaid.text)].every((n) => !numbers(paid.text).has(n)));
+check('every unpaid row can be marked paid',
+  (unpaid.text.match(/Mark paid/g) ?? []).length === numbers(unpaid.text).size,
+  `${(unpaid.text.match(/Mark paid/g) ?? []).length} buttons for ${numbers(unpaid.text).size} orders`);
+check('paid orders show no Mark paid button', !paid.text.includes('Mark paid'));
+
+results.push('\n== Adding a category ==');
+check('dashboard offers Add a category', (await req('/admin/dashboard', { cookies: admin })).text.includes('Add category'));
+check('products page offers Add a category', (await req('/admin/products', { cookies: admin })).text.includes('Add category'));
+const catPlain = await req('/admin/categories', { cookies: admin });
+const catNew = await req('/admin/categories?new=1', { cookies: admin });
+check('categories page loads', catPlain.status === 200);
+check('the form is closed by default', !catPlain.text.includes('New category'));
+check('?new=1 opens the form straight away', catNew.text.includes('New category'));
+
 check('admin logout works', (await req('/api/admin/auth/logout', { method: 'POST', cookies: admin })).status === 200);
 check('admin protected after logout', [302, 307].includes((await req('/admin/dashboard', { cookies: admin })).status));
 
@@ -379,6 +418,37 @@ check('service worker never caches /checkout', sw.text.includes("'/checkout'"));
 check('service worker only handles GET', sw.text.includes("request.method !== 'GET'"));
 check('service worker has an offline fallback', sw.text.includes('OFFLINE_URL'));
 check('sw.js is served no-store', (sw.headers.get('cache-control') ?? '').includes('no-cache'));
+
+results.push('\n== Auth pages are chrome-free ==');
+// Someone entering a password should see the sign-in card and nothing else.
+// These pages live in their own route group precisely so the header, footer
+// and mobile tab bar do not render; this is what proves the group is working.
+for (const path of ['/login', '/register', '/forgot-password']) {
+  const html = (await req(path)).text;
+  check(`${path} has no site header`, !html.includes('<header'));
+  check(`${path} has no site footer`, !html.includes('<footer'));
+  check(`${path} still shows the shop name`, html.includes('Debby'));
+  check(`${path} offers a way out`, html.includes('/shop'));
+}
+// A normal shop page must still have its chrome, or the check above would pass
+// for the wrong reason.
+const shopChrome = (await req('/shop')).text;
+check('shop page still has a header', shopChrome.includes('<header'));
+check('shop page still has a footer', shopChrome.includes('<footer'));
+
+results.push('\n== Google sign-in ==');
+// Not configured in this environment, so the button must be absent and the
+// routes must refuse politely rather than erroring.
+const loginHtml = (await req('/login')).text;
+check('Google button hidden when unconfigured', !loginHtml.includes('Continue with Google'));
+const googleStart = await req('/api/auth/google');
+check('google start redirects rather than 500s', [302, 307].includes(googleStart.status), `got ${googleStart.status}`);
+check('google start explains why it cannot run',
+  (googleStart.headers.get('location') ?? '').includes('google-unavailable'));
+const googleCb = await req('/api/auth/google/callback?code=x&state=y');
+check('google callback refuses a forged state', [302, 307].includes(googleCb.status), `got ${googleCb.status}`);
+check('forged callback does not create a session',
+  !(googleCb.headers.getSetCookie?.() ?? []).some((c) => c.startsWith('dk_customer')));
 
 results.push('\n== Security headers & errors ==');
 check('X-Content-Type-Options set', home.headers.get('x-content-type-options') === 'nosniff');

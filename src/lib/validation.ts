@@ -72,23 +72,29 @@ const shortText = (max: number) => z.string().trim().max(max);
 
 // --- Accounts ----------------------------------------------------------------
 
+/**
+ * Signing up asks for an email and a password, nothing else. The shorter the
+ * form, the more people finish it — and a phone number is still collected at
+ * checkout, where it is genuinely needed to arrange a delivery.
+ */
 export const registerSchema = z.object({
-  name: nameSchema,
-  phone: phoneSchema,
-  email: optionalEmailSchema,
+  email: emailSchema,
   password: passwordSchema,
   marketingOptIn: z.boolean().optional().default(false),
 });
 
 export const loginSchema = z.object({
-  identifier: z.string().trim().min(1, 'Enter your phone number or email'),
+  // Still accepts a phone number: accounts created before this change sign in
+  // exactly as they did, and the route resolves either form.
+  identifier: z.string().trim().min(1, 'Enter your email address'),
   password: z.string().min(1, 'Enter your password'),
 });
 
+/** The profile page is where a name and phone can be filled in later. */
 export const profileSchema = z.object({
-  name: nameSchema,
-  phone: phoneSchema,
-  email: optionalEmailSchema,
+  name: z.union([nameSchema, z.literal('')]).optional().transform((v) => (v ? v : undefined)),
+  phone: z.union([phoneSchema, z.literal('')]).optional().transform((v) => (v ? v : undefined)),
+  email: emailSchema,
 });
 
 export const changePasswordSchema = z.object({

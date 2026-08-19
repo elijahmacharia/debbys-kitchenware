@@ -25,6 +25,16 @@ export async function POST(request: Request) {
       .limit(1);
     if (!customer) return unauthorized();
 
+    // A Google account has no password to change. Refusing outright would leave
+    // the person stuck, so point them at the reset flow, which will set one.
+    if (!customer.passwordHash) {
+      return fail(
+        'This account signs in with Google and has no password yet. Use "Forgot password" to set one.',
+        400,
+        { currentPassword: 'No password set on this account' },
+      );
+    }
+
     if (!(await verifyPassword(parsed.data.currentPassword, customer.passwordHash))) {
       return fail('Your current password is not correct', 400, { currentPassword: 'Incorrect password' });
     }

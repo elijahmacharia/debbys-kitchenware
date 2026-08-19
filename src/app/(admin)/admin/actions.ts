@@ -10,6 +10,7 @@ import { getCurrentAdmin } from '@/lib/auth';
 import { uniqueSlug } from '@/lib/slug';
 import { parseShillingsToCents } from '@/lib/money';
 import { allowedNextStatuses } from '@/lib/orders';
+import { paymentMethodLabel } from '@/lib/config';
 import {
   categorySchema, deliveryZoneSchema, fieldErrors, orderStatusSchema, paymentUpdateSchema,
   productSchema, stockAdjustSchema,
@@ -436,6 +437,55 @@ export async function updateOrderPaymentAction(orderId: string, form: FormData):
     revalidatePath(`/admin/orders/${orderId}`);
     revalidatePath('/admin/orders');
     return { ok: true, message: 'Payment status updated' };
+  });
+}
+
+/**
+ * One click to record that an order has been paid for.
+ *
+ * This exists because almost every payment this shop takes is cash on delivery
+ * or an M-Pesa transfer that lands outside the website. The owner is not
+ * changing a status so much as ticking a box after money arrives, and that
+ * should not require opening an order, finding a dropdown and pressing save.
+ *
+ * An M-Pesa transaction code can be passed as the reference so there is
+ * something to check a statement against later. Cash has no code, so the note
+ * simply records that it was cash.
+ *
+ * Already-paid orders are left alone rather than treated as an error: a double
+ * click, or two people marking the same order, should be harmless.
+ */
+export async function markOrderPaidAction(orderId: string, reference?: string): Promise<ActionResult> {
+  return guard(async () => {
+    const admin = await requireAdmin();
+
+    const [order] = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
+    if (!order) return { ok: false, message: 'That order no longer exists.' };
+    if (order.paymentStatus === 'PAID') return { ok: true, message: 'That order was already marked paid.' };
+
+    const trimmed = reference?.trim().slice(0, 60) || null;
+
+    await db.transaction(async (tx) => {
+      await tx.update(orders)
+        .set({ paymentStatus: 'PAID', paymentReference: trimmed ?? order.paymentReference })
+        .where(eq(orders.id, orderId));
+
+      // Recorded against the order so there is an audit trail of who confirmed
+      // the money and when, which matters when takings are reconciled.
+      await tx.insert(orderEvents).values({
+        orderId,
+        status: order.status,
+        note: trimmed
+          ? `Payment received (${paymentMethodLabel(order.paymentMethod)}), ref ${trimmed}`
+          : `Payment received (${paymentMethodLabel(order.paymentMethod)})`,
+        actorAdminId: admin.id,
+      });
+    });
+
+    revalidatePath('/admin/orders');
+    revalidatePath(`/admin/orders/${orderId}`);
+    revalidatePath('/admin/dashboard');
+    return { ok: true, message: 'Marked as paid' };
   });
 }
 

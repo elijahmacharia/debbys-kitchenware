@@ -1,7 +1,7 @@
 import { eq, or } from 'drizzle-orm';
 import { db } from '@/db';
 import { cartItems, customers } from '@/db/schema';
-import { startCustomerSession, verifyPassword, wastePasswordTime } from '@/lib/auth';
+import { displayName, startCustomerSession, verifyPassword, wastePasswordTime } from '@/lib/auth';
 import { loginSchema, normalizeKenyanPhone } from '@/lib/validation';
 import { clientKey, rateLimit } from '@/lib/rate-limit';
 import { fail, handle, ok, readJson, tooManyRequests, validationFailed } from '@/lib/api';
@@ -51,13 +51,21 @@ export async function POST(request: Request) {
       await wastePasswordTime();
       return fail(GENERIC, 401);
     }
+    // A Google-only account has no password hash. Say so instead of returning
+    // the generic failure: the account exists, and the person is one click from
+    // getting in. This leaks nothing an attacker could not learn by pressing
+    // the Google button themselves.
+    if (!customer.passwordHash) {
+      await wastePasswordTime();
+      return fail('This account uses Google sign-in. Use the "Continue with Google" button instead.', 401);
+    }
     if (!(await verifyPassword(password, customer.passwordHash))) return fail(GENERIC, 401);
     if (!customer.isActive) {
       return fail('This account has been disabled. Please contact us if you think this is a mistake.', 403);
     }
 
     await db.update(customers).set({ lastLoginAt: new Date() }).where(eq(customers.id, customer.id));
-    await startCustomerSession({ id: customer.id, name: customer.name });
+    await startCustomerSession(customer);
 
     // The saved cart is returned so the browser can merge it with whatever the
     // customer put in the cart while signed out.
@@ -66,6 +74,6 @@ export async function POST(request: Request) {
       .from(cartItems)
       .where(eq(cartItems.customerId, customer.id));
 
-    return ok({ id: customer.id, name: customer.name, savedCart });
+    return ok({ id: customer.id, name: displayName(customer), savedCart });
   });
 }

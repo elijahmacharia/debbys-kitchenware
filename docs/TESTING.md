@@ -35,6 +35,55 @@ the database**.
 
 ---
 
+## Accounts, Google sign-in and payments (August 2026)
+
+The signup form changed to email and password only, phone moved to checkout,
+and Google sign-in was added. 220 checks pass against a real production build.
+What that run actually proves, and what it does not:
+
+**Proven by the suite**
+
+- Signing up with an email and password returns 201, and no longer asks for a
+  name or a phone number.
+- A duplicate email returns 409 with wording that sends the person to sign in.
+  A weak password and a malformed email both return 422.
+- Sign-in works by email. It also works by phone once a phone has been added on
+  the profile page, so accounts made before this change still work.
+- The account page greets someone with no name using the part of their email
+  before the @, rather than showing a blank.
+- `/login`, `/register` and `/forgot-password` render with no header and no
+  footer, while `/shop` still has both. Each auth page still shows the shop name
+  and a link back to the shop, so nobody is stranded.
+- With Google unconfigured, the button is not rendered, `/api/auth/google`
+  redirects with an explanation instead of erroring, and a forged callback is
+  refused without setting a session cookie.
+- Every unpaid order in the admin list has a Mark paid button, paid orders have
+  none, and the paid and unpaid filters return sets that do not overlap.
+- `?new=1` opens the new-category form; without it the form stays closed.
+
+**NOT proven, and worth knowing**
+
+- **A real Google sign-in has never been completed.** The sandbox has no Google
+  credentials, so only the unconfigured paths are covered. The first live
+  attempt is the first real test, and `redirect_uri_mismatch` is the usual
+  first failure — the URI in Google Cloud must match
+  `https://YOUR-DOMAIN/api/auth/google/callback` exactly.
+- **The Mark paid button was never pressed.** Server actions cannot be driven
+  over plain HTTP, so the suite proves the button appears for the right orders,
+  not that pressing it updates the row. Press it once on a test order.
+- Nothing visual was checked. No screenshots, no browsers, no screen readers.
+- Account linking, where someone signs up by email and later uses Google with
+  the same address, is written and typechecked but never exercised.
+
+**Migration warning**
+
+`npm run db:push` fails against a database that already has the old customers
+table: `no such column: google_id`. SQLite cannot add a unique column and
+change three others to nullable in place. On an empty database the push works
+cleanly. Since the shop is not trading yet, dropping the customers table and
+pushing again is the simple fix — but check the table is genuinely empty first,
+because that deletes every account in it.
+
 ## Bugs the suite found, and the fixes
 
 Worth recording, because they are exactly the class of bug that ships silently.

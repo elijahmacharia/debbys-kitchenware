@@ -46,7 +46,9 @@ export default async function CheckoutPage() {
             county: a.county, town: a.town, area: a.area, estate: a.estate,
             building: a.building, landmark: a.landmark, directions: a.directions, isDefault: a.isDefault,
           }))}
-          customer={customer ? { name: customer.name, phone: customer.phone, email: customer.email } : null}
+          // Pre-fill only. Name and phone may be blank on an email or Google account,
+          // and checkout asks for both regardless, so a blank prefill is fine.
+          customer={customer ? { name: customer.name ?? '', phone: customer.phone ?? '', email: customer.email } : null}
           isSignedIn={Boolean(customer)}
           deliveryNotice={settings.deliveryNotice}
           paymentInstructions={settings.paymentInstructions}

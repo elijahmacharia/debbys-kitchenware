@@ -1,5 +1,5 @@
 import 'server-only';
-import { and, count, desc, eq, gte, or, sql, sum } from 'drizzle-orm';
+import { and, count, desc, eq, gte, ne, or, sql, sum } from 'drizzle-orm';
 import { db } from '@/db';
 import { categories, contactMessages, customers, orderItems, orders, products } from '@/db/schema';
 
@@ -94,12 +94,21 @@ export async function getLowStockProducts(limit = 50) {
 
 const escapeLike = (value: string) => `%${value.replace(/[%_\\]/g, (m) => `\\${m}`)}%`;
 
-export async function listAdminOrders(filters: { status?: string; q?: string; page?: number; perPage?: number }) {
+export async function listAdminOrders(filters: {
+  status?: string; q?: string; payment?: string; page?: number; perPage?: number;
+}) {
   const page = Math.max(1, filters.page ?? 1);
   const perPage = Math.min(100, Math.max(1, filters.perPage ?? 25));
 
   const conditions = [];
   if (filters.status && filters.status !== 'ALL') conditions.push(eq(orders.status, filters.status as never));
+  // "UNPAID" is a convenience rather than a stored value: it means anything
+  // that is not settled yet, which is the list the owner works through when
+  // reconciling cash and M-Pesa takings.
+  if (filters.payment === 'UNPAID') conditions.push(ne(orders.paymentStatus, 'PAID'));
+  else if (filters.payment && filters.payment !== 'ALL') {
+    conditions.push(eq(orders.paymentStatus, filters.payment as never));
+  }
   if (filters.q) {
     const like = escapeLike(filters.q);
     conditions.push(

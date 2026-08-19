@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getCurrentCustomer } from '@/lib/auth';
+import { displayName, getCurrentCustomer } from '@/lib/auth';
 import { AccountNav } from '@/components/account/AccountNav';
 
 /**
@@ -20,7 +20,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
   return (
     <div className="container-site py-6">
       <div className="grid gap-6 lg:grid-cols-[15rem_1fr] lg:items-start">
-        <AccountNav customerName={customer.name} />
+        <AccountNav customerName={displayName(customer)} />
         <div className="min-w-0">{children}</div>
       </div>
     </div>

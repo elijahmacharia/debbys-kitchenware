@@ -36,6 +36,15 @@ export const business = {
   mapsEmbedUrl: env('NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL'),
 } as const;
 
+/**
+ * Whether to show the "Continue with Google" button.
+ *
+ * Only the client ID is public — the secret never leaves the server. When no
+ * ID is configured the button is not rendered at all, so the site does not
+ * advertise a sign-in route that would fail the moment someone pressed it.
+ */
+export const googleSignInEnabled = !isPlaceholder(env('NEXT_PUBLIC_GOOGLE_CLIENT_ID'));
+
 export const social = [
   { name: 'Instagram', url: env('NEXT_PUBLIC_INSTAGRAM_URL') },
   { name: 'Facebook', url: env('NEXT_PUBLIC_FACEBOOK_URL') },

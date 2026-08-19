@@ -15,7 +15,7 @@ export default async function ProfilePage() {
         <h1>Profile</h1>
         <p className="mt-1 text-sm text-muted">Keep these current so we can reach you.</p>
       </div>
-      <ProfileForm customer={{ name: customer.name, phone: customer.phone, email: customer.email }} />
+      <ProfileForm customer={{ name: customer.name ?? '', phone: customer.phone ?? '', email: customer.email }} />
       <PasswordForm />
     </div>
   );

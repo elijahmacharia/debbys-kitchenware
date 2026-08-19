@@ -33,6 +33,16 @@ export function LoginForm() {
   // Only relative, single-slash paths. Anything else goes to the account page.
   const next = rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/account';
   const reason = params.get('reason');
+  // Google sends the browser back here with ?error=... when the flow could not
+  // be completed. Each case gets wording the customer can act on, rather than
+  // a code they would have to ask someone about.
+  const oauthError = ({
+    'google-unavailable': 'Google sign-in is not set up yet. Please use your email and password.',
+    'google-state': 'That sign-in link expired. Please press "Continue with Google" again.',
+    'google-unverified': 'Google has not verified that email address, so we cannot use it to sign in.',
+    'google-failed': 'We could not complete Google sign-in. Please try again, or use your email and password.',
+    'account-disabled': 'This account has been disabled. Please contact us if you think this is a mistake.',
+  } as Record<string, string>)[params.get('error') ?? ''];
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -68,6 +78,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={submit} noValidate className="space-y-4">
+      {oauthError ? <Alert tone="error">{oauthError}</Alert> : null}
       {reason === 'wishlist' ? <Alert tone="info">Sign in to save items to your wishlist so they are there next time.</Alert> : null}
       {reason === 'protected' ? <Alert tone="info">Please sign in to view that page.</Alert> : null}
       {formError ? <Alert tone="error">{formError}</Alert> : null}

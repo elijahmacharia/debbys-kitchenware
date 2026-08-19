@@ -6,9 +6,9 @@ import { TextField } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 
-export function ProfileForm({ customer }: { customer: { name: string; phone: string; email: string | null } }) {
+export function ProfileForm({ customer }: { customer: { name: string; phone: string; email: string } }) {
   const router = useRouter();
-  const [form, setForm] = useState({ name: customer.name, phone: customer.phone, email: customer.email ?? '' });
+  const [form, setForm] = useState({ name: customer.name, phone: customer.phone, email: customer.email });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

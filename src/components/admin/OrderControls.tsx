@@ -5,18 +5,20 @@ import { SelectField, TextAreaField, TextField } from '@/components/ui/Field';
 import { Alert } from '@/components/ui/Alert';
 import { STATUS_META, type OrderStatus } from '@/lib/orders';
 import { saveOrderNoteAction, updateOrderPaymentAction, updateOrderStatusAction } from '@/app/(admin)/admin/actions';
+import { MarkPaidPanel } from './MarkPaidButton';
 
 /**
  * The three things staff actually do to an order: move it along, record that
  * payment arrived, and leave a note for themselves.
  */
 export function OrderControls({
-  orderId, currentStatus, allowedStatuses, paymentStatus, paymentReference, adminNote,
+  orderId, currentStatus, allowedStatuses, paymentStatus, paymentMethod, paymentReference, adminNote,
 }: {
   orderId: string;
   currentStatus: string;
   allowedStatuses: OrderStatus[];
   paymentStatus: string;
+  paymentMethod: string;
   paymentReference: string | null;
   adminNote: string | null;
 }) {
@@ -53,9 +55,23 @@ export function OrderControls({
       <section className="rounded-3xl bg-surface p-5 shadow-soft">
         <h2 className="text-sm font-bold">Payment</h2>
         <p className="mt-1 text-xs text-muted">
-          Only mark an order paid once you have actually seen the M-Pesa message. The website never sets
+          Only mark an order paid once you have actually seen the money arrive. The website never sets
           this by itself.
         </p>
+
+        {/* The common case gets its own button. The form below stays for
+            corrections: refunds, failed payments, marking something back to
+            unpaid. Most days the owner will never need to open it. */}
+        {paymentStatus === 'PAID' ? null : (
+          <div className="mt-3">
+            <MarkPaidPanel orderId={orderId} method={paymentMethod} />
+          </div>
+        )}
+
+        <details className="mt-3 group">
+          <summary className="cursor-pointer list-none text-xs font-semibold text-muted hover:text-ink">
+            {paymentStatus === 'PAID' ? 'Change payment status' : 'Something else (refund, failed payment)'}
+          </summary>
         <AdminForm action={(form) => updateOrderPaymentAction(orderId, form)} submitLabel="Save payment" className="mt-3">
           {(errors) => (
             <div className="space-y-3">
@@ -72,6 +88,7 @@ export function OrderControls({
             </div>
           )}
         </AdminForm>
+        </details>
       </section>
 
       <section className="rounded-3xl bg-surface p-5 shadow-soft">

@@ -20,24 +20,29 @@ export async function PATCH(request: Request) {
     if (!parsed.success) return validationFailed(parsed.error);
     const { name, phone, email } = parsed.data;
 
+    // Email is always present; phone is optional now, so it only joins the
+    // uniqueness check when the customer actually supplied one.
     const clash = await db
       .select({ id: customers.id, phone: customers.phone })
       .from(customers)
       .where(and(
         ne(customers.id, session.sub),
-        email ? or(eq(customers.phone, phone), eq(customers.email, email)) : eq(customers.phone, phone),
+        phone ? or(eq(customers.phone, phone), eq(customers.email, email)) : eq(customers.email, email),
       ))
       .limit(1);
 
     if (clash.length > 0) {
-      const field = clash[0].phone === phone ? 'phone' : 'email';
+      const field = phone && clash[0].phone === phone ? 'phone' : 'email';
       return fail('Those details are already used by another account', 409, { [field]: 'Already in use by another account' });
     }
 
-    await db.update(customers).set({ name, phone, email: email ?? null }).where(eq(customers.id, session.sub));
+    await db
+      .update(customers)
+      .set({ name: name ?? null, phone: phone ?? null, email })
+      .where(eq(customers.id, session.sub));
 
     // Re-issue the session so the greeting in the header shows the new name.
-    await startCustomerSession({ id: session.sub, name });
+    await startCustomerSession({ id: session.sub, name, email });
 
     return ok({ message: 'Your details have been updated.' });
   });

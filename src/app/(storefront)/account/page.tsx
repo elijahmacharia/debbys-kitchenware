@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { count, eq } from 'drizzle-orm';
 import { db } from '@/db';
 import { addresses, wishlistItems } from '@/db/schema';
-import { getCurrentCustomer } from '@/lib/auth';
+import { displayName, getCurrentCustomer } from '@/lib/auth';
 import { getCustomerOrders } from '@/lib/queries/orders';
 import { formatKsh } from '@/lib/money';
 import { STATUS_META, isTerminal } from '@/lib/orders';
@@ -32,7 +32,7 @@ export default async function AccountPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1>Hello, {customer.name.split(' ')[0]} 👋</h1>
+        <h1>Hello, {displayName(customer).split(' ')[0]} 👋</h1>
         
       </div>
 

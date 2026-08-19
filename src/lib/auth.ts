@@ -81,8 +81,26 @@ const cookieOptions = (maxAge: number) => ({
 
 // --- Customer sessions -------------------------------------------------------
 
-export async function startCustomerSession(customer: { id: string; name: string }) {
-  const token = await signSession({ sub: customer.id, aud: 'customer', name: customer.name }, CUSTOMER_MAX_AGE);
+/**
+ * What to call a customer in the interface.
+ *
+ * Signing up now asks for an email and a password only, so many accounts have
+ * no name until the person places an order or fills in their profile. Falling
+ * back to the part before the @ gives something recognisable to greet them
+ * with instead of an empty space or a blunt "Customer".
+ */
+export function displayName(customer: { name?: string | null; email?: string | null }): string {
+  const named = customer.name?.trim();
+  if (named) return named;
+  const local = customer.email?.split('@')[0]?.trim();
+  return local && local.length > 0 ? local : 'Customer';
+}
+
+export async function startCustomerSession(customer: { id: string; name?: string | null; email?: string | null }) {
+  const token = await signSession(
+    { sub: customer.id, aud: 'customer', name: displayName(customer) },
+    CUSTOMER_MAX_AGE,
+  );
   (await cookies()).set(CUSTOMER_COOKIE, token, cookieOptions(CUSTOMER_MAX_AGE));
 }
 

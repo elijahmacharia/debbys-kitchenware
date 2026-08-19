@@ -6,7 +6,12 @@ import { CategoryManager, type AdminCategory } from '@/components/admin/Category
 
 export const metadata: Metadata = { title: 'Categories', robots: { index: false, follow: false } };
 
-export default async function AdminCategoriesPage() {
+export default async function AdminCategoriesPage(
+  { searchParams }: { searchParams: Promise<{ new?: string }> },
+) {
+  // ?new=1 opens the create form immediately, so the shortcuts on the
+  // dashboard and the products page land somewhere useful.
+  const openNew = (await searchParams).new === '1';
   // Includes inactive categories, unlike the public tree — staff need to see
   // and edit the ones they have hidden.
   const [rows, counts] = await Promise.all([
@@ -43,7 +48,7 @@ export default async function AdminCategoriesPage() {
         those products are moved.
       </p>
       <div className="mt-5">
-        <CategoryManager categories={roots} flatOptions={flatOptions} />
+        <CategoryManager categories={roots} flatOptions={flatOptions} startCreating={openNew} />
       </div>
     </div>
   );

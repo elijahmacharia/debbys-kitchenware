@@ -52,13 +52,17 @@ export default async function AdminCustomersPage({
             <tbody>
               {customers.map((customer) => (
                 <tr key={customer.id}>
-                  <th scope="row">{customer.name}</th>
+                  <th scope="row">{customer.name ?? customer.email.split('@')[0]}</th>
                   <td>
-                    <a href={`tel:${customer.phone}`} className="link">{customer.phone}</a>
+                    {/* Accounts created with Google, or with email alone, have no
+                        phone until the customer places an order. */}
+                    {customer.phone
+                      ? <a href={`tel:${customer.phone}`} className="link">{customer.phone}</a>
+                      : <span className="text-subtle">Not given</span>}
                   </td>
-                  <td className="text-muted">{customer.email ?? '-'}</td>
+                  <td className="text-muted">{customer.email}</td>
                   <td>
-                    <Link href={`/admin/orders?q=${encodeURIComponent(customer.phone)}`} className="link">
+                    <Link href={`/admin/orders?q=${encodeURIComponent(customer.phone ?? customer.email)}`} className="link">
                       {Number(customer.orderCount)}
                     </Link>
                   </td>

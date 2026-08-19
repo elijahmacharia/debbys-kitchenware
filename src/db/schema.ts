@@ -41,21 +41,39 @@ export const adminUsers = sqliteTable('admin_users', {
 
 // --- Customers ---------------------------------------------------------------
 
+/**
+ * Email is the login identifier. It used to be the phone number, which suited
+ * a Kenyan shop, but signing in with Google is now supported and Google never
+ * returns a phone number — so phone moved to checkout, where it is still
+ * required on every order. That means the shop can always reach a buyer about
+ * a delivery even though the account itself may not carry a number.
+ *
+ * Three columns are nullable for reasons worth stating:
+ *   phone         - absent until the customer places an order or fills it in
+ *   passwordHash  - absent for Google accounts, which have no password here
+ *   name          - Google supplies one; email signup does not ask for it, and
+ *                   the display falls back to the part before the @
+ */
 export const customers = sqliteTable('customers', {
   id: id(),
-  name: text('name').notNull(),
-  /** Stored normalised as +254XXXXXXXXX. The primary login identifier. */
-  phone: text('phone').notNull(),
-  email: text('email'),
-  passwordHash: text('password_hash').notNull(),
+  name: text('name'),
+  /** Stored normalised as +254XXXXXXXXX when present. */
+  phone: text('phone'),
+  email: text('email').notNull(),
+  passwordHash: text('password_hash'),
+  /** Google's stable subject claim. Set only for accounts linked to Google. */
+  googleId: text('google_id'),
   isActive: bool('is_active', true),
   marketingOptIn: bool('marketing_opt_in', false),
   lastLoginAt: integer('last_login_at', { mode: 'timestamp' }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 }, (t) => ({
+  // SQLite treats NULLs as distinct in a unique index, so several customers
+  // may have no phone and no google_id without colliding.
   phoneIdx: uniqueIndex('customers_phone_key').on(t.phone),
   emailIdx: uniqueIndex('customers_email_key').on(t.email),
+  googleIdx: uniqueIndex('customers_google_key').on(t.googleId),
   createdIdx: index('customers_created_idx').on(t.createdAt),
 }));
 

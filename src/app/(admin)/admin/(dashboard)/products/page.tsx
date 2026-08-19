@@ -23,7 +23,14 @@ export default async function AdminProductsPage({
           <h1>Products</h1>
           <p className="mt-1 text-sm text-muted">{products.length} product{products.length === 1 ? '' : 's'}{q ? ` matching “${q}”` : ''}</p>
         </div>
-        <ButtonLink href="/admin/products/new"><PlusIcon className="h-4 w-4" />Add product</ButtonLink>
+        <div className="flex flex-wrap gap-2">
+          {/* Adding a category is a normal part of adding stock, so the two
+              sit together rather than one being buried in the sidebar. */}
+          <Link href="/admin/categories?new=1" className="btn border border-line-strong bg-surface text-ink hover:bg-raise">
+            <PlusIcon className="h-4 w-4" />Add category
+          </Link>
+          <ButtonLink href="/admin/products/new"><PlusIcon className="h-4 w-4" />Add product</ButtonLink>
+        </div>
       </div>
 
       <form className="mt-4 flex gap-2" role="search">

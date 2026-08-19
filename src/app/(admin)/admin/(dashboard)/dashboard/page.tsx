@@ -5,6 +5,7 @@ import { formatKsh } from '@/lib/money';
 import { STATUS_META } from '@/lib/orders';
 import { Badge } from '@/components/ui/Badge';
 import { Alert } from '@/components/ui/Alert';
+import { PlusIcon } from '@/components/icons';
 import { cn } from '@/lib/cn';
 
 export const metadata: Metadata = { title: 'Dashboard', robots: { index: false, follow: false } };
@@ -22,6 +23,23 @@ export default async function AdminDashboardPage() {
       <div>
         <h1 className="text-2xl sm:text-3xl">Dashboard</h1>
         <p className="mt-1 text-sm text-muted">How the shop is doing right now.</p>
+      </div>
+
+      {/*
+        The three things the owner does most often, on the first screen they
+        see. All three already existed in the sidebar; sitting them here means
+        the common jobs do not require knowing where they live.
+      */}
+      <div className="flex flex-wrap gap-2">
+        <Link href="/admin/products/new" className="btn btn-primary">
+          <PlusIcon className="h-4 w-4" />Add product
+        </Link>
+        <Link href="/admin/categories?new=1" className="btn border border-line-strong bg-surface text-ink hover:bg-raise">
+          <PlusIcon className="h-4 w-4" />Add category
+        </Link>
+        <Link href="/admin/orders?payment=UNPAID" className="btn border border-line-strong bg-surface text-ink hover:bg-raise">
+          Record a payment
+        </Link>
       </div>
 
       {stats.pendingOrders > 0 ? (

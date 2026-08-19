@@ -16,9 +16,18 @@ export interface AdminCategory {
   children: AdminCategory[];
 }
 
-export function CategoryManager({ categories, flatOptions }: { categories: AdminCategory[]; flatOptions: { id: string; label: string }[] }) {
+/**
+ * `startCreating` opens the new-category form as soon as the page loads. It is
+ * how the "Add a category" shortcuts elsewhere in the admin land the owner on
+ * a form rather than on a list they then have to hunt through.
+ */
+export function CategoryManager({ categories, flatOptions, startCreating = false }: {
+  categories: AdminCategory[];
+  flatOptions: { id: string; label: string }[];
+  startCreating?: boolean;
+}) {
   const [editing, setEditing] = useState<AdminCategory | null>(null);
-  const [creating, setCreating] = useState(false);
+  const [creating, setCreating] = useState(startCreating);
 
   const close = () => { setEditing(null); setCreating(false); };
 
