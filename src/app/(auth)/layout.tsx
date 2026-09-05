@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { CartProvider } from '@/components/cart/CartProvider';
+import { getCustomerSession } from '@/lib/auth';
 
 /**
  * Layout for signing in, registering and resetting a password.
@@ -14,9 +16,23 @@ import type { ReactNode } from 'react';
  * The group name is in brackets, so the URLs are unchanged: /login, /register,
  * /forgot-password, /reset-password.
  *
- * `no-tabbar` cancels the bottom padding that globals.css reserves for the
- * mobile tab bar, which is not rendered here.
+ * CartProvider is here for one specific reason, and removing it breaks sign-in
+ * outright. LoginForm calls useCart() to merge the cart saved on the account
+ * into whatever the browser is holding. When these pages moved out of the
+ * (storefront) group they lost the provider that layout supplies, and every
+ * visit to /login threw "useCart must be used inside <CartProvider>" — a crash,
+ * not a warning. The provider renders nothing on its own, so the page stays as
+ * bare as it looks.
+ *
+ * `no-tabbar` cancels the bottom padding globals.css reserves for the mobile
+ * tab bar, which is not rendered here.
  */
-export default function AuthLayout({ children }: { children: ReactNode }) {
-  return <main className="no-tabbar flex min-h-screen flex-1 flex-col bg-canvas">{children}</main>;
+export default async function AuthLayout({ children }: { children: ReactNode }) {
+  const session = await getCustomerSession();
+
+  return (
+    <CartProvider isSignedIn={Boolean(session)}>
+      <main className="no-tabbar flex min-h-screen flex-1 flex-col bg-canvas">{children}</main>
+    </CartProvider>
+  );
 }

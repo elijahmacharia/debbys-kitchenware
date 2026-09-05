@@ -419,6 +419,24 @@ check('service worker only handles GET', sw.text.includes("request.method !== 'G
 check('service worker has an offline fallback', sw.text.includes('OFFLINE_URL'));
 check('sw.js is served no-store', (sw.headers.get('cache-control') ?? '').includes('no-cache'));
 
+results.push('\n== Landmarks ==');
+// A Lighthouse audit found the error page had no <main>, so a screen reader
+// had no way to skip navigation and reach the content. It is invisible unless
+// you audit for it, which is exactly why it needs a test.
+//
+// Exactly one <main> per page: zero leaves nothing to skip to, and more than
+// one makes "the main content" ambiguous.
+for (const [name, path] of [
+  ['homepage', '/'], ['shop', '/shop'], ['product', '/product/20l-plastic-bucket'],
+  ['cart', '/cart'], ['checkout', '/checkout'], ['contact', '/contact'],
+  ['login', '/login'], ['register', '/register'], ['forgot password', '/forgot-password'],
+  ['404 page', '/no-such-page-exists'],
+]) {
+  const html = (await req(path)).text;
+  const count = (html.match(/<main[\s>]/g) ?? []).length;
+  check(`${name} has exactly one main landmark`, count === 1, `found ${count}`);
+}
+
 results.push('\n== Auth pages are chrome-free ==');
 // Someone entering a password should see the sign-in card and nothing else.
 // These pages live in their own route group precisely so the header, footer
@@ -429,12 +447,30 @@ for (const path of ['/login', '/register', '/forgot-password']) {
   check(`${path} has no site footer`, !html.includes('<footer'));
   check(`${path} still shows the shop name`, html.includes('Debby'));
   check(`${path} offers a way out`, html.includes('/shop'));
+  // The form itself, not just the card around it. This check exists because a
+  // real crash hid here: LoginForm calls useCart(), the (auth) group had no
+  // CartProvider, and the form threw during render. The form sits inside a
+  // <Suspense>, so the shell streamed fine and the page still answered 200
+  // with the shop name on it. Every surface-level check passed while sign-in
+  // was completely broken. Only asserting on the fields catches that.
+  check(`${path} renders its actual form`, /<input|<button/.test(html), 'no form controls found');
 }
 // A normal shop page must still have its chrome, or the check above would pass
 // for the wrong reason.
 const shopChrome = (await req('/shop')).text;
 check('shop page still has a header', shopChrome.includes('<header'));
 check('shop page still has a footer', shopChrome.includes('<footer'));
+
+// Named fields, so a rename or a regression in either form is caught.
+const loginPage = (await req('/login')).text;
+check('login page has an email or phone field', /name="identifier"|type="text"|type="email"/.test(loginPage));
+check('login page has a password field', loginPage.includes('type="password"'));
+const registerPage = (await req('/register')).text;
+check('register page has an email field', /type="email"/.test(registerPage));
+check('register page has a password field', registerPage.includes('type="password"'));
+// No server error leaked into the markup of either page.
+check('no React error digest on the auth pages',
+  !/__next_error__/.test(loginPage) && !/__next_error__/.test(registerPage));
 
 results.push('\n== Google sign-in ==');
 // Not configured in this environment, so the button must be absent and the

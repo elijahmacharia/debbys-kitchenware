@@ -399,7 +399,7 @@ export async function updateOrderStatusAction(orderId: string, form: FormData): 
           if (!item.productId) continue;
           await tx.update(products).set({
             stock: sql`${products.stock} + ${item.quantity}`,
-            unitsSold: sql`MAX(0, ${products.unitsSold} - ${item.quantity})`,
+            unitsSold: sql`GREATEST(0, ${products.unitsSold} - ${item.quantity})`,
           }).where(eq(products.id, item.productId));
           await tx.insert(stockMovements).values({
             productId: item.productId,

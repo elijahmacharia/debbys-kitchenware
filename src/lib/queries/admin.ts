@@ -113,9 +113,9 @@ export async function listAdminOrders(filters: {
     const like = escapeLike(filters.q);
     conditions.push(
       or(
-        sql`${orders.orderNumber} LIKE ${like} ESCAPE '\\'`,
-        sql`${orders.customerName} LIKE ${like} ESCAPE '\\'`,
-        sql`${orders.customerPhone} LIKE ${like} ESCAPE '\\'`,
+        sql`${orders.orderNumber} ILIKE ${like} ESCAPE '\\'`,
+        sql`${orders.customerName} ILIKE ${like} ESCAPE '\\'`,
+        sql`${orders.customerPhone} ILIKE ${like} ESCAPE '\\'`,
       ),
     );
   }
@@ -163,9 +163,9 @@ export async function listCustomers(search?: string) {
     .where(
       like
         ? or(
-            sql`${customers.name} LIKE ${like} ESCAPE '\\'`,
-            sql`${customers.phone} LIKE ${like} ESCAPE '\\'`,
-            sql`${customers.email} LIKE ${like} ESCAPE '\\'`,
+            sql`${customers.name} ILIKE ${like} ESCAPE '\\'`,
+            sql`${customers.phone} ILIKE ${like} ESCAPE '\\'`,
+            sql`${customers.email} ILIKE ${like} ESCAPE '\\'`,
           )
         : undefined,
     )
@@ -186,7 +186,7 @@ export async function listAdminProducts(search?: string) {
     })
     .from(products)
     .innerJoin(categories, eq(products.categoryId, categories.id))
-    .where(like ? or(sql`${products.name} LIKE ${like} ESCAPE '\\'`, sql`${products.sku} LIKE ${like} ESCAPE '\\'`) : undefined)
+    .where(like ? or(sql`${products.name} ILIKE ${like} ESCAPE '\\'`, sql`${products.sku} ILIKE ${like} ESCAPE '\\'`) : undefined)
     .orderBy(desc(products.updatedAt))
     .limit(300);
 }

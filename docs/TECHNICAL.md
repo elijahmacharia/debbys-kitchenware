@@ -42,7 +42,7 @@ component fails the build rather than shipping the driver to the browser.
 
 ## Database
 
-libSQL (SQLite) via Drizzle ORM. Schema in `src/db/schema.ts`.
+PostgreSQL (Supabase) via Drizzle ORM, with the postgres.js driver. Schema in `src/db/schema.ts`.
 
 ### Conventions
 
@@ -290,23 +290,63 @@ checked against the deployed site.
 4. Run `npm run db:push` once against the production database.
 5. Back up the database on a schedule. It holds every order.
 
-### Deploying to Vercel with Turso
+### Deploying to Vercel with Supabase
 
-Vercel's filesystem is read-only and ephemeral, so a local SQLite file cannot
-live there. Turso is hosted libSQL — the same engine — so this needs no code
-change, only configuration.
+Vercel's filesystem is read-only and ephemeral, so the database has to live
+elsewhere. Supabase is hosted PostgreSQL.
 
-1. Create a Turso database. It gives you a `libsql://...` URL and an auth token.
-2. Create the tables and load data **from your machine**, pointed at Turso:
+**Choosing the connection string.** Supabase offers three, and this is the part
+people get wrong:
+
+| String | Port | Use it for |
+| --- | --- | --- |
+| Direct | 5432 | Local development, migrations |
+| Session pooler | 5432 | Long-lived servers |
+| **Transaction pooler** | **6543** | **Vercel, and anything serverless** |
+
+Serverless functions come and go constantly, and each one opening a direct
+connection will exhaust the database's connection limit under real traffic. The
+transaction pooler hands out connections per statement instead. `src/db/index.ts`
+sets `prepare: false` because a transaction-pooled connection cannot use
+prepared statements — a statement prepared on one physical connection may be
+executed on another. Without that flag, queries fail intermittently: fine in
+testing, broken under load.
+
+**Setting it up.**
+
+1. Create a project at supabase.com. Save the database password it shows you —
+   it is not shown again.
+2. Project Settings → Database → Connection string → **Transaction pooler**.
+   Copy it and replace `[YOUR-PASSWORD]`.
+3. Create the tables from your machine:
    ```bash
-   DATABASE_URL="libsql://your-db.turso.io" TURSO_AUTH_TOKEN="..." npm run db:push
-   DATABASE_URL="libsql://your-db.turso.io" TURSO_AUTH_TOKEN="..." npm run db:seed
+   # .env holds DATABASE_URL
+   npm run db:push
    ```
-3. In Vercel → Settings → Environment Variables, set at minimum:
-   `DATABASE_URL`, `TURSO_AUTH_TOKEN`, `AUTH_SECRET` (a **new** one, not your
-   local value), `NEXT_PUBLIC_SITE_URL` (your real deployment URL), and
+4. Optionally load the 43 demo products, so a client has something to look at.
+   **This wipes every order**, so never run it once the shop is trading:
+   ```bash
+   npm run db:seed
+   ```
+5. In Vercel → Settings → Environment Variables, set at minimum:
+   `DATABASE_URL` (the transaction-pooler string), `AUTH_SECRET` (a **new**
+   value, not your local one), `NEXT_PUBLIC_SITE_URL`, and
    `NEXT_PUBLIC_BUSINESS_WHATSAPP`.
-4. Redeploy.
+6. Redeploy. Vercel does not pick up new environment variables without one.
+
+**Row Level Security.** Supabase enables RLS on tables created through its own
+dashboard, but not on tables created by `db:push`, which is what this project
+uses. That is the right outcome here: every query runs server-side through the
+`postgres` role using the connection string, and the browser never talks to the
+database directly. Do not enable RLS on these tables expecting it to add
+protection — it would block the server's own queries while protecting nothing,
+because there is no client-side access to restrict.
+
+**Moving from Turso.** This project ran on SQLite until August 2026. The schema
+shapes are identical; only column types changed, because Postgres has real
+booleans and timestamps where SQLite encoded both as integers. If you still have
+a Turso database with orders in it, export before switching — there is no
+automatic migration path between the two.
 
 Note that `/sitemap.xml` is the only route rendered during `next build`. It is
 written to tolerate an unreachable database and fall back to the static pages,
@@ -317,15 +357,16 @@ until the next hourly regeneration.
 Vercel's **Hobby plan forbids commercial use**. A shop taking real orders needs
 Pro, or one of the hosts below.
 
-### A caveat about SQLite and serverless hosts
+### Connection limits on serverless hosts
 
-Vercel and similar platforms have a read-only filesystem and ephemeral
-instances. A SQLite file there will not persist. Options:
+Postgres allows a fixed number of simultaneous connections, and serverless
+platforms work against that: every concurrent invocation is a separate process
+wanting its own. Use Supabase's transaction pooler on port 6543 and the limit
+stops being your problem. See the deployment section above.
 
-- Point `DATABASE_URL` at **Turso** (hosted libSQL) — no code change at all,
-  just a URL and auth token
-- Migrate to **PostgreSQL** (Neon, Supabase, RDS) — see above
-- Deploy to a VPS with a persistent disk, where the file is fine
+If you ever move off Supabase, any Postgres host works — Neon, RDS, a VPS —
+but check whether it pools connections, and if it does, whether prepared
+statements survive. That is the single setting most likely to bite.
 
 ---
 

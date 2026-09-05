@@ -148,7 +148,9 @@ export function AdminShell({
           document.body,
         ) : null}
 
-        <div className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:py-8 lg:pr-8">{children}</div>
+        {/* The admin has an aside, a header and a nav, so the content area needs
+            naming too, or there is nothing for a screen reader to jump to. */}
+        <main id="main" className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:py-8 lg:pr-8">{children}</main>
       </div>
     </div>
   );

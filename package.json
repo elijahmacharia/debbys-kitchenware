@@ -16,12 +16,12 @@
     "test:smoke": "node scripts/smoke-test.mjs"
   },
   "dependencies": {
-    "@libsql/client": "^0.14.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.3",
     "jose": "^5.9.6",
     "next": "^15.1.6",
+    "postgres": "^3.4.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "server-only": "^0.0.1",

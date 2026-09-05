@@ -4,19 +4,28 @@ import { defineConfig } from 'drizzle-kit';
 /**
  * Used by `npm run db:push` and `npm run db:generate`.
  *
- * Handles both shapes of DATABASE_URL: a local `file:` path, and a hosted
- * Turso `libsql://` URL, which additionally needs TURSO_AUTH_TOKEN. That lets
- * you point the same command at production to create the tables there.
+ * There is no local fallback on purpose. The SQLite version defaulted to a file
+ * on disk when DATABASE_URL was unset, which meant `db:push` could report
+ * "Changes applied" while quietly building tables in a throwaway file and
+ * leaving the real database untouched. That happened, and it cost an afternoon.
+ * Failing loudly is better.
+ *
+ * Schema changes go to whichever database DATABASE_URL names, so check it
+ * before running this against anything that matters.
  */
-const url = process.env.DATABASE_URL ?? 'file:./dev.db';
-const isRemote = !url.startsWith('file:');
+const url = process.env.DATABASE_URL;
+
+if (!url) {
+  throw new Error(
+    'DATABASE_URL is not set, so there is no database to push to. ' +
+    'Copy .env.example to .env and paste your Supabase connection string.',
+  );
+}
 
 export default defineConfig({
   schema: './src/db/schema.ts',
   out: './drizzle',
-  dialect: isRemote ? 'turso' : 'sqlite',
-  dbCredentials: isRemote
-    ? { url, authToken: process.env.TURSO_AUTH_TOKEN }
-    : { url: url.replace(/^file:/, '') },
+  dialect: 'postgresql',
+  dbCredentials: { url },
   strict: false,
 });

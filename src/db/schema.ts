@@ -1,40 +1,45 @@
 /**
- * Debby's Kitchenware — database schema (Drizzle ORM, SQLite dialect).
+ * Debby's Kitchenware — database schema (Drizzle ORM, PostgreSQL dialect).
  *
  * Conventions used throughout:
  *  - Money is stored as an INTEGER number of CENTS. Never floats: 0.1 + 0.2
  *    does not equal 0.3 in binary floating point, and an invoice cannot be
  *    "nearly" right.
- *  - Timestamps are unix epoch integers, surfaced as JS Dates.
+ *  - Timestamps are `timestamptz`, so they carry a timezone rather than being
+ *    a bare number. Kenya does not observe daylight saving, but storing UTC and
+ *    rendering in local time is still the only arrangement that stays correct
+ *    if the shop ever ships beyond one timezone.
  *  - Primary keys are 24-character random strings, not sequential integers, so
  *    nothing in a URL can be guessed or enumerated.
  *  - Order rows snapshot the product name, SKU and price at the time of sale,
  *    so editing or deleting a product later never rewrites order history.
  *
- * Moving to PostgreSQL: swap `drizzle-orm/sqlite-core` for `drizzle-orm/pg-core`
- * and change the driver in src/db/index.ts. See docs/TECHNICAL.md.
+ * This was SQLite (Turso) until August 2026, when it moved to PostgreSQL on
+ * Supabase. The shapes are unchanged; only the column types differ, because
+ * Postgres has real booleans and real timestamps where SQLite encoded both as
+ * integers.
  */
-import { relations, sql } from 'drizzle-orm';
-import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { relations } from 'drizzle-orm';
+import { boolean, index, integer, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 import { createId } from '../lib/id';
 
 const id = () => text('id').primaryKey().$defaultFn(() => createId());
-const createdAt = () => integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`);
+const createdAt = () => timestamp('created_at', { withTimezone: true }).notNull().defaultNow();
 const updatedAt = () =>
-  integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdate(() => new Date());
-/** SQLite has no native boolean; 0/1 with a typed wrapper keeps TS honest. */
-const bool = (name: string, fallback = false) => integer(name, { mode: 'boolean' }).notNull().default(fallback);
+  timestamp('updated_at', { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date());
+/** Postgres has a real boolean type, so this is now a thin naming convenience. */
+const bool = (name: string, fallback = false) => boolean(name).notNull().default(fallback);
 
 // --- Staff -------------------------------------------------------------------
 
-export const adminUsers = sqliteTable('admin_users', {
+export const adminUsers = pgTable('admin_users', {
   id: id(),
   email: text('email').notNull().unique(),
   name: text('name').notNull(),
   passwordHash: text('password_hash').notNull(),
   role: text('role', { enum: ['OWNER', 'STAFF'] }).notNull().default('OWNER'),
   isActive: bool('is_active', true),
-  lastLoginAt: integer('last_login_at', { mode: 'timestamp' }),
+  lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
@@ -54,7 +59,7 @@ export const adminUsers = sqliteTable('admin_users', {
  *   name          - Google supplies one; email signup does not ask for it, and
  *                   the display falls back to the part before the @
  */
-export const customers = sqliteTable('customers', {
+export const customers = pgTable('customers', {
   id: id(),
   name: text('name'),
   /** Stored normalised as +254XXXXXXXXX when present. */
@@ -65,29 +70,30 @@ export const customers = sqliteTable('customers', {
   googleId: text('google_id'),
   isActive: bool('is_active', true),
   marketingOptIn: bool('marketing_opt_in', false),
-  lastLoginAt: integer('last_login_at', { mode: 'timestamp' }),
+  lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 }, (t) => ({
-  // SQLite treats NULLs as distinct in a unique index, so several customers
-  // may have no phone and no google_id without colliding.
+  // Postgres treats NULLs as distinct in a unique index, so any number of
+  // customers may have no phone and no google_id without colliding. (This was
+  // also true under SQLite, so the behaviour is unchanged by the move.)
   phoneIdx: uniqueIndex('customers_phone_key').on(t.phone),
   emailIdx: uniqueIndex('customers_email_key').on(t.email),
   googleIdx: uniqueIndex('customers_google_key').on(t.googleId),
   createdIdx: index('customers_created_idx').on(t.createdAt),
 }));
 
-export const passwordResetTokens = sqliteTable('password_reset_tokens', {
+export const passwordResetTokens = pgTable('password_reset_tokens', {
   id: id(),
   customerId: text('customer_id').notNull().references(() => customers.id, { onDelete: 'cascade' }),
   /** SHA-256 of the token. The raw value only ever exists in the reset link. */
   tokenHash: text('token_hash').notNull().unique(),
-  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
-  usedAt: integer('used_at', { mode: 'timestamp' }),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  usedAt: timestamp('used_at', { withTimezone: true }),
   createdAt: createdAt(),
 }, (t) => ({ customerIdx: index('reset_customer_idx').on(t.customerId) }));
 
-export const addresses = sqliteTable('addresses', {
+export const addresses = pgTable('addresses', {
   id: id(),
   customerId: text('customer_id').notNull().references(() => customers.id, { onDelete: 'cascade' }),
   label: text('label').notNull().default('Home'),
@@ -107,7 +113,7 @@ export const addresses = sqliteTable('addresses', {
 
 // --- Catalogue ---------------------------------------------------------------
 
-export const categories = sqliteTable('categories', {
+export const categories = pgTable('categories', {
   id: id(),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
@@ -124,7 +130,7 @@ export const categories = sqliteTable('categories', {
   sortIdx: index('categories_sort_idx').on(t.sortOrder),
 }));
 
-export const products = sqliteTable('products', {
+export const products = pgTable('products', {
   id: id(),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
@@ -162,7 +168,7 @@ export const products = sqliteTable('products', {
   priceIdx: index('products_price_idx').on(t.priceCents),
 }));
 
-export const productImages = sqliteTable('product_images', {
+export const productImages = pgTable('product_images', {
   id: id(),
   productId: text('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
   url: text('url').notNull(),
@@ -172,7 +178,7 @@ export const productImages = sqliteTable('product_images', {
 }, (t) => ({ productIdx: index('product_images_product_idx').on(t.productId, t.sortOrder) }));
 
 /** Every stock change, with a reason, so a wrong number can be traced. */
-export const stockMovements = sqliteTable('stock_movements', {
+export const stockMovements = pgTable('stock_movements', {
   id: id(),
   productId: text('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
   /** Negative for sales and shrinkage, positive for restocks. */
@@ -185,7 +191,7 @@ export const stockMovements = sqliteTable('stock_movements', {
 
 // --- Cart & wishlist ---------------------------------------------------------
 
-export const cartItems = sqliteTable('cart_items', {
+export const cartItems = pgTable('cart_items', {
   id: id(),
   customerId: text('customer_id').notNull().references(() => customers.id, { onDelete: 'cascade' }),
   productId: text('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
@@ -193,7 +199,7 @@ export const cartItems = sqliteTable('cart_items', {
   updatedAt: updatedAt(),
 }, (t) => ({ uniq: uniqueIndex('cart_items_customer_product_key').on(t.customerId, t.productId) }));
 
-export const wishlistItems = sqliteTable('wishlist_items', {
+export const wishlistItems = pgTable('wishlist_items', {
   id: id(),
   customerId: text('customer_id').notNull().references(() => customers.id, { onDelete: 'cascade' }),
   productId: text('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
@@ -202,7 +208,7 @@ export const wishlistItems = sqliteTable('wishlist_items', {
 
 // --- Delivery ----------------------------------------------------------------
 
-export const deliveryZones = sqliteTable('delivery_zones', {
+export const deliveryZones = pgTable('delivery_zones', {
   id: id(),
   name: text('name').notNull().unique(),
   county: text('county').notNull().default('Nairobi'),
@@ -218,7 +224,7 @@ export const deliveryZones = sqliteTable('delivery_zones', {
 
 // --- Orders ------------------------------------------------------------------
 
-export const orders = sqliteTable('orders', {
+export const orders = pgTable('orders', {
   id: id(),
   /** Shown to the customer: DK-2608-0042. Short enough to read over a call. */
   orderNumber: text('order_number').notNull().unique(),
@@ -276,7 +282,7 @@ export const orders = sqliteTable('orders', {
   phoneIdx: index('orders_phone_idx').on(t.customerPhone),
 }));
 
-export const orderItems = sqliteTable('order_items', {
+export const orderItems = pgTable('order_items', {
   id: id(),
   orderId: text('order_id').notNull().references(() => orders.id, { onDelete: 'cascade' }),
   /** Nullable on purpose: deleting a product must not destroy sales history. */
@@ -291,7 +297,7 @@ export const orderItems = sqliteTable('order_items', {
 }, (t) => ({ orderIdx: index('order_items_order_idx').on(t.orderId) }));
 
 /** Status history. Drives the customer-facing tracking timeline. */
-export const orderEvents = sqliteTable('order_events', {
+export const orderEvents = pgTable('order_events', {
   id: id(),
   orderId: text('order_id').notNull().references(() => orders.id, { onDelete: 'cascade' }),
   status: text('status').notNull(),
@@ -302,13 +308,13 @@ export const orderEvents = sqliteTable('order_events', {
 
 // --- Site content ------------------------------------------------------------
 
-export const settings = sqliteTable('settings', {
+export const settings = pgTable('settings', {
   key: text('key').primaryKey(),
   value: text('value').notNull(),
   updatedAt: updatedAt(),
 });
 
-export const testimonials = sqliteTable('testimonials', {
+export const testimonials = pgTable('testimonials', {
   id: id(),
   authorName: text('author_name').notNull(),
   location: text('location'),
@@ -320,7 +326,7 @@ export const testimonials = sqliteTable('testimonials', {
   createdAt: createdAt(),
 });
 
-export const contactMessages = sqliteTable('contact_messages', {
+export const contactMessages = pgTable('contact_messages', {
   id: id(),
   name: text('name').notNull(),
   phone: text('phone').notNull(),
@@ -332,7 +338,7 @@ export const contactMessages = sqliteTable('contact_messages', {
 }, (t) => ({ readIdx: index('contact_read_idx').on(t.isRead, t.createdAt) }));
 
 /** Cookieless, first-party event counts. No personal data is recorded. */
-export const analyticsEvents = sqliteTable('analytics_events', {
+export const analyticsEvents = pgTable('analytics_events', {
   id: id(),
   type: text('type').notNull(),
   label: text('label'),

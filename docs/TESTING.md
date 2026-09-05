@@ -35,6 +35,94 @@ the database**.
 
 ---
 
+## The crash a passing test suite missed (August 2026)
+
+A Lighthouse audit reported a missing `main` landmark on the live login page.
+The classes it quoted — `min-h-[70vh] items-center justify-center py-12` —
+appear nowhere near the login page in this codebase. They belong to
+`error.tsx` and `not-found.tsx`. The audit had not measured the login page at
+all; it had measured an error page, because **/login was crashing**.
+
+The cause: moving the sign-in pages into their own `(auth)` route group took
+them out from under the storefront layout, which is what supplies
+`CartProvider`. `LoginForm` calls `useCart()` to merge a saved cart on sign-in,
+so every render threw `useCart must be used inside <CartProvider>`.
+
+**Why 220 passing checks did not catch it.** `LoginForm` sits inside a
+`<Suspense>` boundary. The shell streamed successfully, so the page answered
+**HTTP 200** and contained the shop name and the card around the form. The
+suite asserted exactly those things. Every check passed while sign-in was
+entirely broken.
+
+Fixed by adding `CartProvider` to the auth layout, and guarded by new checks
+that assert on the form controls themselves rather than the page around them:
+
+- each auth page renders actual `<input>` and `<button>` elements
+- the login page has a password field; the register page has an email field
+- neither page contains React's `__next_error__` shell
+
+Landmarks are now covered too, since that is what surfaced the crash. Every
+page type is checked for exactly one `<main>`: zero leaves a screen reader
+nothing to skip to, more than one makes "the main content" ambiguous.
+`error.tsx` and `not-found.tsx` genuinely lacked one — they sit outside every
+layout that provides it — as did the admin content area, which had an `aside`,
+a `header` and a `nav` but nothing naming the content.
+
+**Still not covered:** when a *layout* throws, rather than a page, Next.js
+renders its own built-in error shell, which has no landmark. `global-error.tsx`
+was added and handles a root-layout failure, but the storefront-layout case
+still falls through to Next's default. It is only reachable when the database
+is unreachable.
+
+**The lesson worth keeping:** an HTTP 200 is not evidence that a page works.
+Streaming means the shell can succeed while the content fails. Assert on the
+thing the user needs, not on the page that contains it.
+
+## Moving from SQLite to PostgreSQL (August 2026)
+
+The database moved from Turso (SQLite) to Supabase (PostgreSQL). Changing SQL
+dialect is exactly the kind of change a typecheck cannot validate, so the SQL
+was executed rather than merely compiled.
+
+**Proven** — `node scripts/pg-dialect-check.mjs`, 17 checks, run against an
+in-memory PostgreSQL engine:
+
+- All 59 generated schema statements execute. 18 tables created.
+- `is_active` is a real `boolean` and `created_at` a real `timestamptz`, rather
+  than the integers SQLite used for both.
+- Search is case-insensitive. This is the one that mattered: SQLite's `LIKE`
+  ignores case for ASCII, Postgres's does not. Left unchanged, searching
+  "bucket" would have stopped matching "Plastic Bucket".
+- `GREATEST(0, x)` clamps correctly, replacing SQLite's two-argument `MAX`,
+  which does not exist in Postgres and would have been a syntax error when
+  cancelling an order.
+- The conditional stock decrement behind order creation still works.
+- `count()` returns a bigint that arrives as a string, confirming the `Number()`
+  wrapping at every call site is required.
+- Several accounts may share a NULL phone, while duplicate emails are refused.
+
+Also: typecheck clean, and `next build` compiles.
+
+**NOT proven — read this before trusting it**
+
+- **No query has ever run against Supabase itself.** The engine used here
+  implements a large subset of Postgres, not all of it, and is not the same
+  software. It catches dialect mistakes; it cannot catch connection, pooling,
+  permission or performance problems.
+- **The 220-check end-to-end suite was not run.** It needs a live database, and
+  there is none in the build environment. Run it once you are pointed at
+  Supabase — that is the real test.
+- **Wildcard escaping in SQL is unverified.** The emulator neither parses the
+  `ESCAPE` clause nor treats backslash as the default escape, so only the
+  pattern-building half was checked. Search for a term containing `%` once.
+- **The correlated subqueries on the admin Customers page are unverified**, for
+  the same reason — the emulator cannot resolve an outer table reference inside
+  a subquery. Open that page once.
+- **Connection pooling under load is unverified.** `prepare: false` is set,
+  which is what the transaction pooler requires. If queries ever fail
+  intermittently in production while working in testing, that setting is the
+  first place to look.
+
 ## Accounts, Google sign-in and payments (August 2026)
 
 The signup form changed to email and password only, phone moved to checkout,

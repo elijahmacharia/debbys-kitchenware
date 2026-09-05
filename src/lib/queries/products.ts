@@ -96,10 +96,10 @@ function searchCondition(term: string): SQL | undefined {
   const perWord = words.map((word) => {
     const like = `%${word.replace(/[%_\\]/g, (m) => `\\${m}`)}%`;
     return or(
-      sql`${products.name} LIKE ${like} ESCAPE '\\'`,
-      sql`${products.keywords} LIKE ${like} ESCAPE '\\'`,
-      sql`${products.sku} LIKE ${like} ESCAPE '\\'`,
-      sql`${products.description} LIKE ${like} ESCAPE '\\'`,
+      sql`${products.name} ILIKE ${like} ESCAPE '\\'`,
+      sql`${products.keywords} ILIKE ${like} ESCAPE '\\'`,
+      sql`${products.sku} ILIKE ${like} ESCAPE '\\'`,
+      sql`${products.description} ILIKE ${like} ESCAPE '\\'`,
     );
   });
   return and(...perWord);

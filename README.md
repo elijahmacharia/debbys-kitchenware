@@ -77,15 +77,15 @@ The seed refuses to run with a placeholder or short admin password.
 | Framework | Next.js 15 (App Router)       | Server components keep the catalogue on the server; one deployable unit |
 | Language  | TypeScript (strict)           | |
 | Styling   | Tailwind CSS 3                | All colours resolve to CSS variables in `globals.css` for one-file rebranding |
-| Database  | SQLite via libSQL             | See the note below |
+| Database  | PostgreSQL on Supabase        | Was SQLite until August 2026; see the note below |
 | ORM       | Drizzle ORM                   | See the note below |
 | Auth      | `jose` (JWT cookies) + bcrypt | No third-party auth service to configure or pay for |
 | Validation| Zod                           | The same schemas run on the client and as the server-side gate |
 
-### Two deliberate deviations from the brief
+### One deliberate deviation from the brief
 
-The brief asked for PostgreSQL and Prisma. Both were changed, for reasons worth
-recording:
+The brief asked for PostgreSQL and Prisma. It now runs on PostgreSQL; Prisma is
+still not used, for a reason worth recording:
 
 1. **Drizzle instead of Prisma.** Prisma's CLI downloads platform-specific
    engine binaries from `binaries.prisma.sh` at install time. That host was
@@ -93,17 +93,18 @@ recording:
    generated, migrated or tested at all. Drizzle is pure TypeScript, needs no
    engine download, and produces plain SQL. Everything here was therefore
    actually run and tested rather than written blind.
-2. **SQLite (libSQL) instead of PostgreSQL, as the default.** A single file
-   needs no server, which means `npm install && npm run setup` works first time
-   on any machine. The libSQL driver ships prebuilt binaries through npm, so
-   there is no C++ toolchain requirement on Windows or macOS either. For a shop
-   of this size SQLite is genuinely adequate — it will handle this catalogue and
-   order volume comfortably.
+**On the database.** This started on SQLite (Turso), which suited a shop of this
+size and needed no server to run locally. It moved to PostgreSQL on Supabase in
+August 2026. The migration touched three things and nothing else: the column
+helpers in `src/db/schema.ts`, the driver in `src/db/index.ts`, and twelve raw
+SQL fragments where the dialects genuinely differ. No page or API route changed,
+which is the payoff for having kept the driver behind one module.
 
-**Moving to PostgreSQL** is a contained change, documented step by step in
-[`docs/TECHNICAL.md`](docs/TECHNICAL.md#moving-to-postgresql). Only two files
-change: the driver in `src/db/index.ts` and the column helpers in
-`src/db/schema.ts`. No page, API route or query needs editing.
+The one change worth knowing about: product search is now case-insensitive.
+SQLite's `LIKE` ignored case for ASCII and Postgres's does not, so the queries
+use `ILIKE`. Left as `LIKE`, searching "bucket" would have stopped finding
+"Plastic Bucket" — a bug that looks like missing products rather than a dialect
+difference.
 
 ---
 
@@ -218,8 +219,9 @@ Until you provide these, customers simply do not see them:
 5. Back up the database file (or your Postgres instance) on a schedule. It holds
    every order.
 
-Full deployment notes, including the Vercel caveat about SQLite on a read-only
-filesystem, are in [`docs/TECHNICAL.md`](docs/TECHNICAL.md#deployment).
+Full deployment notes, including which of Supabase's three connection strings to
+use on Vercel and why it matters, are in
+[`docs/TECHNICAL.md`](docs/TECHNICAL.md#deployment).
 
 ---
 
