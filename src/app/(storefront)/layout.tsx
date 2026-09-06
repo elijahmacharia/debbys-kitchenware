@@ -11,6 +11,24 @@ import { getCustomerSession } from '@/lib/auth';
 import { analytics } from '@/lib/config';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 
+/*
+ * NOTE ON CACHING, because it is not obvious from reading this file.
+ *
+ * Every page under this layout renders on demand, never from a build-time
+ * cache. That is not configured anywhere — it falls out of the
+ * getCustomerSession() call below, which reads cookies, and reading cookies
+ * makes the whole subtree dynamic.
+ *
+ * The upside is that product changes appear immediately. The cost is that every
+ * visit to the homepage runs its product queries against the database, which on
+ * a hosted database means real network latency on every page view.
+ *
+ * If page speed becomes the priority, the fix is to move the session read out
+ * of this layout and into the components that actually need it, then add
+ * `export const revalidate` here. Adding revalidate on its own does nothing
+ * while the cookie read stays — which is worth knowing before trying it.
+ */
+
 /** Public shop chrome. Everything a customer sees sits inside this. */
 export default async function StorefrontLayout({ children }: { children: React.ReactNode }) {
   const session = await getCustomerSession();

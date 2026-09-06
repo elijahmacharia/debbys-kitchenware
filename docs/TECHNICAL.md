@@ -318,29 +318,59 @@ testing, broken under load.
    it is not shown again.
 2. Project Settings → Database → Connection string → **Transaction pooler**.
    Copy it and replace `[YOUR-PASSWORD]`.
-3. Create the tables from your machine:
+3. Check the connection string before doing anything with it:
    ```bash
-   # .env holds DATABASE_URL
-   npm run db:push
+   npm run db:check
    ```
-4. Optionally load the 43 demo products, so a client has something to look at.
-   **This wipes every order**, so never run it once the shop is trading:
+   This only reads. It tells you in plain language if the string is still a
+   placeholder, still points at Turso, uses the wrong pooler port, or has the
+   wrong password — each of which otherwise surfaces as an unhelpful 500 much
+   later on.
+4. Create the tables from your machine:
+   ```bash
+   npm run db:push
+   npm run db:check    # confirms all 18 tables landed
+   ```
+5. Optionally load the 43 demo products, so a client has something to look at.
+   **This wipes every order**, so never run it once the shop is trading.
+   `db:check` will warn you if there are orders present:
    ```bash
    npm run db:seed
    ```
-5. In Vercel → Settings → Environment Variables, set at minimum:
+6. In Vercel → Settings → Environment Variables, set at minimum:
    `DATABASE_URL` (the transaction-pooler string), `AUTH_SECRET` (a **new**
    value, not your local one), `NEXT_PUBLIC_SITE_URL`, and
    `NEXT_PUBLIC_BUSINESS_WHATSAPP`.
-6. Redeploy. Vercel does not pick up new environment variables without one.
+7. Redeploy. Vercel does not pick up new environment variables without one.
 
-**Row Level Security.** Supabase enables RLS on tables created through its own
-dashboard, but not on tables created by `db:push`, which is what this project
-uses. That is the right outcome here: every query runs server-side through the
-`postgres` role using the connection string, and the browser never talks to the
-database directly. Do not enable RLS on these tables expecting it to add
-protection — it would block the server's own queries while protecting nothing,
-because there is no client-side access to restrict.
+**Turn the Data API off.** When you create the project, Supabase offers to
+"Enable Data API", which publishes every table in the public schema as a REST
+API reachable with the anon key. The anon key is public by design — it ships in
+browser code.
+
+This project does not use it. There is no `supabase-js` dependency; every query
+runs server-side through the connection string. So the Data API adds no
+capability and a great deal of exposure: with it on, and with "Automatically
+expose new tables" ticked, every table `db:push` creates is readable over HTTP
+by anyone with the anon key. That includes `customers` and `admin_users`, which
+hold `password_hash`.
+
+Leave it off. If it somehow gets switched on later, either disable it again or
+enable Row Level Security on every table and write policies — which is a lot of
+work to protect something nothing uses.
+
+**Row Level Security, if the Data API is off.** RLS then adds nothing, because
+there is no client-side path to the database to restrict. Every query arrives
+through the connection string as the `postgres` role, which bypasses RLS
+anyway. Do not enable it expecting protection: it would block the server's own
+queries while guarding a door nobody can reach.
+
+**Pick a region close to Nairobi.** Frankfurt (`eu-central-1`) is normally the
+best-connected European endpoint for East Africa. Every page render makes
+several queries and each pays the round trip, so this is a real part of page
+speed rather than a detail. Set the Vercel function region to match the
+database region — a function in the United States talking to a database in
+Europe doubles the cost of every query.
 
 **Moving from Turso.** This project ran on SQLite until August 2026. The schema
 shapes are identical; only column types changed, because Postgres has real
