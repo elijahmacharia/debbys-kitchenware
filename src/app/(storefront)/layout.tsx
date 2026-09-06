@@ -11,23 +11,30 @@ import { getCustomerSession } from '@/lib/auth';
 import { analytics } from '@/lib/config';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 
-/*
- * NOTE ON CACHING, because it is not obvious from reading this file.
+/**
+ * Never prerender the shop at build time.
  *
- * Every page under this layout renders on demand, never from a build-time
- * cache. That is not configured anywhere — it falls out of the
- * getCustomerSession() call below, which reads cookies, and reading cookies
- * makes the whole subtree dynamic.
+ * Route segment config on a layout applies to every segment beneath it.
  *
- * The upside is that product changes appear immediately. The cost is that every
- * visit to the homepage runs its product queries against the database, which on
- * a hosted database means real network latency on every page view.
+ * These pages already render on demand in production — the getCustomerSession()
+ * call below reads cookies, which forces that. The problem was the *build*:
+ * Next still executed pages like /terms, /about and /faq while generating, and
+ * those call getPublicSettings(), which queries the database. So `next build`
+ * could not finish without a reachable database, and on a hosted one the calls
+ * were slow enough to exceed Next's 60-second limit. A different page failed
+ * each run, which is what a timing problem looks like rather than a broken page.
  *
- * If page speed becomes the priority, the fix is to move the session read out
- * of this layout and into the components that actually need it, then add
- * `export const revalidate` here. Adding revalidate on its own does nothing
- * while the cookie read stays — which is worth knowing before trying it.
+ * Declaring it here means the build never touches the database. That is worth
+ * having on its own: a deploy should not depend on the database being awake,
+ * responsive, or even reachable from the build machine.
+ *
+ * The cost is that every page view queries the database, including from the
+ * United States to Frankfurt. If page speed becomes the priority, the fix is to
+ * move the session read out of this layout and into the components that need
+ * it, then cache the pages that have no per-visitor content. That is a real
+ * piece of work, not a config change.
  */
+export const dynamic = 'force-dynamic';
 
 /** Public shop chrome. Everything a customer sees sits inside this. */
 export default async function StorefrontLayout({ children }: { children: React.ReactNode }) {
