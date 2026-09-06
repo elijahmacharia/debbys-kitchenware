@@ -50,25 +50,23 @@ function createConnection() {
     // connection, so it is safe to leave on in every environment.
     prepare: false,
 
-    // ONE connection per process, deliberately.
+    // Small pool, but not one.
     //
-    // The instinct is to allow a few, and this was `max: 5` at first. That is
-    // wrong here for two reasons.
+    // This was briefly `max: 1`, to stop parallel build workers exhausting the
+    // free-tier pooler. That is no longer a concern — the build does not touch
+    // the database at all now (see the force-dynamic notes in the layouts) —
+    // and one connection had a cost that showed up immediately as a slow site.
     //
-    // A serverless function handles one request at a time, so a pool of five
-    // means four idle connections held open per running instance. Multiply by
-    // the number of instances under load and the database's connection limit
-    // is reached while almost every connection sits doing nothing. The
-    // transaction pooler in front of Postgres is what provides concurrency;
-    // this pool does not need to.
+    // A single page can issue several queries at once. The homepage opens with
+    // a Promise.all of four. With one connection those four queue and run one
+    // after another, each paying the full network round trip. Four is enough
+    // for that group to go together.
     //
-    // It also broke the build. `next build` runs several workers in parallel,
-    // each opening its own pool, and the free-tier pooler ran out of client
-    // connections. Pages then blocked waiting for one and tripped Next's
-    // 60-second prerender limit. The tell was that a *different* page failed
-    // on each run — /categories locally, /about and /faq on Vercel — which is
-    // the signature of contention rather than a broken page.
-    max: 1,
+    // Not larger, because a serverless function serves one request at a time,
+    // so anything beyond what a single page needs concurrently is idle
+    // connections held per instance — and those multiply by instance count
+    // under load. The transaction pooler provides the real concurrency.
+    max: 4,
 
     // Release quickly so a finished invocation does not hold a slot.
     idle_timeout: 20,
