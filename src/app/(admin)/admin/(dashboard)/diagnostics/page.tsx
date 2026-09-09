@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { sql } from 'drizzle-orm';
 import { db } from '@/db';
-import { getDashboardStats, getLowStockProducts, getPopularProducts, getRecentOrders } from '@/lib/queries/admin';
+import { getDashboardStats } from '@/lib/queries/admin';
 import { Alert } from '@/components/ui/Alert';
 
 /**
@@ -38,12 +38,21 @@ import { Alert } from '@/components/ui/Alert';
 
 export const metadata: Metadata = { title: 'Diagnostics', robots: { index: false, follow: false } };
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60;
+export const maxDuration = 30;
 
-/** Stop starting new checks after this long, so the page always renders. */
-const PAGE_BUDGET_MS = 35_000;
+/**
+ * Stop starting new checks after this long, so the page always renders.
+ *
+ * This was 35 seconds and that was too generous — the page still returned a
+ * gateway timeout. The arithmetic that matters: an abandoned query keeps the
+ * connection it was using, the pool holds four, so after four stalls every
+ * remaining check waits for a connection that is never coming back. Twelve
+ * seconds of checks leaves the rest of the function's allowance for rendering
+ * and returning, with room to spare.
+ */
+const PAGE_BUDGET_MS = 12_000;
 /** Longest any single check may take before it is called a failure. */
-const CHECK_TIMEOUT_MS = 6_000;
+const CHECK_TIMEOUT_MS = 2_500;
 
 /** Every table the application expects. Kept in step with scripts/check-database.mjs. */
 const EXPECTED_TABLES = [
@@ -142,14 +151,7 @@ export default async function DiagnosticsPage() {
     return rows;
   });
 
-  // 3. One cheap count per table the failing pages touch. A single count that
-  //    stalls while its neighbours answer points straight at that table.
-  await check('count products', () => db.execute(sql`select count(*) from products`));
-  await check('count orders', () => db.execute(sql`select count(*) from orders`));
-  await check('count customers', () => db.execute(sql`select count(*) from customers`));
-  await check('count contact_messages', () => db.execute(sql`select count(*) from contact_messages`));
-
-  // 4. What is the server actually configured to allow? A statement cancelled
+  // 3. What is the server actually configured to allow? A statement cancelled
   //    after 49ms means something set a very short limit; this reads it back
   //    rather than guessing. Recorded as a detail string, not a pass/fail.
   await check(
@@ -162,30 +164,15 @@ export default async function DiagnosticsPage() {
     },
   );
 
-  // 5. The same thirteen figures, but as ONE statement using scalar subqueries
-  //    instead of thirteen concurrent round trips.
+  // 4. The query that was failing, now rewritten as a single statement.
   //
-  //    This is the experiment that separates the two explanations. If the
-  //    thirteen-at-once version fails and this one succeeds, the fault is the
-  //    concurrency, not the data — and this query is also the fix, since it
-  //    replaces thirteen network round trips with one.
-  await check('the same 13 figures as a single query', () => db.execute(sql`
-    select
-      (select count(*) from orders) as total_orders,
-      (select count(*) from orders where status = 'DELIVERED') as completed_orders,
-      (select coalesce(sum(total_cents), 0) from orders where status = 'DELIVERED') as sales_all_time,
-      (select count(*) from products where is_active) as active_products,
-      (select count(*) from products where is_active and stock > 0 and stock <= low_stock_at) as low_stock,
-      (select count(*) from customers) as customer_count,
-      (select count(*) from contact_messages where is_read = false) as unread_messages
-  `));
-
-  // 6. The real dashboard queries, in the order the page calls them. The first
-  //    one fires thirteen queries at once and is the prime suspect.
-  await check('getDashboardStats() — 13 queries at once', () => getDashboardStats());
-  await check('getRecentOrders()', () => getRecentOrders(8));
-  await check('getPopularProducts()', () => getPopularProducts(5));
-  await check('getLowStockProducts() — products joined to categories', () => getLowStockProducts(6));
+  //    Deliberately the only application query checked here. The earlier
+  //    version of this page ran nine of them and abandoned any that stalled —
+  //    and an abandoned query keeps its connection. Reloading the page a few
+  //    times exhausted the pool and took the whole shop down, which is a
+  //    remarkable thing for a diagnostic to do. Fewer checks, run one at a
+  //    time, is the lesson.
+  await check('getDashboardStats() — now one query, was thirteen', () => getDashboardStats());
 
   const missing = EXPECTED_TABLES.filter((t) => !presentTables.includes(t));
   const unexpected = presentTables.filter((t) => !EXPECTED_TABLES.includes(t));

@@ -147,5 +147,75 @@ try { run(`insert into customers (id, email, is_active, marketing_opt_in) values
 catch { dupBlocked = true; }
 check('duplicate email is still refused', dupBlocked);
 
+// --- 4. The dashboard summary, as one statement ------------------------------
+//
+// getDashboardStats() used to be thirteen queries in a Promise.all. In
+// production that failed with Postgres 57014 — "canceling statement due to
+// statement timeout" — after 49ms: thirteen queries competing for a pool of
+// four connections against Supabase's transaction pooler. It is now a single
+// statement of scalar subqueries.
+//
+// That rewrite gave up TypeScript's checking of column names, because raw SQL
+// is opaque to the compiler. This section is what replaces it: if someone
+// renames a column in schema.ts, the statement below stops matching and this
+// fails. The figures are checked by value, not merely for absence of an error,
+// because the subtle way to get this wrong is to return the wrong number.
+console.log('\n== Dashboard summary as a single statement ==');
+
+// Seeded specifically to separate figures that a careless query would conflate:
+// one delivered order and one cancelled (revenue must count only the first),
+// and p2 is out of stock while p3 merely sits at its threshold.
+run(`insert into orders
+      (id, order_number, public_id, customer_name, customer_phone, fulfilment,
+       status, payment_method, payment_status, subtotal_cents, delivery_fee_cents, total_cents)
+     values
+      ('o1', 'DK-0001', 'pub1', 'Grace', '+254712345678', 'PICKUP',
+       'DELIVERED', 'MPESA', 'PAID', 5000, 0, 5000),
+      ('o2', 'DK-0002', 'pub2', 'Grace', '+254712345678', 'PICKUP',
+       'CANCELLED', 'CASH', 'PENDING', 900, 0, 900),
+      ('o3', 'DK-0003', 'pub3', 'John', '+254712345679', 'DELIVERY',
+       'NEW', 'CASH', 'PENDING', 1000, 200, 1200)`);
+run(`insert into contact_messages (id, name, phone, subject, body, is_read)
+     values ('m1', 'Asha', '+254712345670', 'Question', 'Do you deliver?', false)`);
+
+const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+
+const [summary] = q(`
+    select
+      (select count(*) from orders) as total_orders,
+      (select count(*) from orders
+        where status in ('NEW', 'CONFIRMED', 'PROCESSING', 'READY_FOR_PICKUP', 'OUT_FOR_DELIVERY')) as pending_orders,
+      (select count(*) from orders where status = 'DELIVERED') as completed_orders,
+      (select count(*) from orders where status = 'CANCELLED') as cancelled_orders,
+      (select coalesce(sum(total_cents), 0) from orders
+        where status = 'DELIVERED') as sales_all_time_cents,
+      (select coalesce(sum(total_cents), 0) from orders
+        where status = 'DELIVERED' and created_at >= '${startOfMonth}') as sales_this_month_cents,
+      (select count(*) from products) as product_count,
+      (select count(*) from products where is_active) as active_products,
+      (select count(*) from products where is_active and stock = 0) as out_of_stock,
+      (select count(*) from products
+        where is_active and stock > 0 and stock <= low_stock_at) as low_stock,
+      (select count(*) from customers) as customer_count,
+      (select count(*) from contact_messages where is_read = false) as unread_messages
+`);
+
+const figure = (key) => Number(summary?.[key] ?? NaN);
+const expectFigure = (key, want) =>
+  check(`${key} = ${want}`, figure(key) === want, `got ${figure(key)}`);
+
+expectFigure('total_orders', 3);
+expectFigure('pending_orders', 1);
+expectFigure('completed_orders', 1);
+expectFigure('cancelled_orders', 1);
+// Only the delivered order counts, so the cancelled 900 must not appear.
+expectFigure('sales_all_time_cents', 5000);
+expectFigure('sales_this_month_cents', 5000);
+expectFigure('active_products', 3);
+// p2 has no stock; p3 is low but not empty. These must not be the same figure.
+expectFigure('out_of_stock', 1);
+expectFigure('low_stock', 1);
+expectFigure('unread_messages', 1);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

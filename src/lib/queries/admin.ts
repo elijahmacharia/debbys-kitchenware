@@ -1,56 +1,77 @@
 import 'server-only';
-import { and, count, desc, eq, gte, ne, or, sql, sum } from 'drizzle-orm';
+import { and, desc, eq, ne, or, sql } from 'drizzle-orm';
 import { db } from '@/db';
-import { categories, contactMessages, customers, orderItems, orders, products } from '@/db/schema';
+import { categories, customers, orderItems, orders, products } from '@/db/schema';
 
-/** Numbers for the dashboard overview. */
+/**
+ * Numbers for the dashboard overview, in a single statement.
+ *
+ * This used to be thirteen separate queries in a Promise.all, which read
+ * nicely and was the wrong shape entirely. Against a local SQLite file it was
+ * free. Against Supabase's transaction pooler it was thirteen queries fighting
+ * over a pool of four connections, and it failed in production with Postgres
+ * error 57014 — "canceling statement due to statement timeout" — after 49
+ * milliseconds. Not a slow query: a query that never got to run.
+ *
+ * Thirteen scalar subqueries in one statement return exactly the same figures
+ * for one round trip and one connection. It is also simply faster: the old
+ * version paid the network latency thirteen times, and from a serverless
+ * function that is the dominant cost.
+ *
+ * Written as raw SQL rather than the query builder because the builder has no
+ * way to express "several unrelated aggregates in one statement" — each
+ * db.select() is its own query by construction. The trade is that these column
+ * names are no longer checked against the schema by TypeScript, so a rename in
+ * schema.ts will not break this at compile time. scripts/pg-dialect-check.mjs
+ * executes this exact statement against a Postgres engine to cover that gap.
+ */
 export async function getDashboardStats() {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
   const startOfMonth = new Date(startOfToday.getFullYear(), startOfToday.getMonth(), 1);
 
-  const [
-    totalOrders, pendingOrders, completedOrders, cancelledOrders,
-    salesAllTime, salesThisMonth, ordersToday,
-    productCount, activeProducts, outOfStock, lowStock,
-    customerCount, unreadMessages,
-  ] = await Promise.all([
-    db.select({ value: count() }).from(orders),
-    db.select({ value: count() }).from(orders).where(
-      or(eq(orders.status, 'NEW'), eq(orders.status, 'CONFIRMED'), eq(orders.status, 'PROCESSING'),
-         eq(orders.status, 'READY_FOR_PICKUP'), eq(orders.status, 'OUT_FOR_DELIVERY')),
-    ),
-    db.select({ value: count() }).from(orders).where(eq(orders.status, 'DELIVERED')),
-    db.select({ value: count() }).from(orders).where(eq(orders.status, 'CANCELLED')),
-    // Revenue counts DELIVERED orders only. Counting orders that were never
-    // completed would flatter the figure and mislead the owner.
-    db.select({ value: sum(orders.totalCents) }).from(orders).where(eq(orders.status, 'DELIVERED')),
-    db.select({ value: sum(orders.totalCents) }).from(orders)
-      .where(and(eq(orders.status, 'DELIVERED'), gte(orders.createdAt, startOfMonth))),
-    db.select({ value: count() }).from(orders).where(gte(orders.createdAt, startOfToday)),
-    db.select({ value: count() }).from(products),
-    db.select({ value: count() }).from(products).where(eq(products.isActive, true)),
-    db.select({ value: count() }).from(products).where(and(eq(products.isActive, true), eq(products.stock, 0))),
-    db.select({ value: count() }).from(products)
-      .where(and(eq(products.isActive, true), sql`${products.stock} > 0`, sql`${products.stock} <= ${products.lowStockAt}`)),
-    db.select({ value: count() }).from(customers),
-    db.select({ value: count() }).from(contactMessages).where(eq(contactMessages.isRead, false)),
-  ]);
+  // Revenue counts DELIVERED orders only. Counting orders that were never
+  // completed would flatter the figure and mislead the owner.
+  const rows = (await db.execute(sql`
+    select
+      (select count(*) from orders) as total_orders,
+      (select count(*) from orders
+        where status in ('NEW', 'CONFIRMED', 'PROCESSING', 'READY_FOR_PICKUP', 'OUT_FOR_DELIVERY')) as pending_orders,
+      (select count(*) from orders where status = 'DELIVERED') as completed_orders,
+      (select count(*) from orders where status = 'CANCELLED') as cancelled_orders,
+      (select coalesce(sum(total_cents), 0) from orders
+        where status = 'DELIVERED') as sales_all_time_cents,
+      (select coalesce(sum(total_cents), 0) from orders
+        where status = 'DELIVERED' and created_at >= ${startOfMonth}) as sales_this_month_cents,
+      (select count(*) from orders where created_at >= ${startOfToday}) as orders_today,
+      (select count(*) from products) as product_count,
+      (select count(*) from products where is_active) as active_products,
+      (select count(*) from products where is_active and stock = 0) as out_of_stock,
+      (select count(*) from products
+        where is_active and stock > 0 and stock <= low_stock_at) as low_stock,
+      (select count(*) from customers) as customer_count,
+      (select count(*) from contact_messages where is_read = false) as unread_messages
+  `)) as unknown as Array<Record<string, string | number | null>>;
+
+  // Postgres returns count() and sum() as bigint and numeric, both of which
+  // arrive in JavaScript as strings. Every figure goes through Number().
+  const row = rows[0] ?? {};
+  const value = (key: string) => Number(row[key] ?? 0);
 
   return {
-    totalOrders: totalOrders[0].value,
-    pendingOrders: pendingOrders[0].value,
-    completedOrders: completedOrders[0].value,
-    cancelledOrders: cancelledOrders[0].value,
-    salesAllTimeCents: Number(salesAllTime[0].value ?? 0),
-    salesThisMonthCents: Number(salesThisMonth[0].value ?? 0),
-    ordersToday: ordersToday[0].value,
-    productCount: productCount[0].value,
-    activeProducts: activeProducts[0].value,
-    outOfStock: outOfStock[0].value,
-    lowStock: lowStock[0].value,
-    customerCount: customerCount[0].value,
-    unreadMessages: unreadMessages[0].value,
+    totalOrders: value('total_orders'),
+    pendingOrders: value('pending_orders'),
+    completedOrders: value('completed_orders'),
+    cancelledOrders: value('cancelled_orders'),
+    salesAllTimeCents: value('sales_all_time_cents'),
+    salesThisMonthCents: value('sales_this_month_cents'),
+    ordersToday: value('orders_today'),
+    productCount: value('product_count'),
+    activeProducts: value('active_products'),
+    outOfStock: value('out_of_stock'),
+    lowStock: value('low_stock'),
+    customerCount: value('customer_count'),
+    unreadMessages: value('unread_messages'),
   };
 }
 
