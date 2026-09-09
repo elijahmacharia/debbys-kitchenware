@@ -35,6 +35,19 @@ import { AdminShell } from '@/components/admin/AdminShell';
  * treated as static. Hence the explicit declaration.
  */
 export const dynamic = 'force-dynamic';
+
+/**
+ * The dashboard summary is 13 queries, and it is the page staff land on
+ * immediately after signing in. On a warm database that is a couple of seconds;
+ * on a cold start against a database that has been idle it is the request most
+ * likely to run out of time and return a 504.
+ *
+ * Same reasoning as the sign-in route: this is headroom for the slow first
+ * request, not a substitute for making the page faster. The real work is
+ * reducing the query count.
+ */
+export const maxDuration = 30;
+
 export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const admin = await getCurrentAdmin();
   if (!admin) redirect('/admin/login');

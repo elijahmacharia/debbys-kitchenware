@@ -19,6 +19,21 @@ const schema = z.object({
  * response never distinguishes an unknown email from a wrong password, and
  * admin sessions expire after 8 hours rather than 30 days.
  */
+/**
+ * Give this route more than the platform default.
+ *
+ * Signing in is two queries and one bcrypt comparison — under a second when the
+ * database answers. But it is often the first request to touch the database
+ * after a quiet spell, and a Supabase project that has been paused takes tens of
+ * seconds to wake. On the default allowance that surfaces as a 504 with nothing
+ * in the log, which tells you nothing and looks like the site is broken.
+ *
+ * Thirty seconds is not a fix for slowness. It is room for the one request that
+ * has to wait for the database to come back, so the person signing in gets a
+ * page rather than a gateway error.
+ */
+export const maxDuration = 30;
+
 export async function POST(request: Request) {
   return handle(async () => {
     const limit = rateLimit(clientKey(request, 'admin-login'), 5, 15 * 60);

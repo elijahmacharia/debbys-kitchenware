@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getAdminSession } from '@/lib/auth';
 import { AdminLoginForm } from '@/components/admin/AdminLoginForm';
+import { PotMark } from '@/components/brand/PotMark';
 import { business } from '@/lib/config';
 
 export const metadata: Metadata = {
@@ -18,7 +19,9 @@ export default async function AdminLoginPage() {
     <div className="no-tabbar flex flex-1 items-center justify-center px-4 py-16">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-ink text-lg font-bold text-white">D</span>
+          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-ink text-white">
+            <PotMark className="h-7 w-7" accent={false} />
+          </span>
           <h1 className="mt-4 text-xl">{business.name}</h1>
           <p className="text-sm text-muted">Staff dashboard</p>
         </div>

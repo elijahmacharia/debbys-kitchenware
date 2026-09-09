@@ -70,7 +70,32 @@ function createConnection() {
 
     // Release quickly so a finished invocation does not hold a slot.
     idle_timeout: 20,
-    connect_timeout: 15,
+
+    // Ten seconds, not fifteen. A connection that has not been established in
+    // ten is not going to save the request — Vercel will have given up on the
+    // whole function before the driver gives up on the socket, and the visitor
+    // gets an opaque 504 instead of a page that says something went wrong.
+    // Failing inside the request is worth more than failing outside it.
+    connect_timeout: 10,
+
+    // Ask the kernel to probe an idle socket after 20 seconds rather than the
+    // default 60. This is what notices that the other end has gone away. It
+    // does not help while the instance is frozen — a frozen process sends no
+    // probes — but it catches the case where the instance is merely idle
+    // between requests, which is the common one.
+    keep_alive: 20,
+
+    // Retire every connection after five minutes, even a healthy-looking one.
+    //
+    // This is the fix for requests that hang rather than fail. A serverless
+    // instance is frozen between invocations, and while it is frozen the TCP
+    // socket to the database can be closed at the other end — by the pooler,
+    // by a NAT table, by anything in between. Nothing tells the frozen process.
+    // When it wakes and reuses that socket, the query goes into a void and the
+    // request waits indefinitely: one measured request took 242 seconds.
+    //
+    // A lifetime cap means a stale socket is discarded rather than reused.
+    max_lifetime: 60 * 5,
   });
 
   return drizzle(client, { schema });
