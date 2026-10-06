@@ -98,7 +98,18 @@ function createConnection() {
     max_lifetime: 60 * 5,
   });
 
-  return drizzle(client, { schema });
+  const database = drizzle(client, { schema });
+
+  // Drizzle replaces the timestamp serializers with `(value) => value` so
+  // driver values stay strings. A Date still reaches Bind, and postgres.js
+  // throws "Received an instance of Date" instead of sending the query.
+  // Stringify dates here so a raw timestamp parameter cannot take a page down.
+  for (const oid of [1082, 1083, 1114, 1184]) {
+    client.options.serializers[oid] = (value: unknown) =>
+      value instanceof Date ? value.toISOString() : String(value);
+  }
+
+  return database;
 }
 
 const globalForDb = globalThis as unknown as { db?: ReturnType<typeof createConnection> };
