@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { business, isPlaceholder, mailtoHref, social, telHref } from '@/lib/config';
+import { business, isPlaceholder, social } from '@/lib/config';
+import { formatShopPlace, getShopProfile, mapsEmbedSrc } from '@/lib/settings';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ContactForm } from '@/components/ContactForm';
@@ -12,12 +13,15 @@ export const metadata: Metadata = {
   alternates: { canonical: '/contact' },
 };
 
-export default function ContactPage() {
-  const whatsappHref = waLink(generalEnquiryMessage());
-  const phoneHref = telHref();
-  const emailHref = mailtoHref();
+export default async function ContactPage() {
+  const profile = await getShopProfile();
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
+  const phoneHref = isPlaceholder(profile.phone) ? null : `tel:${profile.phone.replace(/[^\d+]/g, '')}`;
+  const emailHref = isPlaceholder(profile.email) ? null : `mailto:${profile.email}`;
 
   const hasAnyContact = Boolean(phoneHref || whatsappHref || emailHref);
+  const place = formatShopPlace(profile);
+  const mapSrc = mapsEmbedSrc(profile.mapsEmbedUrl);
 
   return (
     <div className="container-site py-6">
@@ -49,7 +53,7 @@ export default function ContactPage() {
                   <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
                   <span>
                     <span className="block text-xs text-muted">Phone</span>
-                    <a href={phoneHref} className="link">{business.phone}</a>
+                    <a href={phoneHref} className="link">{profile.phone}</a>
                   </span>
                 </li>
               ) : null}
@@ -67,25 +71,25 @@ export default function ContactPage() {
                   <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
                   <span>
                     <span className="block text-xs text-muted">Email</span>
-                    <a href={emailHref} className="link break-all">{business.email}</a>
+                    <a href={emailHref} className="link break-all">{profile.email}</a>
                   </span>
                 </li>
               ) : null}
-              {!isPlaceholder(business.address) ? (
+              {place ? (
                 <li className="flex gap-2.5">
                   <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
                   <span>
                     <span className="block text-xs text-muted">Shop</span>
-                    <span>{business.address}</span>
+                    <span>{place}</span>
                   </span>
                 </li>
               ) : null}
-              {!isPlaceholder(business.hours) ? (
+              {!isPlaceholder(profile.hours) ? (
                 <li className="flex gap-2.5">
                   <ClockIcon className="mt-0.5 h-4 w-4 shrink-0 text-clay-600" />
                   <span>
                     <span className="block text-xs text-muted">Opening hours</span>
-                    <span>{business.hours}</span>
+                    <span>{profile.hours}</span>
                   </span>
                 </li>
               ) : null}
@@ -111,9 +115,9 @@ export default function ContactPage() {
           */}
           <section className="card overflow-hidden" aria-labelledby="map">
             <h2 id="map" className="border-b border-line px-4 py-3 text-base font-bold">Getting here</h2>
-            {business.mapsEmbedUrl ? (
+            {mapSrc ? (
               <iframe
-                src={business.mapsEmbedUrl}
+                src={mapSrc}
                 title={`Map showing the location of ${business.name}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -121,16 +125,12 @@ export default function ContactPage() {
               />
             ) : (
               <div className="p-4 text-sm text-muted">
-                <p>The shop location has not been added to the site yet.</p>
-                <p className="mt-1.5 text-xs">
-                  Owner: paste your Google Maps share link into <code>NEXT_PUBLIC_GOOGLE_MAPS_URL</code>{' '}
-                  and the embed link into <code>NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL</code>.
-                </p>
+                <p>Ask us for directions and we will tell you how to find the shop.</p>
               </div>
             )}
-            {business.mapsUrl ? (
+            {profile.mapsUrl && !isPlaceholder(profile.mapsUrl) ? (
               <div className="border-t border-line p-3">
-                <a href={business.mapsUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-sm w-full">
+                <a href={profile.mapsUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-sm w-full">
                   Get directions
                 </a>
               </div>

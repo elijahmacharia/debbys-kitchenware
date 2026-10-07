@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { business, isPlaceholder, mailtoHref, social, telHref } from '@/lib/config';
+import { business, isPlaceholder, social } from '@/lib/config';
+import { formatShopPlace, getShopProfile } from '@/lib/settings';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 import {
   ClockIcon, FacebookIcon, InstagramIcon, MailIcon, MapPinIcon, PhoneIcon, TikTokIcon, WhatsAppIcon,
@@ -12,10 +13,12 @@ const SOCIAL_ICON = { Instagram: InstagramIcon, Facebook: FacebookIcon, TikTok: 
  * [PLACEHOLDER] value is skipped rather than printed, so the live site never
  * shows a phone number nobody answers.
  */
-export function Footer() {
-  const whatsappHref = waLink(generalEnquiryMessage());
-  const phoneHref = telHref();
-  const emailHref = mailtoHref();
+export async function Footer() {
+  const profile = await getShopProfile();
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
+  const phoneHref = isPlaceholder(profile.phone) ? null : `tel:${profile.phone.replace(/[^\d+]/g, '')}`;
+  const emailHref = isPlaceholder(profile.email) ? null : `mailto:${profile.email}`;
+  const place = formatShopPlace(profile);
   const year = new Date().getFullYear();
 
   const columnLink = 'block py-1.5 text-sm text-white/70 transition-colors hover:text-white';
@@ -89,7 +92,7 @@ export function Footer() {
             {phoneHref ? (
               <li className="flex gap-2">
                 <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0" />
-                <a href={phoneHref} className="hover:text-white hover:underline">{business.phone}</a>
+                <a href={phoneHref} className="hover:text-white hover:underline">{profile.phone}</a>
               </li>
             ) : null}
             {whatsappHref ? (
@@ -101,14 +104,14 @@ export function Footer() {
             {emailHref ? (
               <li className="flex gap-2">
                 <MailIcon className="mt-0.5 h-4 w-4 shrink-0" />
-                <a href={emailHref} className="break-all hover:text-white hover:underline">{business.email}</a>
+                <a href={emailHref} className="break-all hover:text-white hover:underline">{profile.email}</a>
               </li>
             ) : null}
-            {!isPlaceholder(business.address) ? (
-              <li className="flex gap-2"><MapPinIcon className="mt-0.5 h-4 w-4 shrink-0" /><span>{business.address}</span></li>
+            {place ? (
+              <li className="flex gap-2"><MapPinIcon className="mt-0.5 h-4 w-4 shrink-0" /><span>{place}</span></li>
             ) : null}
-            {!isPlaceholder(business.hours) ? (
-              <li className="flex gap-2"><ClockIcon className="mt-0.5 h-4 w-4 shrink-0" /><span>{business.hours}</span></li>
+            {!isPlaceholder(profile.hours) ? (
+              <li className="flex gap-2"><ClockIcon className="mt-0.5 h-4 w-4 shrink-0" /><span>{profile.hours}</span></li>
             ) : null}
           </ul>
         </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { enabledPaymentMethods } from '@/lib/config';
-import { getPublicSettings } from '@/lib/settings';
+import { enabledPaymentMethodsFor } from '@/lib/config';
+import { getPublicSettings, getShopProfile } from '@/lib/settings';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Alert } from '@/components/ui/Alert';
 
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default async function PaymentPage() {
-  const settings = await getPublicSettings();
-  const methods = enabledPaymentMethods();
+  const [settings, profile] = await Promise.all([getPublicSettings(), getShopProfile()]);
+  const methods = enabledPaymentMethodsFor(profile);
 
   return (
     <div className="container-site py-6">
@@ -57,8 +57,11 @@ export default async function PaymentPage() {
         <h2>Will I get a receipt?</h2>
         <p>Your M-Pesa message is your proof. Ask and we will confirm in writing on WhatsApp.</p>
 
-        <h2>Automatic M-Pesa</h2>
-        <p>STK push is not switched on. Payment is arranged manually, so we always confirm first.</p>
+        <h2>Paying with M-Pesa</h2>
+        <p>
+          You pay in the M-Pesa app, using the till, paybill or number on this page. Send us the
+          confirmation message and we check it before we pack the order.
+        </p>
       </div>
     </div>
   );

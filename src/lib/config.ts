@@ -1,13 +1,13 @@
 /**
- * Single source of truth for business information and feature flags.
+ * Deploy-time defaults for business information and feature flags.
  *
- * Values come from environment variables so the owner can change the phone
- * number, WhatsApp line or shop address without a developer touching code.
+ * Phone, WhatsApp, address, hours and M-Pesa details saved in Admin → Settings
+ * override these at runtime. See getShopProfile().
  * Anything a browser needs is prefixed NEXT_PUBLIC_. Secrets are never read
  * from this file — see src/lib/env.server.ts for those.
  *
- * Values the business has not supplied yet stay as visible [PLACEHOLDERS] so
- * they are obvious on the page instead of quietly wrong.
+ * A blank or [BRACKETED] value means the business has not supplied it yet.
+ * Public pages hide those instead of printing them.
  */
 
 const env = (key: string, fallback = ''): string => {
@@ -89,7 +89,18 @@ const paybill = env('NEXT_PUBLIC_MPESA_PAYBILL');
 const paybillAccount = env('NEXT_PUBLIC_MPESA_PAYBILL_ACCOUNT', 'Your phone number');
 const sendMoneyName = env('NEXT_PUBLIC_MPESA_SEND_MONEY_NAME');
 
-export const paymentMethods: PaymentMethodConfig[] = [
+export interface PaymentDetails {
+  phone: string;
+  till: string;
+  paybill: string;
+  paybillAccount: string;
+  sendMoneyName: string;
+}
+
+/** Payment methods for a set of business details. Saved settings override the env defaults. */
+export function paymentMethodsFor(details: PaymentDetails): PaymentMethodConfig[] {
+  const account = details.paybillAccount.trim() || 'Your phone number';
+  return [
   {
     /*
      * Ordering "on WhatsApp" still goes through checkout, so the order is
@@ -107,28 +118,28 @@ export const paymentMethods: PaymentMethodConfig[] = [
   {
     key: 'MPESA_TILL',
     label: 'M-Pesa (Buy Goods, Till)',
-    instructions: isPlaceholder(till)
+    instructions: isPlaceholder(details.till)
       ? 'M-Pesa Till number has not been configured yet. We will send you payment details on WhatsApp after you place your order.'
-      : `Go to M-Pesa > Lipa na M-Pesa > Buy Goods and Services. Enter Till Number ${till}, then the order total. Send us the M-Pesa confirmation message on WhatsApp so we can confirm your order.`,
+      : `Go to M-Pesa > Lipa na M-Pesa > Buy Goods and Services. Enter Till Number ${details.till}, then the order total. Send us the M-Pesa confirmation message on WhatsApp so we can confirm your order.`,
     enabled: true,
     appliesTo: 'both',
   },
   {
     key: 'MPESA_PAYBILL',
     label: 'M-Pesa (Paybill)',
-    instructions: isPlaceholder(paybill)
+    instructions: isPlaceholder(details.paybill)
       ? ''
-      : `Go to M-Pesa > Lipa na M-Pesa > Pay Bill. Business Number ${paybill}, Account Number: ${paybillAccount}. Then send us the confirmation message on WhatsApp.`,
-    enabled: !isPlaceholder(paybill),
+      : `Go to M-Pesa > Lipa na M-Pesa > Pay Bill. Business Number ${details.paybill}, Account Number: ${account}. Then send us the confirmation message on WhatsApp.`,
+    enabled: !isPlaceholder(details.paybill),
     appliesTo: 'both',
   },
   {
     key: 'MPESA_SEND_MONEY',
     label: 'M-Pesa (Send Money)',
-    instructions: isPlaceholder(sendMoneyName)
+    instructions: isPlaceholder(details.sendMoneyName)
       ? ''
-      : `Send the order total to ${business.phone} (${sendMoneyName}) using M-Pesa Send Money, then share the confirmation message with us on WhatsApp.`,
-    enabled: !isPlaceholder(sendMoneyName) && !isPlaceholder(business.phone),
+      : `Send the order total to ${details.phone} (${details.sendMoneyName}) using M-Pesa Send Money, then share the confirmation message with us on WhatsApp.`,
+    enabled: !isPlaceholder(details.sendMoneyName) && !isPlaceholder(details.phone),
     appliesTo: 'both',
   },
   {
@@ -146,9 +157,23 @@ export const paymentMethods: PaymentMethodConfig[] = [
     appliesTo: 'PICKUP',
   },
 ];
+}
+
+export const paymentMethods: PaymentMethodConfig[] = paymentMethodsFor({
+  phone: business.phone,
+  till,
+  paybill,
+  paybillAccount,
+  sendMoneyName,
+});
 
 export const enabledPaymentMethods = (fulfilment?: 'DELIVERY' | 'PICKUP') =>
   paymentMethods.filter(
+    (m) => m.enabled && (m.appliesTo === 'both' || !fulfilment || m.appliesTo === fulfilment),
+  );
+
+export const enabledPaymentMethodsFor = (details: PaymentDetails, fulfilment?: 'DELIVERY' | 'PICKUP') =>
+  paymentMethodsFor(details).filter(
     (m) => m.enabled && (m.appliesTo === 'both' || !fulfilment || m.appliesTo === fulfilment),
   );
 

@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCurrentCustomer } from '@/lib/auth';
 import { getCustomerOrderById } from '@/lib/queries/orders';
-import { enabledPaymentMethods } from '@/lib/config';
+import { enabledPaymentMethodsFor } from '@/lib/config';
+import { getShopProfile } from '@/lib/settings';
 import { orderMessage, waLink } from '@/lib/whatsapp';
 import { OrderSummaryCard } from '@/components/order/OrderSummaryCard';
 import { OrderTimeline } from '@/components/order/OrderTimeline';
@@ -25,7 +26,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const order = await getCustomerOrderById(customer.id, id);
   if (!order) notFound();
 
-  const paymentMethod = enabledPaymentMethods().find((m) => m.key === order.paymentMethod);
+  const profile = await getShopProfile();
+  const paymentMethod = enabledPaymentMethodsFor(profile).find((m) => m.key === order.paymentMethod);
 
   const whatsappHref = waLink(
     orderMessage({
@@ -44,6 +46,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       landmark: order.landmark ?? undefined,
       directions: order.directions ?? undefined,
     }),
+    profile.whatsapp,
   );
 
   return (

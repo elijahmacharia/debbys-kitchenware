@@ -4,7 +4,8 @@ import { addresses } from '@/db/schema';
 import { getCustomerSession, grantGuestOrderAccess } from '@/lib/auth';
 import { checkoutSchema } from '@/lib/validation';
 import { createOrder } from '@/lib/orders/createOrder';
-import { enabledPaymentMethods } from '@/lib/config';
+import { enabledPaymentMethodsFor } from '@/lib/config';
+import { getShopProfile } from '@/lib/settings';
 import { track } from '@/lib/analytics';
 import { clientKey, rateLimit } from '@/lib/rate-limit';
 import { fail, handle, ok, readJson, tooManyRequests, validationFailed } from '@/lib/api';
@@ -29,7 +30,8 @@ export async function POST(request: Request) {
 
     // The payment method must be one the shop actually offers for this
     // fulfilment type — the list is config, so the client cannot widen it.
-    const allowed = enabledPaymentMethods(input.fulfilment).map((m) => m.key as string);
+    const profile = await getShopProfile();
+    const allowed = enabledPaymentMethodsFor(profile, input.fulfilment).map((m) => m.key as string);
     if (!allowed.includes(input.paymentMethod)) {
       return fail('That payment method is not available for this order', 400, {
         paymentMethod: 'Please choose another payment method',

@@ -26,11 +26,24 @@ export interface WhatsAppOrderContext {
   orderNumber?: string;
 }
 
-/** null when no WhatsApp number is configured — callers then hide the button. */
-export function waLink(message: string): string | null {
-  const number = whatsappNumber();
-  if (!number) return null;
-  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+/**
+ * null when no WhatsApp number is configured — callers then hide the button.
+ * Pass `number` when the shop profile has a saved WhatsApp line; otherwise
+ * the deploy-time value is used.
+ */
+/** 07… and 7… mobile numbers become 254… so a wa.me link reaches the shop. */
+function digitsForWhatsapp(raw: string): string | null {
+  let digits = raw.replace(/\D/g, '');
+  if (digits.startsWith('0') && digits.length === 10) digits = `254${digits.slice(1)}`;
+  else if (/^[17]\d{8}$/.test(digits)) digits = `254${digits}`;
+  if (digits.length < 9 || digits.length > 15) return null;
+  return digits;
+}
+
+export function waLink(message: string, number?: string | null): string | null {
+  const digits = digitsForWhatsapp(number ?? whatsappNumber() ?? '');
+  if (!digits) return null;
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
 }
 
 export function generalEnquiryMessage(): string {

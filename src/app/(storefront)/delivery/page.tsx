@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getActiveDeliveryZones } from '@/lib/queries/content';
-import { getPublicSettings } from '@/lib/settings';
-import { business, isPlaceholder } from '@/lib/config';
+import { formatShopPlace, getPublicSettings, getShopProfile } from '@/lib/settings';
+import { isPlaceholder } from '@/lib/config';
 import { formatKsh } from '@/lib/money';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Alert } from '@/components/ui/Alert';
@@ -16,8 +16,9 @@ export const metadata: Metadata = {
 };
 
 export default async function DeliveryPage() {
-  const [zones, settings] = await Promise.all([getActiveDeliveryZones(), getPublicSettings()]);
-  const whatsappHref = waLink(generalEnquiryMessage());
+  const [zones, settings, profile] = await Promise.all([getActiveDeliveryZones(), getPublicSettings(), getShopProfile()]);
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
+  const place = formatShopPlace(profile);
 
   return (
     <div className="container-site py-6">
@@ -27,8 +28,8 @@ export default async function DeliveryPage() {
       <div className="prose-page mt-5">
         <h2>Collect at the shop</h2>
         <p>Free. We tell you when it is packed and ready, bring your order number.</p>
-        {!isPlaceholder(business.address) ? <p><strong className="text-ink">Where:</strong> {business.address}</p> : null}
-        {!isPlaceholder(business.hours) ? <p><strong className="text-ink">When:</strong> {business.hours}</p> : null}
+        {place ? <p><strong className="text-ink">Where:</strong> {place}</p> : null}
+        {!isPlaceholder(profile.hours) ? <p><strong className="text-ink">When:</strong> {profile.hours}</p> : null}
 
         <h2>Delivery</h2>
         {settings.deliveryNotice ? <p>{settings.deliveryNotice}</p> : null}

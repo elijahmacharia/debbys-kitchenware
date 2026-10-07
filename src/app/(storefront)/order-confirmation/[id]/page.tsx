@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCustomerSession, hasGuestOrderAccess } from '@/lib/auth';
 import { getOrderForViewer } from '@/lib/queries/orders';
-import { enabledPaymentMethods } from '@/lib/config';
+import { enabledPaymentMethodsFor } from '@/lib/config';
+import { getShopProfile } from '@/lib/settings';
 import { orderMessage, waLink } from '@/lib/whatsapp';
 import { OrderSummaryCard } from '@/components/order/OrderSummaryCard';
 import { OrderTimeline } from '@/components/order/OrderTimeline';
@@ -30,7 +31,8 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
   // A wrong id and someone else's order look identical from outside: 404 both.
   if (!order) notFound();
 
-  const paymentMethod = enabledPaymentMethods().find((m) => m.key === order.paymentMethod);
+  const profile = await getShopProfile();
+  const paymentMethod = enabledPaymentMethodsFor(profile).find((m) => m.key === order.paymentMethod);
 
   const whatsappHref = waLink(
     orderMessage({
@@ -50,6 +52,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
       directions: order.directions ?? undefined,
       note: order.customerNote ?? undefined,
     }),
+    profile.whatsapp,
   );
 
   return (

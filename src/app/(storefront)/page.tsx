@@ -10,6 +10,7 @@ import { getActiveDeliveryZones, getPublishedTestimonials } from '@/lib/queries/
 import { getCustomerSession } from '@/lib/auth';
 import { getWishlistProductIds } from '@/lib/queries/wishlist';
 import { business } from '@/lib/config';
+import { getShopProfile } from '@/lib/settings';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { CategoryCard } from '@/components/product/CategoryCard';
@@ -40,11 +41,12 @@ const categoryImage = (slug: string) =>
 const MIN_RAIL = 3;
 
 export default async function HomePage() {
-  const [categories, session, zones, testimonials] = await Promise.all([
+  const [categories, session, zones, testimonials, profile] = await Promise.all([
     getTopCategories(6),
     getCustomerSession(),
     getActiveDeliveryZones(),
     getPublishedTestimonials(),
+    getShopProfile(),
   ]);
 
   /*
@@ -69,7 +71,7 @@ export default async function HomePage() {
   const featuredFallback = popular.length === 0 ? take(await getFeaturedProducts(4, used)) : [];
 
   const wishlisted = await getWishlistProductIds(session?.sub ?? null);
-  const whatsappHref = waLink(generalEnquiryMessage());
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
   const isSignedIn = Boolean(session);
 
   const grid = (items: ProductListItem[]) => (

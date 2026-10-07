@@ -9,6 +9,7 @@ import { ServiceWorkerManager } from '@/components/pwa/ServiceWorkerManager';
 import { OrganizationJsonLd } from '@/components/seo/JsonLd';
 import { getCustomerSession } from '@/lib/auth';
 import { analytics } from '@/lib/config';
+import { getShopProfile } from '@/lib/settings';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 
 /**
@@ -38,8 +39,8 @@ export const dynamic = 'force-dynamic';
 
 /** Public shop chrome. Everything a customer sees sits inside this. */
 export default async function StorefrontLayout({ children }: { children: React.ReactNode }) {
-  const session = await getCustomerSession();
-  const whatsappHref = waLink(generalEnquiryMessage());
+  const [session, profile] = await Promise.all([getCustomerSession(), getShopProfile()]);
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
 
   return (
     <>
