@@ -38,9 +38,11 @@ function createConnection() {
     // Loud rather than silent. The previous SQLite setup quietly fell back to a
     // local file when this was unset, which meant a migration once ran against
     // a throwaway database on someone's laptop while the live one sat
-    // untouched. A missing connection string should stop everything.
+    // untouched. A missing connection string should stop the request that
+    // needs the database, not the whole deploy.
     throw new Error(
-      'DATABASE_URL is not set. Copy .env.example to .env and paste your Supabase connection string. ' +
+      'DATABASE_URL is not set. Locally, copy .env.example to .env and paste your Supabase connection string. ' +
+      'On Vercel, add DATABASE_URL under Project Settings → Environment Variables (the transaction pooler string, port 6543). ' +
       'See docs/TECHNICAL.md for which of the three Supabase strings to use.',
     );
   }
@@ -112,9 +114,35 @@ function createConnection() {
   return database;
 }
 
-const globalForDb = globalThis as unknown as { db?: ReturnType<typeof createConnection> };
+type Database = ReturnType<typeof createConnection>;
 
-export const db = globalForDb.db ?? createConnection();
-if (process.env.NODE_ENV !== 'production') globalForDb.db = db;
+const globalForDb = globalThis as unknown as { db?: Database };
+
+/**
+ * Open the pool on the first query, not when this module is imported.
+ *
+ * Next evaluates every route module while it collects page data, including
+ * API routes that only import `db`. Creating the client at import time made
+ * `next build` throw "DATABASE_URL is not set" on Vercel before any request
+ * ran, even though those routes are dynamic and the build is not supposed to
+ * touch the database. The sitemap is the one route that does query during
+ * the build; it already catches a failure and ships the static pages.
+ */
+function getDb(): Database {
+  if (globalForDb.db) return globalForDb.db;
+  const database = createConnection();
+  // Keep one pool across dev hot reloads. In production the module lives for
+  // the life of the instance, and globalThis is that instance.
+  globalForDb.db = database;
+  return database;
+}
+
+export const db: Database = new Proxy({} as Database, {
+  get(_target, prop) {
+    const database = getDb();
+    const value = database[prop as keyof Database];
+    return typeof value === 'function' ? (value as (...args: unknown[]) => unknown).bind(database) : value;
+  },
+});
 
 export { schema };
