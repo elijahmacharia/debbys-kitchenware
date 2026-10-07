@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getPublicSettings } from '@/lib/settings';
 import { getCategoryTree } from '@/lib/queries/categories';
-import { business, isPlaceholder } from '@/lib/config';
+import { business } from '@/lib/config';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ButtonLink } from '@/components/ui/Button';
 
@@ -78,13 +78,6 @@ export default async function AboutPage() {
           </>
         ) : null}
 
-        {isPlaceholder(business.address) ? (
-          <p className="rounded-2xl border border-dashed border-line bg-canvas p-3 text-xs">
-            <strong className="text-ink">Note for the shop owner:</strong> the shop address, phone number
-            and opening hours have not been added yet. Fill them into your <code>.env</code> file and they
-            will appear here, in the footer and on the contact page automatically.
-          </p>
-        ) : null}
       </div>
 
       <div className="mt-8 flex flex-wrap gap-2">

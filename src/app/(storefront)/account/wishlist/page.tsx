@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getCurrentCustomer } from '@/lib/auth';
 import { getWishlist } from '@/lib/queries/wishlist';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
+import { getShopProfile } from '@/lib/settings';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ButtonLink } from '@/components/ui/Button';
@@ -20,7 +21,8 @@ export default async function WishlistPage() {
   const available = items.filter((item) => item.isActive);
   const withdrawn = items.filter((item) => !item.isActive);
 
-  const whatsappHref = waLink(generalEnquiryMessage());
+  const profile = await getShopProfile();
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
   const wishlistedIds = new Set(items.map((item) => item.id));
 
   return (

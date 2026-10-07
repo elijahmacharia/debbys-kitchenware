@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { getCategoryTree } from '@/lib/queries/categories';
 import { getCustomerSession } from '@/lib/auth';
 import { getPublicSettings } from '@/lib/settings';
-import { business, telHref } from '@/lib/config';
+import { isPlaceholder } from '@/lib/config';
+import { getShopProfile } from '@/lib/settings';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
 import { AnnouncementBar } from './AnnouncementBar';
 import { AccountMenu } from './AccountMenu';
@@ -19,10 +20,11 @@ import { PhoneIcon, WhatsAppIcon } from '@/components/icons';
  * "Sign in" before the name appears.
  */
 export async function Header() {
-  const [tree, session, settings] = await Promise.all([
+  const [tree, session, settings, profile] = await Promise.all([
     getCategoryTree(),
     getCustomerSession(),
     getPublicSettings(),
+    getShopProfile(),
   ]);
 
   const categories = tree.map((c) => ({
@@ -31,8 +33,8 @@ export async function Header() {
     children: c.children.map((child) => ({ name: child.name, slug: child.slug })),
   }));
 
-  const whatsappHref = waLink(generalEnquiryMessage());
-  const phoneHref = telHref();
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
+  const phoneHref = isPlaceholder(profile.phone) ? null : `tel:${profile.phone.replace(/[^\d+]/g, '')}`;
   const navLink = 'inline-flex h-11 items-center px-3 text-sm text-ink transition-colors hover:text-ink';
 
   return (
@@ -46,7 +48,7 @@ export async function Header() {
           <div className="flex items-center gap-4">
             {phoneHref ? (
               <a href={phoneHref} className="inline-flex items-center gap-1.5 hover:text-ink">
-                <PhoneIcon className="h-3.5 w-3.5" /> {business.phone}
+                <PhoneIcon className="h-3.5 w-3.5" /> {profile.phone}
               </a>
             ) : null}
             <Link href="/delivery" className="hover:text-ink">Delivery &amp; pickup</Link>

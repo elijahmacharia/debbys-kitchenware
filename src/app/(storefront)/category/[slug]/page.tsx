@@ -6,6 +6,7 @@ import { getPriceCeiling, listProducts } from '@/lib/queries/products';
 import { getCustomerSession } from '@/lib/auth';
 import { getWishlistProductIds } from '@/lib/queries/wishlist';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
+import { getShopProfile } from '@/lib/settings';
 import { buildPageHref, parseProductSearchParams, type RawSearchParams } from '@/lib/searchParams';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { ShopFilters } from '@/components/shop/ShopFilters';
@@ -38,15 +39,16 @@ export default async function CategoryPage({
   if (!category) notFound();
 
   const filters = parseProductSearchParams(rawParams);
-  const [result, tree, session, priceCeiling] = await Promise.all([
+  const [result, tree, session, priceCeiling, profile] = await Promise.all([
     listProducts({ ...filters, categorySlug: slug }),
     getCategoryTree(),
     getCustomerSession(),
     getPriceCeiling(),
+    getShopProfile(),
   ]);
 
   const wishlisted = await getWishlistProductIds(session?.sub ?? null);
-  const whatsappHref = waLink(generalEnquiryMessage());
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
 
   const crumbs: Crumb[] = [{ name: 'Home', href: '/' }, { name: 'Categories', href: '/categories' }];
   if (category.parent) crumbs.push({ name: category.parent.name, href: `/category/${category.parent.slug}` });

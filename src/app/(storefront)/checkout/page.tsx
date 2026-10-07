@@ -4,8 +4,8 @@ import { db } from '@/db';
 import { addresses } from '@/db/schema';
 import { getActiveDeliveryZones } from '@/lib/queries/content';
 import { getCurrentCustomer } from '@/lib/auth';
-import { getPublicSettings } from '@/lib/settings';
-import { business, enabledPaymentMethods, isPlaceholder } from '@/lib/config';
+import { formatShopPlace, getPublicSettings, getShopProfile } from '@/lib/settings';
+import { enabledPaymentMethodsFor } from '@/lib/config';
 import { CheckoutForm } from '@/components/cart/CheckoutForm';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
@@ -16,10 +16,11 @@ export const metadata: Metadata = {
 };
 
 export default async function CheckoutPage() {
-  const [zones, customer, settings] = await Promise.all([
+  const [zones, customer, settings, profile] = await Promise.all([
     getActiveDeliveryZones(),
     getCurrentCustomer(),
     getPublicSettings(),
+    getShopProfile(),
   ]);
 
   const savedAddresses = customer
@@ -38,7 +39,7 @@ export default async function CheckoutPage() {
             id: zone.id, name: zone.name, county: zone.county,
             feeCents: zone.feeCents, etaText: zone.etaText, note: zone.note,
           }))}
-          paymentMethods={enabledPaymentMethods().map((m) => ({
+          paymentMethods={enabledPaymentMethodsFor(profile).map((m) => ({
             key: m.key, label: m.label, instructions: m.instructions, appliesTo: m.appliesTo,
           }))}
           savedAddresses={savedAddresses.map((a) => ({
@@ -52,7 +53,7 @@ export default async function CheckoutPage() {
           isSignedIn={Boolean(customer)}
           deliveryNotice={settings.deliveryNotice}
           paymentInstructions={settings.paymentInstructions}
-          shopAddress={isPlaceholder(business.address) ? null : business.address}
+          shopAddress={formatShopPlace(profile)}
         />
       </div>
     </div>

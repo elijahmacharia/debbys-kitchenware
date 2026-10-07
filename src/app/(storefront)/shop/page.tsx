@@ -5,6 +5,7 @@ import { getCategoryTree } from '@/lib/queries/categories';
 import { getCustomerSession } from '@/lib/auth';
 import { getWishlistProductIds } from '@/lib/queries/wishlist';
 import { generalEnquiryMessage, waLink } from '@/lib/whatsapp';
+import { getShopProfile } from '@/lib/settings';
 import { buildPageHref, parseProductSearchParams, type RawSearchParams } from '@/lib/searchParams';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { ShopFilters } from '@/components/shop/ShopFilters';
@@ -28,15 +29,16 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   const rawParams = await searchParams;
   const filters = parseProductSearchParams(rawParams);
 
-  const [result, tree, session, priceCeiling] = await Promise.all([
+  const [result, tree, session, priceCeiling, profile] = await Promise.all([
     listProducts(filters),
     getCategoryTree(),
     getCustomerSession(),
     getPriceCeiling(),
+    getShopProfile(),
   ]);
 
   const wishlisted = await getWishlistProductIds(session?.sub ?? null);
-  const whatsappHref = waLink(generalEnquiryMessage());
+  const whatsappHref = waLink(generalEnquiryMessage(), profile.whatsapp);
 
   if (filters.q) await trackSearch(filters.q, result.total);
 

@@ -1,4 +1,5 @@
 import { business, isPlaceholder, siteUrl, social } from '@/lib/config';
+import { getShopProfile } from '@/lib/settings';
 import { effectivePriceCents } from '@/lib/money';
 
 /**
@@ -13,7 +14,8 @@ function JsonLd({ data }: { data: Record<string, unknown> }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
 
-export function OrganizationJsonLd() {
+export async function OrganizationJsonLd() {
+  const profile = await getShopProfile();
   const sameAs = social.map((s) => s.url);
   const data: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -23,21 +25,21 @@ export function OrganizationJsonLd() {
     url: siteUrl,
     description: 'Kitchenware, kitchen utensils, household goods, plastic products, storage and cleaning items in Kenya.',
     ...(sameAs.length ? { sameAs } : {}),
-    ...(isPlaceholder(business.phone) ? {} : { telephone: business.phone }),
-    ...(isPlaceholder(business.email) ? {} : { email: business.email }),
-    ...(isPlaceholder(business.address)
+    ...(isPlaceholder(profile.phone) ? {} : { telephone: profile.phone }),
+    ...(isPlaceholder(profile.email) ? {} : { email: profile.email }),
+    ...(isPlaceholder(profile.address)
       ? {}
       : {
           address: {
             '@type': 'PostalAddress',
-            streetAddress: business.address,
-            ...(isPlaceholder(business.city) ? {} : { addressLocality: business.city }),
-            ...(isPlaceholder(business.county) ? {} : { addressRegion: business.county }),
+            streetAddress: profile.address,
+            ...(isPlaceholder(profile.city) ? {} : { addressLocality: profile.city }),
+            ...(isPlaceholder(profile.county) ? {} : { addressRegion: profile.county }),
             addressCountry: 'KE',
           },
         }),
-    ...(isPlaceholder(business.hours) ? {} : { openingHours: business.hours }),
-    ...(business.mapsUrl ? { hasMap: business.mapsUrl } : {}),
+    ...(isPlaceholder(profile.hours) ? {} : { openingHours: profile.hours }),
+    ...(profile.mapsUrl && !isPlaceholder(profile.mapsUrl) ? { hasMap: profile.mapsUrl } : {}),
     currenciesAccepted: 'KES',
     areaServed: { '@type': 'Country', name: 'Kenya' },
   };

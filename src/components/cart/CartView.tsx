@@ -20,7 +20,7 @@ import { orderMessage, waLink } from '@/lib/whatsapp';
  * the fee depends on an area the customer has not chosen yet. Quoting a number
  * here and a different one at checkout is the fastest way to lose an order.
  */
-export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) {
+export function CartView({ deliveryAvailable, whatsappNumber }: { deliveryAvailable: boolean; whatsappNumber?: string | null }) {
   const { lines, issues, ready, subtotalCents, setQuantity, remove, clear, dismissIssues } = useCart();
 
   if (!ready) {
@@ -59,6 +59,7 @@ export function CartView({ deliveryAvailable }: { deliveryAvailable: boolean }) 
       subtotalCents,
       totalCents: subtotalCents,
     }),
+    whatsappNumber,
   );
 
   return (

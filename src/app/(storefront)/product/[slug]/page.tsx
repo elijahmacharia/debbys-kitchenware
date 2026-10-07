@@ -8,6 +8,7 @@ import { getActiveDeliveryZones } from '@/lib/queries/content';
 import { siteUrl } from '@/lib/config';
 import { effectivePriceCents } from '@/lib/money';
 import { generalEnquiryMessage, productEnquiryMessage, waLink } from '@/lib/whatsapp';
+import { getShopProfile } from '@/lib/settings';
 import { track } from '@/lib/analytics';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { PurchasePanel } from '@/components/product/PurchasePanel';
@@ -62,11 +63,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   // Popularity counter and analytics. Neither can throw — see implementations.
   await Promise.all([incrementProductView(product.id), track('PRODUCT_VIEW', product.sku)]);
 
+  const profile = await getShopProfile();
   const unitPrice = effectivePriceCents(product);
   const whatsappHref = waLink(
     productEnquiryMessage({ name: product.name, sku: product.sku, priceCents: unitPrice, url: `${siteUrl}/product/${product.slug}` }),
+    profile.whatsapp,
   );
-  const genericWhatsapp = waLink(generalEnquiryMessage());
+  const genericWhatsapp = waLink(generalEnquiryMessage(), profile.whatsapp);
 
   const crumbs: Crumb[] = [{ name: 'Home', href: '/' }, { name: 'Shop', href: '/shop' }];
   if (product.parentCategory) crumbs.push({ name: product.parentCategory.name, href: `/category/${product.parentCategory.slug}` });
