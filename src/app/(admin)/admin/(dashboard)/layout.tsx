@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getCurrentAdmin } from '@/lib/auth';
 import { AdminShell } from '@/components/admin/AdminShell';
+import { ensureMediaTable } from '@/lib/media';
 
 /**
  * Guards every dashboard route.
@@ -51,6 +52,13 @@ export const maxDuration = 30;
 export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const admin = await getCurrentAdmin();
   if (!admin) redirect('/admin/login');
+  // Photo storage was added after the first database setup. Create the table
+  // here so an upload on the live site does not depend on a separate migration.
+  try {
+    await ensureMediaTable();
+  } catch (error) {
+    console.error('[media]', error);
+  }
 
   return <AdminShell adminName={admin.name} role={admin.role}>{children}</AdminShell>;
 }

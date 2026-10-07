@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { ShopImage } from './ShopImage';
 import { useState } from 'react';
 import { ImageIcon } from '@/components/icons';
 import { cn } from '@/lib/cn';
@@ -41,7 +41,7 @@ export function ProductGallery({
         {currentFailed ? (
           <div className="grid h-full place-items-center text-subtle"><ImageIcon className="h-12 w-12" /></div>
         ) : (
-          <Image
+          <ShopImage
             key={current.id}
             src={current.url}
             alt={current.alt || productName}
@@ -68,7 +68,7 @@ export function ProductGallery({
                 index === active ? 'border-clay-600 ring-1 ring-clay-600' : 'border-line hover:border-ink',
               )}
             >
-              <Image src={image.url} alt="" fill sizes="80px" loading="lazy" className="object-contain p-1" />
+              <ShopImage src={image.url} alt="" fill sizes="80px" loading="lazy" className="object-contain p-1" />
             </button>
           ))}
         </div>

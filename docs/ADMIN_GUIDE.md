@@ -58,16 +58,18 @@ The first page shows how the shop is doing:
 
 ### Photos
 
-Photo upload through the dashboard is **not built yet**. For now:
+On the product form, press **Add a photo** and choose a picture from your phone
+or computer. You can add up to 8. The first one is the picture on the product
+card; use **Move up** if you added them in the wrong order.
 
-1. Give the photo a descriptive filename, e.g. `20l-plastic-bucket-blue.jpg`
-   (this helps Google Images find it).
-2. Ask your developer to place it in the `public/uploads/` folder.
-3. In the product form, enter the path: `/uploads/20l-plastic-bucket-blue.jpg`
-4. Fill in the **alt text** — a short description of what is in the photo. Blind
-   customers' screen readers read it aloud, and Google uses it too.
+Fill in the description of the photo. Screen readers read it aloud, and it
+helps people find the item.
 
-The first photo is the one shown on product cards.
+Categories have the same **Photo** button. A category photo replaces the plain
+illustration on the homepage. Leave it empty to keep the illustration.
+
+Messages from the contact form are under **Messages**. Mark one as read once
+you have replied, or delete it when you no longer need it.
 
 ### Visibility
 

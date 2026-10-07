@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
+import { isDirectImage } from './ShopImage';
 
 /**
  * A category as a picture you click, not a text link in a box.
@@ -24,6 +25,7 @@ export function CategoryCard({
       <Image
         src={image}
         alt=""
+        unoptimized={isDirectImage(image)}
         fill
         sizes="(max-width: 640px) 50vw, 33vw"
         loading="lazy"

@@ -195,7 +195,7 @@ try {
     'addresses', 'admin_users', 'analytics_events', 'cart_items', 'categories',
     'contact_messages', 'customers', 'delivery_zones', 'order_events',
     'order_items', 'orders', 'password_reset_tokens', 'product_images',
-    'products', 'settings', 'stock_movements', 'testimonials', 'wishlist_items',
+    'media_files', 'products', 'settings', 'stock_movements', 'testimonials', 'wishlist_items',
   ];
   const present = new Set(tables.map((t) => t.table_name));
   const missing = expected.filter((t) => !present.has(t));
@@ -203,7 +203,7 @@ try {
     warn(`Missing tables: ${missing.join(', ')}`);
     console.log('\n  Next: npm run db:push\n');
   } else {
-    ok('All 18 expected tables are there.');
+    ok(`All ${expected.length} expected tables are there.`);
   }
 
   // The column that caused the migration to fail on the old database. If it is

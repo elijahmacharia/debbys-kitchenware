@@ -4,10 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { AdminForm } from './AdminForm';
 import { TextField, TextAreaField, SelectField, CheckboxField } from '@/components/ui/Field';
-import { Alert } from '@/components/ui/Alert';
-import { PlusIcon, TrashIcon } from '@/components/icons';
 import { centsToInput } from '@/lib/money';
 import { saveProductAction } from '@/app/(admin)/admin/actions';
+import { PhotoFields } from './PhotoFields';
 
 export interface ProductFormValues {
   id: string;
@@ -24,12 +23,7 @@ export function ProductForm({
   product?: ProductFormValues;
   categoryOptions: { id: string; label: string; isActive: boolean }[];
 }) {
-  const [images, setImages] = useState<{ url: string; alt: string }[]>(
-    product?.images.length ? product.images : [{ url: '', alt: '' }],
-  );
-
-  const setImage = (index: number, key: 'url' | 'alt', value: string) =>
-    setImages((current) => current.map((image, i) => (i === index ? { ...image, [key]: value } : image)));
+  const [images, setImages] = useState<{ url: string; alt: string }[]>(product?.images ?? []);
 
   return (
     <AdminForm
@@ -91,43 +85,12 @@ export function ProductForm({
           </section>
 
           <section className="rounded-3xl bg-surface p-5 shadow-soft space-y-3 sm:p-6">
-            <h2 className="text-base font-bold">Images</h2>
-            <Alert tone="info">
-              Upload is not built yet. Put an image file in <code>public/uploads/</code> and enter its path
-              here, for example <code>/uploads/bucket-20l.jpg</code>, or paste a full https:// URL. The
-              first image is the one shown on product cards.
-            </Alert>
-
-            {images.map((image, index) => (
-              <div key={index} className="grid gap-3 rounded-3xl p-3 sm:grid-cols-[1fr_1fr_auto]">
-                <TextField
-                  name="imageUrl" label={`Image ${index + 1} path or URL`} hideLabel={index > 0}
-                  value={image.url} onChange={(e) => setImage(index, 'url', e.target.value)}
-                  placeholder="/uploads/my-photo.jpg"
-                />
-                <TextField
-                  name="imageAlt" label="Alt text (describes the photo)" hideLabel={index > 0}
-                  value={image.alt} onChange={(e) => setImage(index, 'alt', e.target.value)}
-                  placeholder="20 litre blue plastic bucket with handle"
-                />
-                <div className="flex items-end">
-                  <button
-                    type="button"
-                    onClick={() => setImages((c) => (c.length === 1 ? [{ url: '', alt: '' }] : c.filter((_, i) => i !== index)))}
-                    className="btn-ghost btn-sm border border-line text-danger"
-                    aria-label={`Remove image ${index + 1}`}
-                  >
-                    <TrashIcon className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            {images.length < 8 ? (
-              <button type="button" onClick={() => setImages((c) => [...c, { url: '', alt: '' }])} className="btn-secondary btn-sm">
-                <PlusIcon className="h-4 w-4" /> Add another image
-              </button>
-            ) : null}
+            <h2 className="text-base font-bold">Photos</h2>
+            <p className="text-xs text-muted">
+              Add up to 8 photos from your phone or computer. The first one is the picture on the product card.
+              {errors['images.0.url'] ? <span className="mt-1 block text-danger">{errors['images.0.url']}</span> : null}
+            </p>
+            <PhotoFields images={images} onChange={setImages} />
           </section>
 
           <section className="rounded-3xl bg-surface p-5 shadow-soft space-y-3 sm:p-6">

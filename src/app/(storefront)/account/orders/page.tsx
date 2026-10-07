@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ShopImage } from '@/components/product/ShopImage';
 import { getCurrentCustomer } from '@/lib/auth';
 import { getCustomerOrders } from '@/lib/queries/orders';
 import { formatKsh } from '@/lib/money';
@@ -54,7 +54,7 @@ export default async function OrdersPage() {
                   <li key={item.id} className="flex items-center gap-3 px-4 py-2.5">
                     <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded border border-line bg-canvas">
                       {item.imageUrl ? (
-                        <Image src={item.imageUrl} alt="" fill sizes="40px" className="object-contain p-0.5" />
+                        <ShopImage src={item.imageUrl} alt="" fill sizes="40px" className="object-contain p-0.5" />
                       ) : (
                         <span className="grid h-full place-items-center text-subtle"><ImageIcon className="h-4 w-4" /></span>
                       )}

@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { and, eq, ne, sql } from 'drizzle-orm';
 import { db } from '@/db';
 import {
-  categories, deliveryZones, orderEvents, orderItems, orders, productImages, products, stockMovements,
+  categories, contactMessages, deliveryZones, orderEvents, orderItems, orders, productImages, products, stockMovements,
 } from '@/db/schema';
 import { getCurrentAdmin } from '@/lib/auth';
 import { uniqueSlug } from '@/lib/slug';
@@ -16,6 +16,7 @@ import {
   productSchema, stockAdjustSchema,
 } from '@/lib/validation';
 import { saveSettings } from '@/lib/settings';
+import { releaseMedia } from '@/lib/media';
 
 /**
  * ADMIN SERVER ACTIONS
@@ -67,8 +68,12 @@ export async function saveProductAction(productId: string | null, form: FormData
     if (priceCents === null) return { ok: false, fields: { priceCents: 'Enter a valid price, e.g. 450 or 450.50' } };
     if (saleRaw && salePriceCents === null) return { ok: false, fields: { salePriceCents: 'Enter a valid sale price' } };
 
-    const imageUrls = form.getAll('imageUrl').map(String).filter((url) => url.trim().length > 0);
+    const imageUrls = form.getAll('imageUrl').map(String);
     const imageAlts = form.getAll('imageAlt').map(String);
+    const images = imageUrls
+      .map((url, index) => ({ url: url.trim(), alt: (imageAlts[index] ?? '').trim() }))
+      .filter((image) => image.url.length > 0)
+      .map((image) => ({ ...image, alt: image.alt || str(form, 'name') }));
 
     const parsed = productSchema.safeParse({
       name: str(form, 'name'),
@@ -86,10 +91,7 @@ export async function saveProductAction(productId: string | null, form: FormData
       isNewArrival: bool(form, 'isNewArrival'),
       metaTitle: str(form, 'metaTitle') || undefined,
       metaDescription: str(form, 'metaDescription') || undefined,
-      images: imageUrls.map((url, index) => ({
-        url: url.trim(),
-        alt: (imageAlts[index] ?? '').trim() || str(form, 'name'),
-      })),
+      images,
     });
 
     if (!parsed.success) return { ok: false, fields: fieldErrors(parsed.error) };
@@ -102,6 +104,10 @@ export async function saveProductAction(productId: string | null, form: FormData
       .where(productId ? and(eq(products.sku, data.sku), ne(products.id, productId)) : eq(products.sku, data.sku))
       .limit(1);
     if (skuClash.length > 0) return { ok: false, fields: { sku: 'Another product already uses this SKU' } };
+
+    const previousImages = productId
+      ? (await db.select({ url: productImages.url }).from(productImages).where(eq(productImages.productId, productId))).map((row) => row.url)
+      : [];
 
     if (productId) {
       const [existing] = await db
@@ -171,6 +177,9 @@ export async function saveProductAction(productId: string | null, form: FormData
       });
     }
 
+    const kept = new Set(data.images.map((image) => image.url));
+    await releaseMedia(previousImages.filter((url) => !kept.has(url)));
+
     revalidatePath('/admin/products');
     revalidatePath('/shop');
     revalidatePath('/');
@@ -199,9 +208,12 @@ export async function deleteProductAction(productId: string): Promise<ActionResu
       };
     }
 
+    const photos = await db.select({ url: productImages.url }).from(productImages).where(eq(productImages.productId, productId));
     await db.delete(products).where(eq(products.id, productId));
+    await releaseMedia(photos.map((photo) => photo.url));
     revalidatePath('/admin/products');
     revalidatePath('/shop');
+    revalidatePath('/');
     return { ok: true, message: 'Product deleted' };
   });
 }
@@ -283,6 +295,10 @@ export async function saveCategoryAction(categoryId: string | null, form: FormDa
       return { ok: false, fields: { parentId: 'A category cannot be inside itself' } };
     }
 
+    const [previousCategory] = categoryId
+      ? await db.select({ imageUrl: categories.imageUrl }).from(categories).where(eq(categories.id, categoryId)).limit(1)
+      : [];
+
     if (categoryId) {
       const [existing] = await db.select({ name: categories.name, slug: categories.slug })
         .from(categories).where(eq(categories.id, categoryId)).limit(1);
@@ -313,6 +329,10 @@ export async function saveCategoryAction(categoryId: string | null, form: FormDa
       });
     }
 
+    if (previousCategory?.imageUrl && previousCategory.imageUrl !== (data.imageUrl ?? null)) {
+      await releaseMedia([previousCategory.imageUrl]);
+    }
+
     revalidatePath('/admin/categories');
     revalidatePath('/categories');
     revalidatePath('/');
@@ -341,7 +361,9 @@ export async function deleteCategoryAction(categoryId: string): Promise<ActionRe
       return { ok: false, message: 'This category has subcategories. Delete or move those first.' };
     }
 
+    const [removed] = await db.select({ imageUrl: categories.imageUrl }).from(categories).where(eq(categories.id, categoryId)).limit(1);
     await db.delete(categories).where(eq(categories.id, categoryId));
+    if (removed?.imageUrl) await releaseMedia([removed.imageUrl]);
     revalidatePath('/admin/categories');
     revalidatePath('/categories');
     return { ok: true, message: 'Category deleted' };
@@ -560,5 +582,27 @@ export async function saveSettingsAction(form: FormData): Promise<ActionResult> 
     revalidatePath('/admin/settings');
     revalidatePath('/', 'layout');
     return { ok: true, message: 'Settings saved' };
+  });
+}
+
+// -------------------------------------------------------------- Messages
+
+export async function markMessageReadAction(messageId: string): Promise<ActionResult> {
+  return guard(async () => {
+    await requireAdmin();
+    await db.update(contactMessages).set({ isRead: true }).where(eq(contactMessages.id, messageId));
+    revalidatePath('/admin/messages');
+    revalidatePath('/admin/dashboard');
+    return { ok: true, message: 'Marked as read' };
+  });
+}
+
+export async function deleteMessageAction(messageId: string): Promise<ActionResult> {
+  return guard(async () => {
+    await requireAdmin();
+    await db.delete(contactMessages).where(eq(contactMessages.id, messageId));
+    revalidatePath('/admin/messages');
+    revalidatePath('/admin/dashboard');
+    return { ok: true, message: 'Message deleted' };
   });
 }

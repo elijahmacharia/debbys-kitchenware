@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { ShopImage } from './ShopImage';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/components/cart/CartProvider';
@@ -60,7 +60,7 @@ export function ProductCard({
         <Link href={href} className="block overflow-hidden rounded-3xl bg-raise" tabIndex={-1} aria-hidden="true">
           <div className="relative aspect-square">
             {product.imageUrl && !imageFailed ? (
-              <Image
+              <ShopImage
                 src={product.imageUrl}
                 alt={product.imageAlt ?? product.name}
                 fill

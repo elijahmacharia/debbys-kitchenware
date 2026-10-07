@@ -59,7 +59,7 @@ const EXPECTED_TABLES = [
   'addresses', 'admin_users', 'analytics_events', 'cart_items', 'categories',
   'contact_messages', 'customers', 'delivery_zones', 'order_events',
   'order_items', 'orders', 'password_reset_tokens', 'product_images',
-  'products', 'settings', 'stock_movements', 'testimonials', 'wishlist_items',
+  'media_files', 'products', 'settings', 'stock_movements', 'testimonials', 'wishlist_items',
 ];
 
 type Result = {
