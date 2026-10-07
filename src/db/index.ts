@@ -1,5 +1,6 @@
+import net from 'node:net';
 import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import postgres, { type Options as PostgresOptions } from 'postgres';
 import * as schema from './schema';
 
 /**
@@ -32,19 +33,34 @@ import * as schema from './schema';
  * open a new pool each time; caching on globalThis keeps one.
  */
 
+/**
+ * How long a pool may be reused. Vercel freezes the process between requests,
+ * so the driver's idle and lifetime timers do not run while it is frozen, and
+ * a socket the pooler has already dropped still looks open. The next query
+ * then waits until the platform kills the function. Wall-clock age still
+ * advances during a freeze, so this is checked before every query.
+ */
+const CLIENT_MAX_AGE_MS = 15_000;
+
+/** Give up when a socket goes quiet. A dropped connection never sends data. */
+const SOCKET_QUIET_MS = 12_000;
+
 function createConnection() {
   const url = process.env.DATABASE_URL;
   if (!url) {
     // Loud rather than silent. The previous SQLite setup quietly fell back to a
     // local file when this was unset, which meant a migration once ran against
     // a throwaway database on someone's laptop while the live one sat
-    // untouched. A missing connection string should stop everything.
+    // untouched. A missing connection string should stop the request that
+    // needs the database, not the whole deploy.
     throw new Error(
-      'DATABASE_URL is not set. Copy .env.example to .env and paste your Supabase connection string. ' +
+      'DATABASE_URL is not set. Locally, copy .env.example to .env and paste your Supabase connection string. ' +
+      'On Vercel, add DATABASE_URL under Project Settings → Environment Variables (the transaction pooler string, port 6543). ' +
       'See docs/TECHNICAL.md for which of the three Supabase strings to use.',
     );
   }
 
+  const sockets = new Set<net.Socket>();
   const client = postgres(url, {
     // Required by Supabase's transaction pooler. Harmless on a direct
     // connection, so it is safe to leave on in every environment.
@@ -68,8 +84,11 @@ function createConnection() {
     // under load. The transaction pooler provides the real concurrency.
     max: 4,
 
-    // Release quickly so a finished invocation does not hold a slot.
-    idle_timeout: 20,
+    // Close an idle socket quickly once this process is actually running.
+    // One second is long enough for the queries on a single page to share a
+    // connection, and short enough that a finished request does not keep a
+    // pooler slot while the instance sits idle.
+    idle_timeout: 1,
 
     // Ten seconds, not fifteen. A connection that has not been established in
     // ten is not going to save the request — Vercel will have given up on the
@@ -78,32 +97,94 @@ function createConnection() {
     // Failing inside the request is worth more than failing outside it.
     connect_timeout: 10,
 
-    // Ask the kernel to probe an idle socket after 20 seconds rather than the
-    // default 60. This is what notices that the other end has gone away. It
-    // does not help while the instance is frozen — a frozen process sends no
-    // probes — but it catches the case where the instance is merely idle
-    // between requests, which is the common one.
     keep_alive: 20,
 
-    // Retire every connection after five minutes, even a healthy-looking one.
-    //
-    // This is the fix for requests that hang rather than fail. A serverless
-    // instance is frozen between invocations, and while it is frozen the TCP
-    // socket to the database can be closed at the other end — by the pooler,
-    // by a NAT table, by anything in between. Nothing tells the frozen process.
-    // When it wakes and reuses that socket, the query goes into a void and the
-    // request waits indefinitely: one measured request took 242 seconds.
-    //
-    // A lifetime cap means a stale socket is discarded rather than reused.
-    max_lifetime: 60 * 5,
-  });
+    // Backup for the wall-clock check below. The timer does not fire while
+    // the instance is frozen, so it is not the thing that prevents a hang.
+    max_lifetime: 15,
 
-  return drizzle(client, { schema });
+    // Own the socket so a connection that stops sending data is destroyed.
+    // The driver otherwise waits on that socket until the platform times the
+    // whole function out, which is the multi-minute page load.
+    socket(options: { host: string[]; port: number[] }) {
+      const host = options.host[0];
+      const port = options.port[0];
+      return new Promise<net.Socket>((resolve, reject) => {
+        const socket = net.connect({ host, port });
+        sockets.add(socket);
+        socket.once('close', () => sockets.delete(socket));
+        socket.setTimeout(SOCKET_QUIET_MS);
+        socket.on('timeout', () => {
+          socket.destroy(new Error('The database stopped answering'));
+        });
+        socket.once('error', reject);
+        socket.once('connect', () => {
+          socket.removeListener('error', reject);
+          // The driver reads these when it upgrades the socket to TLS.
+          (socket as net.Socket & { host?: string; port?: number }).host = host;
+          (socket as net.Socket & { host?: string; port?: number }).port = port;
+          resolve(socket);
+        });
+      });
+    },
+  } as PostgresOptions<Record<string, never>>);
+
+  const database = drizzle(client, { schema });
+
+  // Drizzle replaces the timestamp serializers with `(value) => value` so
+  // driver values stay strings. A Date still reaches Bind, and postgres.js
+  // throws "Received an instance of Date" instead of sending the query.
+  // Stringify dates here so a raw timestamp parameter cannot take a page down.
+  for (const oid of [1082, 1083, 1114, 1184]) {
+    client.options.serializers[oid] = (value: unknown) =>
+      value instanceof Date ? value.toISOString() : String(value);
+  }
+
+  return {
+    database,
+    close() {
+      for (const socket of sockets) socket.destroy();
+      void client.end({ timeout: 0 });
+    },
+  };
 }
 
-const globalForDb = globalThis as unknown as { db?: ReturnType<typeof createConnection> };
+type Database = ReturnType<typeof createConnection>['database'];
 
-export const db = globalForDb.db ?? createConnection();
-if (process.env.NODE_ENV !== 'production') globalForDb.db = db;
+const globalForDb = globalThis as unknown as {
+  connection?: { database: Database; openedAt: number; close: () => void };
+};
+
+/**
+ * Open the pool on the first query, not when this module is imported.
+ *
+ * Next evaluates every route module while it collects page data, including
+ * API routes that only import `db`. Creating the client at import time made
+ * `next build` throw "DATABASE_URL is not set" on Vercel before any request
+ * ran, even though those routes are dynamic and the build is not supposed to
+ * touch the database. The sitemap is the one route that does query during
+ * the build; it already catches a failure and ships the static pages.
+ *
+ * A pool is also replaced once it is older than CLIENT_MAX_AGE_MS. That is
+ * what stops a thawed serverless instance from sending a query down a socket
+ * the pooler closed while the instance was frozen.
+ */
+function getDb(): Database {
+  const now = Date.now();
+  const current = globalForDb.connection;
+  if (current && now - current.openedAt < CLIENT_MAX_AGE_MS) return current.database;
+  current?.close();
+  const connection = createConnection();
+  globalForDb.connection = { database: connection.database, openedAt: now, close: connection.close };
+  return connection.database;
+}
+
+export const db: Database = new Proxy({} as Database, {
+  get(_target, prop) {
+    const database = getDb();
+    const value = database[prop as keyof Database];
+    return typeof value === 'function' ? (value as (...args: unknown[]) => unknown).bind(database) : value;
+  },
+});
 
 export { schema };

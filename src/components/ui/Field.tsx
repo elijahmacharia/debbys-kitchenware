@@ -53,6 +53,7 @@ export function TextField({
     <Shell id={id} label={label} hint={hint} error={error} required={required} hideLabel={hideLabel}>
       <input
         id={id}
+        type="text"
         required={required}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}

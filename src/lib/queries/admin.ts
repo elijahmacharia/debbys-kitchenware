@@ -29,6 +29,12 @@ export async function getDashboardStats() {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
   const startOfMonth = new Date(startOfToday.getFullYear(), startOfToday.getMonth(), 1);
+  // ISO strings, not Date objects. Drizzle's postgres.js driver serializes
+  // timestamps with an identity function, and postgres.js then refuses to bind
+  // a Date ("Received an instance of Date"), which took down the dashboard
+  // and every page that asks for these figures.
+  const startOfTodayIso = startOfToday.toISOString();
+  const startOfMonthIso = startOfMonth.toISOString();
 
   // Revenue counts DELIVERED orders only. Counting orders that were never
   // completed would flatter the figure and mislead the owner.
@@ -42,8 +48,8 @@ export async function getDashboardStats() {
       (select coalesce(sum(total_cents), 0) from orders
         where status = 'DELIVERED') as sales_all_time_cents,
       (select coalesce(sum(total_cents), 0) from orders
-        where status = 'DELIVERED' and created_at >= ${startOfMonth}) as sales_this_month_cents,
-      (select count(*) from orders where created_at >= ${startOfToday}) as orders_today,
+        where status = 'DELIVERED' and created_at >= ${startOfMonthIso}) as sales_this_month_cents,
+      (select count(*) from orders where created_at >= ${startOfTodayIso}) as orders_today,
       (select count(*) from products) as product_count,
       (select count(*) from products where is_active) as active_products,
       (select count(*) from products where is_active and stock = 0) as out_of_stock,
