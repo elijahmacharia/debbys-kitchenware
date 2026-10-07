@@ -203,6 +203,18 @@ export const contactSchema = z.object({
 
 // --- Admin -------------------------------------------------------------------
 
+/** A photo we stored, a demo illustration, or an https link. Nothing else. */
+export const storedImageUrl = z.string().trim().min(1).max(500).refine((url) => {
+  if (/^\/media\/[a-z0-9]{24}$/.test(url)) return true;
+  if (url.startsWith('/demo-images/') && !url.includes('..') && !url.includes('\\')) return true;
+  if (url.startsWith('/categories/') && url.endsWith('.svg') && !url.includes('..') && !url.includes('\\')) return true;
+  try {
+    return new URL(url).protocol === 'https:';
+  } catch {
+    return false;
+  }
+}, 'Choose a photo, or paste a link that starts with https://');
+
 export const productSchema = z.object({
   name: z.string().trim().min(2, 'Product name is required').max(140),
   sku: z.string().trim().min(1, 'SKU is required').max(40)
@@ -220,7 +232,7 @@ export const productSchema = z.object({
   isNewArrival: z.boolean().default(false),
   metaTitle: shortText(70).optional(),
   metaDescription: shortText(180).optional(),
-  images: z.array(z.object({ url: z.string().min(1).max(500), alt: shortText(160) })).max(8).default([]),
+  images: z.array(z.object({ url: storedImageUrl, alt: shortText(160) })).max(8, 'A product can have at most 8 photos').default([]),
 }).superRefine((data, ctx) => {
   if (data.salePriceCents && data.salePriceCents >= data.priceCents) {
     ctx.addIssue({
@@ -233,7 +245,10 @@ export const productSchema = z.object({
 export const categorySchema = z.object({
   name: z.string().trim().min(2, 'Category name is required').max(80),
   description: shortText(600).optional(),
-  imageUrl: shortText(500).optional(),
+  imageUrl: z.string().trim().max(500).optional().refine(
+    (url) => !url || storedImageUrl.safeParse(url).success,
+    'Choose a photo, or paste a link that starts with https://',
+  ),
   parentId: z.string().optional().nullable(),
   sortOrder: z.coerce.number().int().min(0).max(9999).default(0),
   isActive: z.boolean().default(true),

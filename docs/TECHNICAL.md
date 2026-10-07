@@ -237,7 +237,7 @@ with a generated name, so a layout check does not protect it.
 | Data exposure | `admin_note` is stripped from every customer-facing query. Customer pages are `noindex` and `no-store` |
 | Secret exposure | `server-only` fences secrets out of client bundles. Only `NEXT_PUBLIC_*` reaches the browser |
 | Clickjacking / sniffing | `X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`. `X-Powered-By` removed |
-| Unsafe uploads | No upload endpoint exists. SVGs served through `next/image` get a CSP forbidding scripts and sandboxing the document |
+| Unsafe uploads | Staff-only `POST /api/admin/uploads`. The file type is taken from the bytes (JPEG, PNG, GIF, WEBP only; SVG is rejected) and the image is stored in Postgres, not on disk |
 | Error leakage | Every route wraps its handler; unexpected errors log server-side and return a generic message |
 
 **Rate limiting is in-memory.** It protects a single instance. Behind more than

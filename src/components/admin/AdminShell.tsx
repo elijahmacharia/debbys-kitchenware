@@ -6,13 +6,14 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/cn';
 import {
-  ChartIcon, GridIcon, LogOutIcon, MenuIcon, PackageIcon, SettingsIcon,
+  ChartIcon, GridIcon, LogOutIcon, MailIcon, MenuIcon, PackageIcon, SettingsIcon,
   StoreIcon, TruckIcon, UsersIcon, XIcon,
 } from '@/components/icons';
 
 const NAV = [
   { href: '/admin/dashboard', label: 'Dashboard', Icon: ChartIcon },
   { href: '/admin/orders', label: 'Orders', Icon: PackageIcon },
+  { href: '/admin/messages', label: 'Messages', Icon: MailIcon },
   { href: '/admin/products', label: 'Products', Icon: StoreIcon },
   { href: '/admin/categories', label: 'Categories', Icon: GridIcon },
   { href: '/admin/inventory', label: 'Inventory', Icon: PackageIcon },

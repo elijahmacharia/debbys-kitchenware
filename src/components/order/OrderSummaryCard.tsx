@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { ShopImage } from '@/components/product/ShopImage';
 import Link from 'next/link';
 import { formatKsh } from '@/lib/money';
 import { ImageIcon } from '@/components/icons';
@@ -53,7 +53,7 @@ export function OrderSummaryCard({ order }: { order: OrderLike }) {
             <li key={item.id} className="flex gap-3 p-3">
               <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded border border-line bg-canvas">
                 {item.imageUrl ? (
-                  <Image src={item.imageUrl} alt="" fill sizes="56px" className="object-contain p-1" />
+                  <ShopImage src={item.imageUrl} alt="" fill sizes="56px" className="object-contain p-1" />
                 ) : (
                   <span className="grid h-full place-items-center text-subtle"><ImageIcon className="h-5 w-5" /></span>
                 )}

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ChevronDownIcon, GridIcon, PlusIcon, TrashIcon } from '@/components/icons';
 import { deleteCategoryAction, reorderCategoryAction, saveCategoryAction } from '@/app/(admin)/admin/actions';
+import { PhotoFields, type PhotoValue } from './PhotoFields';
 
 export interface AdminCategory {
   id: string; name: string; slug: string; description: string | null; imageUrl: string | null;
@@ -28,8 +29,19 @@ export function CategoryManager({ categories, flatOptions, startCreating = false
 }) {
   const [editing, setEditing] = useState<AdminCategory | null>(null);
   const [creating, setCreating] = useState(startCreating);
+  const [photo, setPhoto] = useState<PhotoValue[]>([]);
 
-  const close = () => { setEditing(null); setCreating(false); };
+  const close = () => { setEditing(null); setCreating(false); setPhoto([]); };
+  const startEdit = (category: AdminCategory) => {
+    setEditing(category);
+    setCreating(false);
+    setPhoto(category.imageUrl ? [{ url: category.imageUrl, alt: '' }] : []);
+  };
+  const startNew = () => {
+    setEditing(null);
+    setCreating(true);
+    setPhoto([]);
+  };
 
   const renderRow = (category: AdminCategory, depth: number) => (
     <div key={category.id}>
@@ -47,7 +59,7 @@ export function CategoryManager({ categories, flatOptions, startCreating = false
         <div className="flex flex-wrap gap-1">
           <ActionButton action={async () => reorderCategoryAction(category.id, 'up')} title="Move up" variant="ghost">↑</ActionButton>
           <ActionButton action={async () => reorderCategoryAction(category.id, 'down')} title="Move down" variant="ghost">↓</ActionButton>
-          <button type="button" onClick={() => { setEditing(category); setCreating(false); }} className="btn-secondary btn-sm">Edit</button>
+          <button type="button" onClick={() => startEdit(category)} className="btn-secondary btn-sm">Edit</button>
           <ActionButton
             variant="ghost"
             className="text-danger"
@@ -91,7 +103,13 @@ export function CategoryManager({ categories, flatOptions, startCreating = false
               hint="Lower numbers appear first."
             />
           </div>
-          <TextField name="imageUrl" label="Image path or URL" defaultValue={category?.imageUrl ?? ''} error={errors.imageUrl} placeholder="/uploads/category-kitchen.jpg" />
+          <div>
+            <p className="mb-2 text-sm font-medium text-ink">Photo</p>
+            <p className="mb-2 text-xs text-muted">Shown on the homepage in place of the plain illustration. Leave it empty to keep the illustration.</p>
+            {errors.imageUrl ? <p className="mb-2 text-xs text-danger">{errors.imageUrl}</p> : null}
+            <input type="hidden" name="imageUrl" value={photo[0]?.url ?? ''} />
+            <PhotoFields images={photo} onChange={(next) => setPhoto(next.slice(0, 1))} max={1} showAlt={false} urlName="unusedImageUrl" />
+          </div>
           <CheckboxField name="isActive" label="Visible in the shop" defaultChecked={category?.isActive ?? true} />
         </div>
       )}
@@ -105,7 +123,7 @@ export function CategoryManager({ categories, flatOptions, startCreating = false
           icon={<GridIcon className="h-8 w-8" />}
           title="No categories yet"
           description="Categories group your products so customers can find things. Create at least one before adding products."
-          action={<Button onClick={() => setCreating(true)}><PlusIcon className="h-4 w-4" />Add a category</Button>}
+          action={<Button onClick={startNew}><PlusIcon className="h-4 w-4" />Add a category</Button>}
         />
       ) : null}
 
@@ -116,7 +134,7 @@ export function CategoryManager({ categories, flatOptions, startCreating = false
       ) : null}
 
       {!creating && !editing ? (
-        <Button className="mt-4" variant="secondary" onClick={() => setCreating(true)}>
+        <Button className="mt-4" variant="secondary" onClick={startNew}>
           <PlusIcon className="h-4 w-4" /> Add a category
         </Button>
       ) : null}

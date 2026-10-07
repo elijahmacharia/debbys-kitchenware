@@ -80,7 +80,7 @@ export function ProductJsonLd({
         sku: product.sku,
         description: product.description.slice(0, 500),
         category: categoryName,
-        image: images.map((url) => `${siteUrl}${url}`),
+        image: images.map((url) => (url.startsWith('http://') || url.startsWith('https://') ? url : `${siteUrl}${url}`)),
         brand: { '@type': 'Brand', name: business.name },
         offers: {
           '@type': 'Offer',

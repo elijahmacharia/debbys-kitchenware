@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ShopImage } from '@/components/product/ShopImage';
 import { useCart, clearStoredCart } from './CartProvider';
 import { TextField, TextAreaField, SelectField, CheckboxField } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
@@ -416,7 +416,7 @@ export function CheckoutForm({
             <li key={line.productId} className="flex gap-2.5">
               <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded border border-line bg-canvas">
                 {line.imageUrl ? (
-                  <Image src={line.imageUrl} alt="" fill sizes="48px" className="object-contain p-0.5" />
+                  <ShopImage src={line.imageUrl} alt="" fill sizes="48px" className="object-contain p-0.5" />
                 ) : (
                   <span className="grid h-full place-items-center text-subtle"><ImageIcon className="h-4 w-4" /></span>
                 )}

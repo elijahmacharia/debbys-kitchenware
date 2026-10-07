@@ -298,6 +298,7 @@ check('admin can sign in', adminLogin.status === 200, `got ${adminLogin.status} 
 for (const [name, path] of [
   ['dashboard', '/admin/dashboard'], ['orders', '/admin/orders'], ['products', '/admin/products'],
   ['new product', '/admin/products/new'], ['categories', '/admin/categories'],
+  ['messages', '/admin/messages'],
   ['inventory', '/admin/inventory'], ['customers', '/admin/customers'],
   ['delivery zones', '/admin/delivery'], ['settings', '/admin/settings'],
 ]) {
@@ -315,6 +316,8 @@ check('inventory low-stock filter works', (await req('/admin/inventory?filter=lo
 check('customers page lists the test account', (await req('/admin/customers', { cookies: admin })).text.includes('Renamed Customer'));
 check('customer search works', (await req(`/admin/customers?q=Renamed`, { cookies: admin })).text.includes('Renamed Customer'));
 check('product search works', (await req('/admin/products?q=bucket', { cookies: admin })).text.includes('Bucket'));
+check('new product offers a photo upload', (await req('/admin/products/new', { cookies: admin })).text.includes('Add a photo'));
+check('new product no longer asks for a file path', !(await req('/admin/products/new', { cookies: admin })).text.includes('Upload is not built'));
 check('settings shows placeholder warning', (await req('/admin/settings', { cookies: admin })).text.includes('still missing'));
 check('admin cookie does not open customer APIs', (await req('/api/account/addresses', { cookies: admin })).status === 401);
 

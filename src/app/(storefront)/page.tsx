@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import {
@@ -17,6 +16,7 @@ import { CategoryCard } from '@/components/product/CategoryCard';
 import { ButtonLink } from '@/components/ui/Button';
 import { WebsiteSearchJsonLd } from '@/components/seo/JsonLd';
 import { ArrowRightIcon, StoreIcon, TruckIcon, WhatsAppIcon } from '@/components/icons';
+import { ShopImage } from '@/components/product/ShopImage';
 import { SearchBox } from '@/components/layout/SearchBox';
 import { CategoryChips } from '@/components/shop/CategoryChips';
 import { formatKsh } from '@/lib/money';
@@ -32,6 +32,13 @@ export const metadata: Metadata = {
 const CATEGORY_IMAGE = ['kitchenware', 'household', 'plastic-products', 'storage', 'cleaning'];
 const categoryImage = (slug: string) =>
   `/categories/${CATEGORY_IMAGE.includes(slug) ? slug : 'other'}.svg`;
+
+/** A photo the owner uploaded wins. Otherwise the department illustration. */
+const categoryPicture = (category: { slug: string; imageUrl: string | null }) => {
+  const url = category.imageUrl?.trim() ?? '';
+  if (url.startsWith('/media/') || url.startsWith('https://') || url.startsWith('/demo-images/')) return url;
+  return categoryImage(category.slug);
+};
 
 /**
  * A rail only earns its place if the catalogue can genuinely fill it. Showing
@@ -115,7 +122,7 @@ export default async function HomePage() {
               </div>
               <div className="relative order-1 aspect-[4/3] sm:order-2 sm:aspect-square">
                 {heroProduct.imageUrl ? (
-                  <Image
+                  <ShopImage
                     src={heroProduct.imageUrl}
                     alt={heroProduct.imageAlt ?? heroProduct.name}
                     fill
@@ -175,7 +182,7 @@ export default async function HomePage() {
                 name={category.name}
                 slug={category.slug}
                 productCount={category.productCount}
-                image={categoryImage(category.slug)}
+                image={categoryPicture(category)}
                 tall={index === 0}
               />
             ))}

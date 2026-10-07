@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { ShopImage } from '@/components/product/ShopImage';
 import Link from 'next/link';
 import { useCart } from './CartProvider';
 import { QuantityStepper } from '@/components/product/QuantityStepper';
@@ -74,7 +74,7 @@ export function CartView({ deliveryAvailable, whatsappNumber }: { deliveryAvaila
                 <div className="flex gap-3.5">
                 <Link href={`/product/${line.slug}`} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-raise sm:h-[5.5rem] sm:w-[5.5rem]">
                   {line.imageUrl ? (
-                    <Image src={line.imageUrl} alt={line.name} fill sizes="96px" className="object-contain p-1" />
+                    <ShopImage src={line.imageUrl} alt={line.name} fill sizes="96px" className="object-contain p-1" />
                   ) : (
                     <span className="grid h-full place-items-center text-subtle"><ImageIcon className="h-6 w-6" /></span>
                   )}

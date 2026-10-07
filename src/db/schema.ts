@@ -20,7 +20,7 @@
  * integers.
  */
 import { relations } from 'drizzle-orm';
-import { boolean, index, integer, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+import { boolean, customType, index, integer, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 import { createId } from '../lib/id';
 
 const id = () => text('id').primaryKey().$defaultFn(() => createId());
@@ -167,6 +167,39 @@ export const products = pgTable('products', {
   listIdx: index('products_list_idx').on(t.isActive, t.createdAt),
   priceIdx: index('products_price_idx').on(t.priceCents),
 }));
+
+/**
+ * Product and category photos, kept in the database rather than on disk.
+ *
+ * A file written into `public/` disappears on the next deploy, and Vercel has
+ * no disk that survives from one request to the next. The bytes live here, and
+ * `/media/[id]` reads them back.
+ */
+const bytea = customType<{ data: Buffer; default: false }>({
+  dataType() {
+    return 'bytea';
+  },
+  toDriver(value: Buffer) {
+    return value;
+  },
+  fromDriver(value: unknown): Buffer {
+    if (Buffer.isBuffer(value)) return value;
+    if (value instanceof Uint8Array) return Buffer.from(value);
+    if (typeof value === 'string') {
+      const hex = value.startsWith('\\x') ? value.slice(2) : value;
+      return Buffer.from(hex, 'hex');
+    }
+    throw new Error('Unexpected bytea value from the database');
+  },
+});
+
+export const mediaFiles = pgTable('media_files', {
+  id: text('id').primaryKey(),
+  contentType: text('content_type').notNull(),
+  byteSize: integer('byte_size').notNull(),
+  data: bytea('data').notNull(),
+  createdAt: createdAt(),
+});
 
 export const productImages = pgTable('product_images', {
   id: id(),
