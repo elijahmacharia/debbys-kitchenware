@@ -1,6 +1,6 @@
 import { eq, or } from 'drizzle-orm';
 import { db } from '@/db';
-import { cartItems, customers } from '@/db/schema';
+import { adminUsers, cartItems, customers } from '@/db/schema';
 import { displayName, startCustomerSession, verifyPassword, wastePasswordTime } from '@/lib/auth';
 import { loginSchema, normalizeKenyanPhone } from '@/lib/validation';
 import { clientKey, rateLimit } from '@/lib/rate-limit';
@@ -48,6 +48,19 @@ export async function POST(request: Request) {
     const GENERIC = 'Those details do not match an account. Please check and try again.';
 
     if (!customer) {
+      // The staff account lives in a different table. Saying so here is what
+      // stops the owner signing in on this form and being told, with no
+      // further hint, that the details do not match.
+      if (asEmail) {
+        const [admin] = await db
+          .select({ id: adminUsers.id })
+          .from(adminUsers)
+          .where(eq(adminUsers.email, asEmail))
+          .limit(1);
+        if (admin) {
+          return fail('This email is for the staff dashboard. Use the staff sign-in page.', 401);
+        }
+      }
       await wastePasswordTime();
       return fail(GENERIC, 401);
     }

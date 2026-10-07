@@ -99,6 +99,10 @@ export function LoginForm() {
       </div>
 
       <Button type="submit" fullWidth loading={submitting}>{submitting ? 'Signing in…' : 'Sign in'}</Button>
+
+      <p className="text-center text-sm text-muted">
+        Staff dashboard: <Link href="/admin/login" className="link">Staff sign in</Link>
+      </p>
     </form>
   );
 }
